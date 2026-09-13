@@ -1,0 +1,363 @@
+.cs-case-study {
+  --cs-section-gap: clamp(3rem, 6vw, 5rem);
+  --cs-content-width: min(58.625rem, 100%);
+  --cs-accent: #333;
+  width: 100%;
+  min-height: 100vh;
+  background: #f3f3f3;
+  color: #333;
+}
+
+.cs-case-study .case-study-layout {
+  padding-top: 0;
+}
+
+@media (min-width: 1024px) {
+  .cs-case-study .case-study-spy-nav,
+  .cs-case-study .case-study-spy-nav.is-pinned,
+  .cs-case-study .case-study-spy-nav.is-at-bottom {
+    padding-top: var(--cs-section-gap);
+    z-index: 20;
+    pointer-events: auto;
+  }
+}
+
+.cs-content {
+  width: 100%;
+  max-width: var(--cs-content-width);
+}
+
+.cs-section {
+  padding-block: var(--cs-section-gap);
+}
+
+.cs-section--context {
+  padding-top: var(--cs-section-gap);
+}
+
+.cs-section--last {
+  padding-bottom: clamp(4rem, 8vw, 6rem);
+}
+
+.cs-label {
+  margin: 0 0 2.5rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: var(--case-study-label-size);
+  font-weight: var(--case-study-label-weight);
+  letter-spacing: var(--case-study-label-tracking);
+  text-transform: uppercase;
+  color: var(--case-study-label-color);
+}
+
+.cs-hero-head {
+  margin-bottom: 4rem;
+}
+
+.cs-hero-kicker {
+  margin: 0 0 0.5rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  font-weight: 300;
+  line-height: 1.2;
+  color: #333;
+}
+
+.cs-hero-title {
+  margin: 0;
+  font-family: "Major Mono Display", monospace;
+  font-size: clamp(2.75rem, 7vw, 4.375rem);
+  font-weight: 400;
+  line-height: 1;
+  color: #333;
+}
+
+.cs-hero-subtitle {
+  margin: 0.5rem 0 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(1.25rem, 2.4vw, 1.875rem);
+  font-weight: 300;
+  line-height: 1.2;
+  color: #333;
+}
+
+.cs-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+  margin: 0 0 4rem;
+}
+
+.cs-meta-item dt {
+  margin: 0 0 1rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 300;
+  color: #333;
+}
+
+.cs-meta-item dd {
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  font-weight: 700;
+  line-height: 1.3;
+  color: #333;
+}
+
+.cs-intro-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(1.5rem, 6vw, 6rem);
+  margin-bottom: 4rem;
+  overflow: visible;
+}
+
+.cs-intro-copy {
+  margin: 0;
+  max-width: 40rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: var(--case-study-body-size);
+  font-weight: 300;
+  line-height: var(--case-study-body-line-height);
+  color: #333;
+}
+
+.cs-heading-md {
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: var(--case-study-body-size);
+  font-weight: 400;
+  line-height: 1.35;
+  color: #333;
+}
+
+.cs-heading-md--bold,
+.cs-heading-lg {
+  font-weight: 700;
+}
+
+.cs-heading-lg {
+  margin: 0 0 1.5rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: var(--case-study-body-size);
+  line-height: 1.35;
+  color: #333;
+}
+
+.cs-heading-display {
+  margin: 0 0 1.5rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(1.5rem, 3vw, 1.875rem);
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: #333;
+}
+
+.cs-body {
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: var(--case-study-body-size);
+  font-weight: 300;
+  line-height: var(--case-study-body-line-height);
+  color: #333;
+}
+
+.cs-caption {
+  margin: 1rem 0 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 300;
+  text-align: center;
+  color: #333;
+}
+
+.cs-hero-media-wrap {
+  width: 100%;
+}
+
+.cs-hero-media-wrap--page-top {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+.cs-hero-media-wrap--page-top .cs-hero-media {
+  aspect-ratio: 20 / 9;
+  max-height: min(38vw, 490px);
+}
+
+.cs-hero-media-wrap--inline {
+  width: 100%;
+}
+
+.cs-hero-media-wrap--inline .cs-hero-media {
+  aspect-ratio: 942 / 490;
+  max-height: none;
+}
+
+.cs-hero-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #000;
+}
+
+.cs-hero-media.is-transition-target {
+  visibility: hidden;
+}
+
+.cs-hero-media.is-revealed {
+  opacity: 1;
+}
+
+.cs-hero-media__poster,
+.cs-hero-media__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cs-hero-media-wrap--page-top .cs-hero-media__poster,
+.cs-hero-media-wrap--page-top .cs-hero-media__video {
+  height: 165%;
+  top: auto;
+  bottom: 0;
+  object-position: center bottom;
+}
+
+.cs-hero-media.is-revealed .cs-hero-media__poster {
+  opacity: 0;
+}
+
+.cs-hero-media__poster {
+  transition: opacity 0.2s ease;
+}
+
+.cs-volume-video {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.cs-volume-video video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2050 / 1000;
+  object-fit: cover;
+  background: #111;
+}
+
+.cs-volume-toggle {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  z-index: 2;
+  width: 2.85rem;
+  height: 2.7rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.cs-volume-toggle img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.cs-media {
+  margin: 0;
+}
+
+.cs-media img,
+.cs-media video,
+.cs-inline-video {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.cs-inline-video {
+  background: #111;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  opacity: 0;
+}
+
+.cs-inline-video.is-ready {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-inline-video {
+    opacity: 1;
+  }
+}
+
+.cs-two-col {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin: 2.5rem 0;
+}
+
+.cs-case-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(51, 51, 51, 0.12);
+}
+
+.cs-case-nav__link--previous .cs-case-nav__arrow--previous {
+  transform: scaleX(-1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cs-case-nav__link--previous:hover {
+    color: #ff5500;
+    gap: 1rem;
+  }
+
+  .cs-case-nav__link--previous:hover .cs-case-nav__arrow--previous {
+    transform: scaleX(-1) translateX(4px);
+  }
+}
+
+.cs-nav-boundary {
+  width: 100%;
+  height: 0;
+  pointer-events: none;
+}
+
+@media (max-width: 1023px) {
+  .cs-meta-grid,
+  .cs-two-col {
+    grid-template-columns: 1fr;
+  }
+
+  .cs-intro-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 639px) {
+  .cs-case-study .case-study-button {
+    width: 100%;
+  }
+
+  .cs-case-nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

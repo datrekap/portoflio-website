@@ -1,0 +1,10 @@
+.cs-appear {
+  overflow: visible;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-appear {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

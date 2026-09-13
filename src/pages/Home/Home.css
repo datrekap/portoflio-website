@@ -1,0 +1,370 @@
+.home {
+  --home-section-gap: clamp(4rem, 10vh, 6rem);
+  --home-footer-gap: 7rem;
+  --home-grid-size: var(--site-grid-size);
+  --home-grid-line-color: var(--site-grid-line-color);
+  --home-grid-line-width: var(--site-grid-line-width);
+  --home-selected-work-pad-y: clamp(3.5rem, 7vh, 5.5rem);
+  min-height: 100vh;
+  width: 100%;
+}
+
+.home-landing {
+  --home-ground-x: 0px;
+  --home-ground-left: clamp(4.75rem, 11vh, 6.25rem);
+  --home-ground-right: clamp(6.75rem, 16vh, 8.75rem);
+  --home-ground-rise: calc(var(--home-ground-right) - var(--home-ground-left));
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.home-grid-overlay {
+  position: absolute;
+  inset: -2rem;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(
+      to right,
+      var(--home-grid-line-color) 0,
+      var(--home-grid-line-color) var(--home-grid-line-width),
+      transparent var(--home-grid-line-width)
+    ),
+    linear-gradient(
+      to bottom,
+      var(--home-grid-line-color) 0,
+      var(--home-grid-line-color) var(--home-grid-line-width),
+      transparent var(--home-grid-line-width)
+    );
+  background-size: var(--home-grid-size) var(--home-grid-size);
+  opacity: var(--site-grid-opacity);
+  filter: blur(0.2px);
+}
+
+.home-landing-content {
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  padding-top: clamp(7rem, 12vh, 9rem);
+  padding-bottom: calc(var(--home-ground-left) + clamp(2rem, 4vh, 3rem));
+  pointer-events: none;
+}
+
+.home-hero-scene {
+  --home-ground-x: 0px;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.home-hero-apron {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: #f3f3f3;
+  clip-path: polygon(
+    0 100%,
+    0 calc(100% - var(--home-ground-left)),
+    100% calc(100% - var(--home-ground-right)),
+    100% 100%
+  );
+}
+
+.home-hero-ground {
+  position: absolute;
+  left: -10vw;
+  width: 120vw;
+  bottom: calc(var(--home-ground-left) - 4px);
+  z-index: 2;
+  height: 10px;
+  transform-origin: 10vw 50%;
+  transform: rotate(calc(-1 * atan2(var(--home-ground-rise), 100vw)));
+  background-image: url("/play/ground-line.svg");
+  background-repeat: repeat-x;
+  background-size: 1517px 100%;
+  background-position: var(--home-ground-x, 0px) center;
+}
+
+.home-hero-walker-slot {
+  --home-walker-inset: 10rem; /* larger = further left */
+  /* 0 = top of artboard, 100 = feet. Bigger = lower. No unit. */
+  --home-caption-y: 30;
+  position: absolute;
+  right: calc(var(--page-gutter-x) + var(--home-walker-inset));
+  bottom: calc(var(--home-ground-right) - 2.5rem);
+  z-index: 3;
+  width: clamp(18rem, 23vw, 24rem);
+  aspect-ratio: 210 / 264;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.home-hero-walker {
+  position: relative;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: visible;
+  background: none;
+  pointer-events: auto;
+  cursor: pointer;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.home-hero-walker:focus {
+  outline: none;
+}
+
+.home-hero-walker:focus-visible {
+  outline: 2px solid #ff5500;
+  outline-offset: 4px;
+}
+
+.home-hero-rive-wrap {
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transform-origin: 50% 100%;
+  transition: transform 0.22s cubic-bezier(0.22, 1.2, 0.36, 1);
+}
+
+.home-hero-rive {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  user-select: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .home-hero-walker:hover:not(.is-poking) .home-hero-rive-wrap {
+    transform: scale(1.06);
+  }
+}
+
+.home-hero-walker.is-poking .home-hero-rive-wrap {
+  animation: home-walker-poke 0.28s cubic-bezier(0.22, 1.2, 0.36, 1);
+}
+
+@keyframes home-walker-poke {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(0.96, 0.94);
+  }
+  68% {
+    transform: scale(1.03, 1.04);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-hero-rive-wrap {
+    transition: none;
+  }
+
+  .home-hero-walker:hover .home-hero-rive-wrap,
+  .home-hero-walker.is-poking .home-hero-rive-wrap {
+    animation: none;
+    transform: none;
+  }
+}
+
+.home-hero-caption-anchor {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--home-caption-y) * 1%);
+  bottom: auto;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  transform: translate(-50%, -100%);
+  pointer-events: none;
+}
+
+.home-hero-caption {
+  position: relative;
+  display: block;
+  width: max-content;
+  max-width: min(14rem, 72vw);
+  padding: 0.4rem 0.7rem 0.42rem;
+  background: #ff5500;
+  border: 4px solid #333333;
+  color: #f3f3f3;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0.06em;
+  text-align: center;
+  white-space: normal;
+  transform-origin: 50% 100%;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.home-hero-caption.is-visible {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+@media (max-width: 700px) {
+  .home-hero-walker-slot {
+    width: clamp(13.5rem, 56vw, 17rem);
+  }
+
+  .home-hero-caption {
+    max-width: min(9.5rem, 58vw);
+    font-size: 0.6875rem;
+    padding: 0.32rem 0.55rem 0.34rem;
+  }
+}
+
+.home-landing-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: end;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  width: 100%;
+}
+
+.home-landing-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(1rem, 2.5vw, 1.75rem);
+  min-width: 0;
+  pointer-events: auto;
+}
+
+.home-hero {
+  margin: 0 0 0 0.3rem;
+  font-family: "Major Mono Display", monospace;
+  font-size: 80px;
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: #333333;
+  text-transform: uppercase;
+}
+
+.home-hero-line,
+.home-bio-line {
+  display: block;
+  overflow: hidden;
+}
+
+.home-hero-line-inner,
+.home-bio-line-inner {
+  display: block;
+}
+
+.home-bio {
+  margin: 0 0 0 clamp(0.75rem, 1.6vw, 0rem);
+  font-family: "Montserrat", sans-serif;
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 1.25;
+  color: #333333;
+}
+
+.home-bio-ampersand {
+  color: #ff5500;
+  font-family: "Major Mono Display", monospace;
+  font-weight: 400;
+}
+
+/* ----- Selected work (first 4 projects) ----- */
+.home-selected-work {
+  padding-top: var(--home-selected-work-pad-y);
+}
+
+.home-selected-work-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin: 0 0 var(--home-selected-work-pad-y);
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  color: #333333;
+}
+
+.home-selected-work-dash {
+  display: block;
+  flex-shrink: 0;
+  width: 1.0625rem;
+  height: auto;
+}
+
+.home-selected-work-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  width: 100%;
+}
+
+@media (min-width: 1025px) {
+  .home-selected-work-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.5rem 3rem;
+  }
+}
+
+.home-selected-work-more {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--home-selected-work-pad-y);
+  padding-bottom: var(--home-selected-work-pad-y);
+}
+
+.home-see-more-work {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  color: #333333;
+  text-decoration: none;
+  transition: color 0.25s ease, gap 0.25s ease;
+}
+
+.home-see-more-work-arrow {
+  display: block;
+  flex-shrink: 0;
+  width: 2.125rem;
+  height: auto;
+  transition: transform 0.25s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .home-see-more-work:hover {
+    color: #ff5500;
+    gap: 1rem;
+  }
+
+  .home-see-more-work:hover .home-see-more-work-arrow {
+    transform: translateX(4px);
+  }
+}

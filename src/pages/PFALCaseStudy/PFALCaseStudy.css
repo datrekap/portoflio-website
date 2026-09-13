@@ -1,0 +1,959 @@
+.pfal-case-study {
+  --pfal-section-gap: clamp(3rem, 6vw, 5rem);
+  --pfal-content-width: min(58.625rem, 100%);
+  width: 100%;
+  min-height: 100vh;
+  background: #f3f3f3;
+  color: #333;
+}
+
+.pfal-case-study .case-study-layout {
+  padding-top: 0;
+}
+
+@media (min-width: 1024px) {
+  .pfal-case-study .case-study-spy-nav {
+    padding-top: var(--pfal-section-gap);
+  }
+
+  .pfal-case-study .case-study-spy-nav.is-pinned,
+  .pfal-case-study .case-study-spy-nav.is-at-bottom {
+    padding-top: var(--pfal-section-gap);
+    z-index: 20;
+    pointer-events: auto;
+  }
+}
+
+.pfal-content {
+  width: 100%;
+  max-width: var(--pfal-content-width);
+}
+
+.pfal-section {
+  padding-block: var(--pfal-section-gap);
+}
+
+.pfal-section--context {
+  padding-top: var(--pfal-section-gap);
+}
+
+.pfal-section--last {
+  padding-bottom: clamp(4rem, 8vw, 6rem);
+}
+
+.pfal-label {
+  margin: 0 0 2.5rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: var(--case-study-label-size);
+  font-weight: var(--case-study-label-weight);
+  letter-spacing: var(--case-study-label-tracking);
+  text-transform: uppercase;
+  color: var(--case-study-label-color);
+}
+
+.pfal-hero-head {
+  margin-bottom: 4rem;
+}
+
+.pfal-hero-title {
+  margin: 0;
+  font-family: "Major Mono Display", monospace;
+  font-size: clamp(2.75rem, 7vw, 4.375rem);
+  font-weight: 400;
+  line-height: 1;
+  color: #333;
+}
+
+.pfal-hero-subtitle {
+  margin: 0.5rem 0 0 0.375rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(1.25rem, 2.4vw, 1.875rem);
+  font-weight: 300;
+  line-height: 1.2;
+  color: #333;
+}
+
+.pfal-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+  margin: 0 0 4rem;
+}
+
+.pfal-meta-item dt {
+  margin: 0 0 1rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 300;
+  color: #333;
+}
+
+.pfal-meta-item dd {
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  font-weight: 700;
+  line-height: 1.3;
+  color: #333;
+}
+
+.pfal-intro-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(1.5rem, 6vw, 6rem);
+  margin-bottom: 4rem;
+  overflow: visible;
+}
+
+.pfal-intro-copy {
+  margin: 0;
+  max-width: 40rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: var(--case-study-body-size);
+  font-weight: 300;
+  line-height: var(--case-study-body-line-height);
+  color: #333;
+  overflow: visible;
+}
+
+.pfal-intro-copy__regular {
+  font-weight: 400;
+}
+
+.pfal-intro-copy a.pfal-hover-phrase__link {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.pfal-case-study a:not(.case-study-button):not(.home-see-more-work):not(.pfal-hover-phrase__link) {
+  transition:
+    font-weight 0.15s ease,
+    text-decoration-color 0.15s ease;
+}
+
+.pfal-case-study a:not(.case-study-button):not(.home-see-more-work):not(.pfal-hover-phrase__link):hover,
+.pfal-case-study a:not(.case-study-button):not(.home-see-more-work):not(.pfal-hover-phrase__link):focus-visible {
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.pfal-hero-media-wrap {
+  width: 100%;
+}
+
+.pfal-hero-media-wrap--page-top {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+.pfal-hero-media-wrap--page-top .pfal-hero-media {
+  aspect-ratio: 20 / 9;
+  max-height: min(38vw, 490px);
+}
+
+.pfal-hero-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #000;
+}
+
+.pfal-hero-media.is-transition-target {
+  visibility: hidden;
+}
+
+.pfal-hero-media.is-revealed {
+  opacity: 1;
+}
+
+.pfal-hero-media__poster,
+.pfal-hero-media__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pfal-hero-media-wrap--page-top .pfal-hero-media__poster,
+.pfal-hero-media-wrap--page-top .pfal-hero-media__video {
+  height: 165%;
+  top: auto;
+  bottom: 0;
+  object-position: center bottom;
+}
+
+.pfal-hero-media.is-revealed .pfal-hero-media__poster {
+  opacity: 0;
+}
+
+.pfal-hero-media__poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.2s ease;
+}
+
+.pfal-hero-media__video {
+  opacity: 1;
+}
+
+.pfal-volume-video {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.pfal-volume-video video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2050 / 1000;
+  object-fit: cover;
+  background: #111;
+}
+
+.pfal-volume-toggle {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  z-index: 2;
+  width: 2.85rem;
+  height: 2.7rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.pfal-volume-toggle img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.pfal-heading-md {
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: var(--case-study-body-size);
+  font-weight: 400;
+  line-height: 1.35;
+  color: #333;
+}
+
+.pfal-heading-md--bold {
+  font-weight: 700;
+}
+
+.pfal-heading-lg {
+  margin: 0 0 1.5rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: var(--case-study-body-size);
+  font-weight: 700;
+  line-height: 1.35;
+  color: #333;
+  overflow: visible;
+}
+
+.pfal-heading-lg--regular {
+  font-weight: 400;
+}
+
+.pfal-body {
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: var(--case-study-body-size);
+  font-weight: 300;
+  line-height: var(--case-study-body-line-height);
+  color: #333;
+}
+
+.pfal-kicker {
+  margin: 0 0 1.5rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #333;
+}
+
+.pfal-problem-head {
+  margin-bottom: 1.5rem;
+}
+
+.pfal-problem-head .pfal-heading-md {
+  font-weight: 700;
+}
+
+@media (min-width: 1280px) {
+  .pfal-problem-head .pfal-heading-md {
+    white-space: nowrap;
+  }
+}
+
+.pfal-two-col .pfal-heading-md {
+  margin-bottom: 1.5rem;
+}
+
+.pfal-two-col {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin: 2.5rem 0;
+}
+
+.pfal-media {
+  margin: 2.5rem 0 0;
+}
+
+.pfal-media--overview {
+  margin-top: 0;
+}
+
+.pfal-media img,
+.pfal-media video,
+.pfal-volume-video video {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.pfal-media video,
+.pfal-volume-video video {
+  aspect-ratio: 2050 / 1000;
+  object-fit: cover;
+  background: #111;
+}
+
+.pfal-look-ahead-pair,
+.pfal-video-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.pfal-video-pair__item {
+  min-width: 0;
+}
+
+.pfal-media-caption {
+  margin: 1rem 0 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 300;
+  text-align: center;
+  color: #333;
+}
+
+.pfal-moodboard__frame {
+  position: relative;
+  overflow: hidden;
+}
+
+.pfal-moodboard__base {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.pfal-moodboard__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.82) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+
+.pfal-moodboard__hover {
+  display: block;
+  width: min(47%, 27.5rem);
+  height: auto;
+  transform: translateY(0.35rem);
+  opacity: 0;
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pfal-moodboard__frame:hover .pfal-moodboard__overlay,
+  .pfal-moodboard__frame:focus-within .pfal-moodboard__overlay {
+    opacity: 1;
+  }
+
+  .pfal-moodboard__frame:hover .pfal-moodboard__hover,
+  .pfal-moodboard__frame:focus-within .pfal-moodboard__hover {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pfal-moodboard__overlay,
+  .pfal-moodboard__hover {
+    transition: none;
+  }
+
+  .pfal-hover-phrase:hover .pfal-hover-phrase__art,
+  .pfal-hover-phrase:has(:focus-visible) .pfal-hover-phrase__art,
+  .pfal-hover-phrase:focus-visible .pfal-hover-phrase__art {
+    animation: none;
+    opacity: 1;
+    transform: translate(0.35rem, -0.35rem) scale(1);
+  }
+}
+
+.pfal-public-art-headline {
+  margin: 1.5rem 0 2rem;
+}
+
+.pfal-public-art-headline__lead {
+  margin: 0 0 0.35rem 0.75rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-style: italic;
+  font-weight: 900;
+  line-height: 1.1;
+  color: #333;
+}
+
+.pfal-public-art-headline__main {
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(2.75rem, 8vw, 6.25rem);
+  font-style: italic;
+  font-weight: 900;
+  line-height: 0.95;
+}
+
+.pfal-accent-orange {
+  color: #ff7700;
+}
+
+.pfal-accent-blue {
+  color: #094d7f;
+}
+
+.pfal-foot-traffic {
+  position: relative;
+  margin-bottom: 2.5rem;
+  overflow: visible;
+}
+
+.pfal-hover-phrase {
+  position: relative;
+  display: inline-block;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.pfal-hover-phrase__link {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.pfal-hover-phrase:focus-visible,
+.pfal-hover-phrase__link:focus-visible {
+  outline: 1px dotted currentColor;
+  outline-offset: 0.15em;
+}
+
+.pfal-hover-phrase__art {
+  position: absolute;
+  left: 100%;
+  bottom: 0.15em;
+  z-index: 3;
+  width: min(10.8rem, 48vw);
+  height: auto;
+  max-width: none;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(0.2rem, 0.55rem) scale(0.62);
+  transform-origin: 12% 100%;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pfal-hover-phrase:hover .pfal-hover-phrase__art {
+    animation: pfal-callout-bounce 0.48s cubic-bezier(0.22, 1.45, 0.36, 1) forwards;
+  }
+}
+
+.pfal-hover-phrase:has(:focus-visible) .pfal-hover-phrase__art,
+.pfal-hover-phrase:focus-visible .pfal-hover-phrase__art {
+  animation: pfal-callout-bounce 0.48s cubic-bezier(0.22, 1.45, 0.36, 1) forwards;
+}
+
+@keyframes pfal-callout-bounce {
+  0% {
+    opacity: 0;
+    transform: translate(0.2rem, 0.55rem) scale(0.62);
+  }
+
+  62% {
+    opacity: 1;
+    transform: translate(0.4rem, -0.45rem) scale(1.08);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(0.35rem, -0.35rem) scale(1);
+  }
+}
+
+.pfal-gallery-block {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  overflow: visible;
+}
+
+.pfal-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem 2.35rem;
+  width: 100%;
+}
+
+.pfal-gallery-grid img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 345 / 259;
+  object-fit: cover;
+}
+
+.pfal-gallery-caption {
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: var(--case-study-body-size);
+  font-weight: 300;
+  text-align: center;
+  color: #333;
+  overflow: visible;
+}
+
+.pfal-stats-block {
+  display: flex;
+  flex-direction: column;
+  gap: 3.25rem;
+}
+
+.pfal-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.pfal-stat {
+  text-align: center;
+}
+
+.pfal-stat__value {
+  margin: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(2.5rem, 5vw, 3.4375rem);
+  font-weight: 900;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.pfal-stat__label {
+  margin: 0.55rem 0 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: var(--case-study-body-size);
+  font-weight: 300;
+  color: #333;
+}
+
+.pfal-copy-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin: 2.5rem 0;
+}
+
+.pfal-copy-block--early {
+  margin-block: 4.5rem;
+}
+
+.pfal-copy-block--look-ahead {
+  margin-top: 4.5rem;
+}
+
+.pfal-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: center;
+  margin: 2.5rem 0;
+}
+
+.pfal-split--play {
+  margin-block: 4.5rem;
+}
+
+.pfal-split--reverse .pfal-split__text {
+  order: 1;
+}
+
+.pfal-split--reverse .pfal-split__visual {
+  order: 2;
+}
+
+.pfal-split__text .pfal-heading-md {
+  margin-bottom: 1.5rem;
+}
+
+.pfal-split__visual {
+  min-width: 0;
+  overflow: visible;
+}
+
+.pfal-slider-caption {
+  margin: 0.75rem 0 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 300;
+  text-align: center;
+  color: #000;
+}
+
+.pfal-compare {
+  width: 100%;
+}
+
+.pfal-compare.image-compare--crossfade .image-compare__stage {
+  aspect-ratio: 411 / 405;
+}
+
+.pfal-compare.image-compare--crossfade .image-compare__track {
+  left: calc(var(--compare-handle-width) / 2);
+  right: calc(var(--compare-handle-width) / 2);
+}
+
+.pfal-comparison-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4.3rem;
+  justify-items: center;
+  margin: 2.5rem 0 1.5rem;
+}
+
+.pfal-comparison-card {
+  width: 12.5rem;
+  height: 12.5rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #f3f3f3;
+}
+
+.pfal-comparison-card--blue {
+  background: linear-gradient(180deg, #0d141a 0%, #000 100%);
+}
+
+.pfal-comparison-card--orange {
+  background: linear-gradient(180deg, #1a150d 0%, #000 100%);
+}
+
+.pfal-comparison-card--highlight {
+  background: linear-gradient(180deg, #1a150d 0%, #000 100%);
+  border: 1px solid #fff;
+  box-shadow: 0 0 11px rgba(255, 174, 0, 0.65);
+  text-align: center;
+}
+
+.pfal-comparison-card__title {
+  margin: 0 0 0.35rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.45rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.pfal-comparison-card__value {
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.pfal-comparison-card--blue .pfal-comparison-card__value {
+  background: linear-gradient(180deg, #0af 0%, #88d7ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.pfal-comparison-card--orange .pfal-comparison-card__value,
+.pfal-comparison-card--highlight .pfal-comparison-card__value {
+  background: linear-gradient(180deg, #ff5b00 0%, #ffd382 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.pfal-comparison-card__detail {
+  margin: 0.35rem 0 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.55rem;
+  font-weight: 400;
+  color: #f3f3f3;
+}
+
+.pfal-caption-center {
+  margin: 0 0 2.5rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 300;
+  text-align: center;
+  color: #333;
+}
+
+.pfal-play-visual .pfal-volume-video video,
+.pfal-play-visual > img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.pfal-play-visual__caption {
+  margin-top: 1.75rem;
+  margin-bottom: 0;
+}
+
+.pfal-exhibition-grid {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 938 / 1438.44;
+}
+
+.pfal-exhibition-grid img,
+.pfal-exhibition-grid video {
+  position: absolute;
+  display: block;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
+  background: #111;
+}
+
+.pfal-exhibition-grid__photo1 {
+  top: 0;
+  left: 0;
+  width: 22.83%;
+  height: 19.85%;
+}
+
+.pfal-exhibition-grid__photo4 {
+  top: 0;
+  left: 25.09%;
+  width: 45.79%;
+  height: 19.87%;
+}
+
+.pfal-exhibition-grid__fe1 {
+  top: 0;
+  left: 73.19%;
+  width: 26.64%;
+  height: 30.88%;
+}
+
+.pfal-exhibition-grid__fe2 {
+  top: 20.97%;
+  left: 0;
+  width: 70.89%;
+  height: 26%;
+}
+
+.pfal-exhibition-grid__photo3 {
+  top: 32.78%;
+  left: 73.19%;
+  width: 26.81%;
+  height: 14.18%;
+}
+
+.pfal-exhibition-grid__fe3 {
+  top: 48.85%;
+  left: 0;
+  width: 28.77%;
+  height: 33.35%;
+}
+
+.pfal-exhibition-grid__fe4 {
+  top: 48.85%;
+  left: 32.61%;
+  width: 67.18%;
+  height: 24.64%;
+}
+
+.pfal-exhibition-grid__fe5 {
+  top: 75.37%;
+  left: 32.65%;
+  width: 67.15%;
+  height: 24.63%;
+}
+
+.pfal-exhibition-grid__photo2 {
+  top: 83.28%;
+  left: 0;
+  width: 28.8%;
+  height: 16.72%;
+}
+
+.pfal-button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+.pfal-collab-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 3vw, 2.5rem);
+  margin: 2rem 0 1.5rem;
+}
+
+.pfal-collab-photo {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.pfal-case-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(51, 51, 51, 0.12);
+}
+
+.pfal-case-nav__link--previous .pfal-case-nav__arrow--previous {
+  transform: scaleX(-1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pfal-case-nav__link--previous:hover {
+    color: #ff5500;
+    gap: 1rem;
+  }
+
+  .pfal-case-nav__link--previous:hover .pfal-case-nav__arrow--previous {
+    transform: scaleX(-1) translateX(4px);
+  }
+}
+
+.pfal-nav-boundary {
+  width: 100%;
+  height: 0;
+  pointer-events: none;
+}
+
+@media (max-width: 1023px) {
+  .pfal-meta-grid,
+  .pfal-two-col,
+  .pfal-stats-row,
+  .pfal-split,
+  .pfal-comparison-row,
+  .pfal-collab-grid,
+  .pfal-look-ahead-pair,
+  .pfal-video-pair {
+    grid-template-columns: 1fr;
+  }
+
+  .pfal-intro-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pfal-split--reverse .pfal-split__text,
+  .pfal-split--reverse .pfal-split__visual {
+    order: initial;
+  }
+
+  .pfal-exhibition-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    aspect-ratio: auto;
+    height: auto;
+  }
+
+  .pfal-exhibition-grid img,
+  .pfal-exhibition-grid video {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: auto;
+  }
+
+  .pfal-exhibition-grid__photo1 {
+    aspect-ratio: 3 / 4;
+  }
+
+  .pfal-exhibition-grid__fe1,
+  .pfal-exhibition-grid__fe3 {
+    aspect-ratio: 9 / 16;
+  }
+
+  .pfal-exhibition-grid__fe2,
+  .pfal-exhibition-grid__fe4,
+  .pfal-exhibition-grid__fe5,
+  .pfal-exhibition-grid__photo2,
+  .pfal-exhibition-grid__photo3,
+  .pfal-exhibition-grid__photo4 {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+@media (max-width: 639px) {
+  .pfal-gallery-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pfal-button-row {
+    flex-direction: column;
+  }
+
+  .pfal-case-study .case-study-button {
+    width: 100%;
+  }
+
+  .pfal-case-nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

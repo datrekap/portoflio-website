@@ -1,0 +1,237 @@
+@property --cs-grid-size {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 28px;
+}
+
+@property --cs-grid-line {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 1px;
+}
+
+@property --cs-grid-opacity {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0.12;
+}
+
+@property --cs-btn-weight {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 300;
+}
+
+.case-study-button {
+  --cs-btn-fg: #333;
+  --cs-grid-size: 28px;
+  --cs-grid-line: 1px;
+  --cs-grid-opacity: 0.12;
+  --cs-btn-edge: 0.35s;
+  --cs-btn-draw: 0.42s;
+  --cs-btn-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --cs-btn-shadow: 0 2px 8px rgba(51, 51, 51, 0.12);
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: visible;
+  min-width: 11.8rem;
+  padding: 1.25rem 2.5rem;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.9375rem;
+  font-weight: var(--cs-btn-weight);
+  font-variation-settings: "wght" var(--cs-btn-weight);
+  color: var(--cs-btn-fg);
+  text-decoration: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  font-synthesis: none;
+  box-shadow: none;
+  transition:
+    box-shadow var(--cs-btn-draw) var(--cs-btn-ease),
+    --cs-btn-weight var(--cs-btn-draw) var(--cs-btn-ease);
+}
+
+.case-study-button__chrome {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.case-study-button__stroke {
+  position: absolute;
+  inset: 0;
+}
+
+.case-study-button__edge {
+  position: absolute;
+  background: currentColor;
+}
+
+.case-study-button__edge--left,
+.case-study-button__edge--right {
+  top: 0;
+  width: 1px;
+  height: 100%;
+}
+
+.case-study-button__edge--left {
+  left: 0;
+}
+
+.case-study-button__edge--right {
+  right: 0;
+}
+
+.case-study-button__edge--top-left,
+.case-study-button__edge--top-right,
+.case-study-button__edge--bottom-left,
+.case-study-button__edge--bottom-right {
+  width: 50%;
+  height: 1px;
+  transform: scaleX(0);
+  transition: transform var(--cs-btn-edge) var(--cs-btn-ease);
+}
+
+.case-study-button__edge--top-left,
+.case-study-button__edge--top-right {
+  top: 0;
+}
+
+.case-study-button__edge--bottom-left,
+.case-study-button__edge--bottom-right {
+  bottom: 0;
+}
+
+.case-study-button__edge--top-left,
+.case-study-button__edge--bottom-left {
+  left: 0;
+  transform-origin: left center;
+}
+
+.case-study-button__edge--top-right,
+.case-study-button__edge--bottom-right {
+  right: 0;
+  transform-origin: right center;
+}
+
+.case-study-button__grid-clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.case-study-button__grid {
+  position: absolute;
+  inset: -1.25rem;
+  will-change: transform;
+}
+
+.case-study-button__grid-v,
+.case-study-button__grid-h {
+  position: absolute;
+  inset: 0;
+  opacity: var(--cs-grid-opacity);
+}
+
+.case-study-button__grid-v {
+  background-image: linear-gradient(
+    to right,
+    currentColor 0,
+    currentColor var(--cs-grid-line),
+    transparent var(--cs-grid-line)
+  );
+  background-size: var(--cs-grid-size) var(--cs-grid-size);
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 0.42s var(--cs-btn-ease);
+  transition-delay: 0s;
+}
+
+.case-study-button__grid-h {
+  background-image: linear-gradient(
+    to bottom,
+    currentColor 0,
+    currentColor var(--cs-grid-line),
+    transparent var(--cs-grid-line)
+  );
+  background-size: var(--cs-grid-size) var(--cs-grid-size);
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.42s var(--cs-btn-ease);
+  transition-delay: 0.08s;
+}
+
+.case-study-button__label {
+  position: relative;
+  z-index: 1;
+  font-weight: var(--cs-btn-weight);
+  font-variation-settings: "wght" var(--cs-btn-weight);
+}
+
+.case-study-button:focus-visible {
+  outline: 2px solid #333;
+  outline-offset: 4px;
+  box-shadow: var(--cs-btn-shadow);
+  --cs-btn-weight: 700;
+}
+
+.case-study-button:focus-visible .case-study-button__edge--top-left,
+.case-study-button:focus-visible .case-study-button__edge--top-right,
+.case-study-button:focus-visible .case-study-button__edge--bottom-left,
+.case-study-button:focus-visible .case-study-button__edge--bottom-right {
+  transform: scaleX(1);
+}
+
+.case-study-button:focus-visible .case-study-button__grid-h {
+  clip-path: inset(0 0 0 0);
+  transition-delay: 0.08s;
+}
+
+.case-study-button:focus-visible .case-study-button__grid-v {
+  clip-path: inset(0 0 0 0);
+  transition-delay: 0.16s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .case-study-button:hover {
+    box-shadow: var(--cs-btn-shadow);
+    --cs-btn-weight: 700;
+  }
+
+  .case-study-button:hover .case-study-button__edge--top-left,
+  .case-study-button:hover .case-study-button__edge--top-right,
+  .case-study-button:hover .case-study-button__edge--bottom-left,
+  .case-study-button:hover .case-study-button__edge--bottom-right {
+    transform: scaleX(1);
+  }
+
+  .case-study-button:hover .case-study-button__grid-h {
+    clip-path: inset(0 0 0 0);
+    transition-delay: 0.08s;
+  }
+
+  .case-study-button:hover .case-study-button__grid-v {
+    clip-path: inset(0 0 0 0);
+    transition-delay: 0.16s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .case-study-button,
+  .case-study-button__edge,
+  .case-study-button__grid-v,
+  .case-study-button__grid-h {
+    transition: none;
+  }
+
+  .case-study-button__grid {
+    transform: none !important;
+  }
+}

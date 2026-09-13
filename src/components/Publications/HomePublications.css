@@ -1,0 +1,137 @@
+/* Publications section — light page background with Figma dot grid (node 1029:785) */
+
+.home-publications {
+  position: relative;
+  width: 100%;
+  padding: var(--home-selected-work-pad-y) 0 8rem;
+  overflow: hidden;
+}
+
+.home-publications-grid-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, #333333 2.5px, transparent 2.5px);
+  background-size: 40px 40px;
+  background-position: center;
+  opacity: 0;
+  transform-origin: center center;
+  will-change: opacity, transform;
+}
+
+.home-publications-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.5rem, 5vw, 4rem);
+}
+
+.home-publications-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  color: #333333;
+}
+
+.home-publications-dash {
+  display: block;
+  flex-shrink: 0;
+  width: 1.0625rem;
+  height: auto;
+}
+
+.home-publications-content {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.5rem, 5vw, 4rem);
+  width: 100%;
+}
+
+.home-publications-section {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.5rem, 5vw, 4rem);
+  width: 100%;
+}
+
+.home-publications-section-title {
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  font-weight: 700;
+  line-height: 1.4;
+  color: #333333;
+}
+
+.home-publications-list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.75rem, 3vw, 2.5rem);
+  width: 100%;
+}
+
+.home-publications-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.home-publications-entry--link {
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.25s ease;
+}
+
+.home-publications-paper-title {
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(1.125rem, 2vw, 1.5625rem);
+  font-weight: 400;
+  line-height: 1.35;
+  color: #ff5500;
+  transition: color 0.25s ease;
+}
+
+.home-publications-authors {
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(0.9375rem, 1.5vw, 1.25rem);
+  font-weight: 400;
+  line-height: 1.5;
+  color: #666666;
+  transition: color 0.25s ease;
+}
+
+.home-publications-author-highlight {
+  font-weight: 700;
+  color: #333333;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .home-publications-entry--link:hover {
+    transform: translateX(6px);
+  }
+
+  .home-publications-entry--link:hover .home-publications-paper-title {
+    color: #333333;
+  }
+
+  .home-publications-entry--link:hover .home-publications-authors {
+    color: #333333;
+  }
+}
+
+.home-publications-entry--link:focus-visible {
+  outline: 2px solid #ff5500;
+  outline-offset: 4px;
+  border-radius: 2px;
+}

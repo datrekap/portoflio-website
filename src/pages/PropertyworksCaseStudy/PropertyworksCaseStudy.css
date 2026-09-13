@@ -1,0 +1,338 @@
+.pw-case-study {
+  --cs-accent: #192e59;
+}
+
+.pw-case-study .cs-section--context {
+  padding-top: clamp(6.75rem, 12vw, 9rem);
+}
+
+.pw-case-study .cs-hero-head {
+  margin-bottom: 0;
+}
+
+.pw-hero-media-wrap {
+  margin: 4rem 0;
+}
+
+#pw-overview,
+.pw-overview-copy {
+  overflow: visible;
+}
+
+.pw-hover-phrase {
+  position: relative;
+  display: inline-block;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.pw-hover-phrase__link {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.pw-hover-phrase:focus-visible,
+.pw-hover-phrase__link:focus-visible {
+  outline: 1px dotted currentColor;
+  outline-offset: 0.15em;
+}
+
+.pw-hover-phrase__art {
+  position: absolute;
+  left: 100%;
+  bottom: 0.15em;
+  z-index: 3;
+  width: min(10.8rem, 48vw);
+  height: auto;
+  max-width: none;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(0.2rem, 0.55rem) scale(0.62);
+  transform-origin: 12% 100%;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pw-hover-phrase:hover .pw-hover-phrase__art {
+    animation: pw-phrase-bounce 0.48s cubic-bezier(0.22, 1.45, 0.36, 1) forwards;
+  }
+}
+
+.pw-hover-phrase:has(:focus-visible) .pw-hover-phrase__art,
+.pw-hover-phrase:focus-visible .pw-hover-phrase__art {
+  animation: pw-phrase-bounce 0.48s cubic-bezier(0.22, 1.45, 0.36, 1) forwards;
+}
+
+@keyframes pw-phrase-bounce {
+  0% {
+    opacity: 0;
+    transform: translate(0.2rem, 0.55rem) scale(0.62);
+  }
+
+  62% {
+    opacity: 1;
+    transform: translate(0.4rem, -0.45rem) scale(1.08);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(0.35rem, -0.35rem) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pw-hover-phrase:hover .pw-hover-phrase__art,
+  .pw-hover-phrase:has(:focus-visible) .pw-hover-phrase__art,
+  .pw-hover-phrase:focus-visible .pw-hover-phrase__art {
+    animation: none;
+    opacity: 1;
+    transform: translate(0.35rem, -0.35rem) scale(1);
+  }
+}
+
+.pw-case-study h2.cs-heading-md,
+.pw-case-study h3.cs-heading-md,
+.pw-case-study h2.cs-heading-display,
+.pw-case-study h3.cs-heading-display {
+  margin-bottom: 1.5rem;
+}
+
+.pw-solution-kicker {
+  margin-bottom: 1.5rem;
+}
+
+.pw-gap-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 1.25rem;
+  margin: 2.5rem 0 2.5rem;
+}
+
+.pw-problem-media {
+  margin: 0 0 2.5rem;
+}
+
+.pw-problem-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.pw-metrics-shell {
+  width: 100%;
+  max-width: none;
+}
+
+.pw-metrics-shell > .cs-label {
+  max-width: var(--cs-content-width);
+}
+
+.pw-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 1.5rem;
+  row-gap: 1.5rem;
+  align-items: start;
+  justify-items: stretch;
+  width: 100%;
+  overflow: visible;
+  padding: 1.25rem 0;
+  margin: 2.5rem 0 0;
+}
+
+.pw-metrics > .cs-appear,
+.pw-stat {
+  width: 100%;
+  min-width: 0;
+}
+
+.pw-stat {
+  text-align: left;
+  overflow: visible;
+}
+
+.pw-stat__value {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(3.25rem, 6.5vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: visible;
+  color: #1d3667;
+}
+
+.pw-stat__suffix,
+.pw-stat__prefix {
+  display: inline-flex;
+  align-items: center;
+  height: 1em;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.pw-stat__label {
+  margin: 1.9375rem 0 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: var(--case-study-body-size);
+  font-weight: 300;
+  line-height: 1.35;
+  color: #333;
+}
+
+.pw-research-block,
+.pw-approach-block,
+.pw-solution-block {
+  margin-top: 5rem;
+}
+
+.pw-research-block--first,
+.pw-approach-block--first,
+.pw-solution-block--first {
+  margin-top: 2.5rem;
+}
+
+.pw-block-gap {
+  margin-top: 2.5rem;
+}
+
+.pw-flow-media {
+  margin: 1.5rem 0 0;
+}
+
+.pw-flow-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.pw-onboarding-gap-media {
+  margin-top: 3.5rem;
+  padding-top: 2.5rem;
+}
+
+.pw-flag-system {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 6vw, 5.5rem);
+  margin: 2.5rem 0 5rem;
+}
+
+.pw-flag-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.pw-flag-col__label {
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  color: #333;
+}
+
+.pw-flag-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.pw-flag-row img {
+  display: block;
+  width: 3.125rem;
+  height: 3.125rem;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.pw-flag-row span {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
+  color: #333;
+  white-space: nowrap;
+}
+
+.pw-fit-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(12rem, 26.75rem);
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.pw-fit-media {
+  margin: 0;
+  min-width: 0;
+}
+
+.pw-fit-media .pw-fit-video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 428 / 315;
+  object-fit: cover;
+  background: #111;
+}
+
+.pw-solution-media {
+  margin: 2.5rem 0 0;
+}
+
+.pw-solution-media img,
+.pw-solution-media .pw-solution-video {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.pw-solution-media .pw-solution-video {
+  aspect-ratio: auto;
+  object-fit: cover;
+  object-position: center;
+  background: transparent;
+}
+
+.pw-solution-media--framed {
+  display: block;
+  background: transparent;
+  padding: 0;
+  overflow: hidden;
+}
+
+.pw-solution-media--framed .pw-solution-video {
+  width: 100%;
+  height: auto;
+  box-shadow: none;
+}
+
+.pw-solution-media--log img {
+  aspect-ratio: auto;
+  object-fit: contain;
+  background: transparent;
+}
+
+@media (max-width: 1023px) {
+  .pw-gap-grid,
+  .pw-flag-system,
+  .pw-fit-row,
+  .pw-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .pw-flag-col {
+    align-items: flex-start;
+  }
+}
+

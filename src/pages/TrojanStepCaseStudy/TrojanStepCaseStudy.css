@@ -1,0 +1,968 @@
+.ts-case-study {
+  --cs-accent: #3b17dc;
+}
+
+.ts-dance-journey {
+  --ts-dance-gap: 1rem;
+  --ts-dance-visible: 2.25;
+  margin: 2.5rem 0 3rem;
+}
+
+.ts-dance-journey__scroller {
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+  container-type: inline-size;
+}
+
+.ts-dance-journey__scroller:active {
+  cursor: grabbing;
+}
+
+.ts-dance-journey__track {
+  display: flex;
+  align-items: stretch;
+  gap: var(--ts-dance-gap);
+  width: max-content;
+  will-change: transform;
+}
+
+.ts-dance-journey__vid {
+  display: block;
+  flex-shrink: 0;
+  width: calc(
+    (100cqi - (var(--ts-dance-visible) - 1) * var(--ts-dance-gap)) /
+      var(--ts-dance-visible)
+  );
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  pointer-events: none;
+  background: #111;
+}
+
+.ts-split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.42fr) minmax(0, 0.58fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+  margin: 3rem 0 4rem;
+}
+
+.ts-split .cs-media {
+  min-width: 0;
+}
+
+.ts-split .cs-body + .cs-body {
+  margin-top: 1.25rem;
+}
+
+.ts-influence-copy {
+  margin: 1.5rem 0 2rem;
+}
+
+.ts-block-gap {
+  margin-top: 1.5rem;
+}
+
+.ts-influence-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.ts-influence-card {
+  margin: 0;
+}
+
+.ts-influence-card img,
+.ts-influence-card video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  background: #111;
+}
+
+.ts-influence-card figcaption {
+  margin-top: 1rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #333;
+}
+
+#trojan-problem {
+  overflow: visible;
+}
+
+.ts-research-list {
+  display: flex;
+  flex-direction: column;
+  margin: 2.5rem 0 3rem;
+  overflow: visible;
+}
+
+#trojan-problem .cs-heading-md {
+  margin-top: 1.5rem;
+}
+
+.ts-research-row {
+  display: grid;
+  grid-template-columns: minmax(12rem, 14rem) minmax(0, 1fr);
+  gap: clamp(1.5rem, 6vw, 6rem);
+  align-items: center;
+  padding: 2.5rem 0;
+  border-bottom: 1px solid #333;
+  overflow: visible;
+  position: relative;
+}
+
+.ts-research-row--flip {
+  grid-template-columns: minmax(0, 1fr) minmax(12rem, 14rem);
+}
+
+.ts-research-row--flip .ts-problem-hover {
+  order: 2;
+}
+
+.ts-problem-hover {
+  position: relative;
+  display: block;
+  overflow: visible;
+  z-index: 1;
+}
+
+.ts-problem-hover:hover,
+.ts-problem-hover:focus-within {
+  z-index: 4;
+}
+
+.ts-problem-hover > img:first-of-type {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+.ts-problem-hover__art {
+  position: absolute;
+  z-index: 3;
+  width: min(10.8rem, 90%);
+  height: auto;
+  max-width: none;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.ts-problem-hover--right .ts-problem-hover__art {
+  top: auto;
+  right: auto;
+  bottom: calc(100% - 1.85rem);
+  left: calc(100% - 1.85rem);
+  transform: translate(0.2rem, 0.55rem) scale(0.62);
+  transform-origin: 0% 100%;
+}
+
+.ts-problem-hover--left .ts-problem-hover__art {
+  top: auto;
+  left: auto;
+  bottom: calc(100% - 1.85rem);
+  right: calc(100% - 1.85rem);
+  transform: translate(-0.2rem, 0.55rem) scale(0.62);
+  transform-origin: 100% 100%;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ts-problem-hover--right:hover .ts-problem-hover__art,
+  .ts-problem-hover--right:focus-within .ts-problem-hover__art {
+    animation: ts-callout-bounce-right 0.48s cubic-bezier(0.22, 1.45, 0.36, 1) forwards;
+  }
+
+  .ts-problem-hover--left:hover .ts-problem-hover__art,
+  .ts-problem-hover--left:focus-within .ts-problem-hover__art {
+    animation: ts-callout-bounce-left 0.48s cubic-bezier(0.22, 1.45, 0.36, 1) forwards;
+  }
+}
+
+.ts-problem-hover--right:focus-within .ts-problem-hover__art {
+  animation: ts-callout-bounce-right 0.48s cubic-bezier(0.22, 1.45, 0.36, 1) forwards;
+}
+
+.ts-problem-hover--left:focus-within .ts-problem-hover__art {
+  animation: ts-callout-bounce-left 0.48s cubic-bezier(0.22, 1.45, 0.36, 1) forwards;
+}
+
+@keyframes ts-callout-bounce-right {
+  0% {
+    opacity: 0;
+    transform: translate(0.2rem, 0.55rem) scale(0.62);
+  }
+
+  62% {
+    opacity: 1;
+    transform: translate(0.4rem, -0.45rem) scale(1.08);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(0.35rem, -0.35rem) scale(1);
+  }
+}
+
+@keyframes ts-callout-bounce-left {
+  0% {
+    opacity: 0;
+    transform: translate(-0.2rem, 0.55rem) scale(0.62);
+  }
+
+  62% {
+    opacity: 1;
+    transform: translate(-0.4rem, -0.45rem) scale(1.08);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-0.35rem, -0.35rem) scale(1);
+  }
+}
+
+.ts-research-list .cs-heading-md {
+  margin-top: 1.5rem;
+}
+
+.ts-aspects {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0 2.5rem;
+}
+
+.ts-aspect {
+  margin: 0;
+  padding: 0 0 0 1.85rem;
+  border: 0;
+  background: none;
+  font-family: "Montserrat", sans-serif;
+  font-size: var(--case-study-body-size);
+  font-weight: 300;
+  color: #333;
+  position: relative;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: font-weight 0.2s ease, color 0.2s ease;
+}
+
+.ts-aspect::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.35em;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  background: #d9d9d9;
+}
+
+.ts-aspect.is-active {
+  font-weight: 400;
+  color: var(--cs-accent);
+}
+
+.ts-aspect.is-active::before {
+  background: var(--cs-accent);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ts-aspect:hover:not(.is-active) {
+    font-weight: 500;
+  }
+}
+
+.ts-skeleton-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.ts-skeleton-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.ts-skeleton-pair img,
+.ts-skeleton-pair video,
+.ts-skeleton-grid img,
+.ts-skeleton-grid video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: #111;
+}
+
+.ts-skeleton-pair + .cs-caption,
+.ts-skeleton-grid + .cs-caption {
+  margin-top: 1rem;
+}
+
+.ts-caption-left {
+  text-align: left;
+}
+
+.ts-making-loop {
+  margin-top: 2rem;
+}
+
+.ts-making-loop img {
+  background: #000;
+}
+
+.ts-core-flow {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(12rem, 0.6fr);
+  gap: clamp(1.5rem, 6vw, 6rem);
+  align-items: center;
+  margin: 1.5rem 0 3rem;
+}
+
+.ts-core-flow .cs-media {
+  min-width: 0;
+}
+
+.ts-flow-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.ts-flow-step {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: "Montserrat", sans-serif;
+  font-size: var(--case-study-body-size);
+  font-weight: 300;
+  color: #333;
+  cursor: pointer;
+  text-align: left;
+  transition: font-weight 0.2s ease, color 0.2s ease;
+}
+
+.ts-flow-step::before {
+  content: "";
+  width: 1.1rem;
+  height: 1.1rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #d9d9d9;
+}
+
+.ts-flow-step.is-active {
+  font-weight: 400;
+  color: var(--cs-accent);
+}
+
+.ts-flow-step.is-active::before {
+  background: var(--cs-accent);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ts-flow-step:hover:not(.is-active) {
+    font-weight: 500;
+  }
+}
+
+.ts-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin-top: 1.5rem;
+  align-items: start;
+}
+
+.ts-feature-card {
+  display: grid;
+  grid-template-rows: auto 0fr;
+  border: 1px solid #333;
+  background: #f3f3f3;
+  overflow: hidden;
+  transition: grid-template-rows 0.35s ease;
+}
+
+.ts-feature-card:hover,
+.ts-feature-card:focus-within {
+  grid-template-rows: auto 1fr;
+}
+
+.ts-feature-card__frame {
+  overflow: hidden;
+  aspect-ratio: 224 / 189;
+}
+
+.ts-feature-card__frame video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #111;
+}
+
+.ts-feature-card__caption {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.ts-feature-card__caption p {
+  margin: 0;
+  padding: 1.5rem 1rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.4;
+  color: #333;
+  transform: translateY(0.35rem);
+  opacity: 0;
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ts-feature-card:hover .ts-feature-card__caption p,
+  .ts-feature-card:focus-within .ts-feature-card__caption p {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ts-feature-card:focus-within .ts-feature-card__caption p {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ts-eval-photos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin: 0 0 2.5rem;
+  align-items: start;
+}
+
+.ts-eval-photos > * {
+  min-width: 0;
+}
+
+.ts-eval-photos img,
+.ts-eval-photos video,
+.ts-eval-photos .cs-inline-video,
+.ts-eval-photos__video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 9 / 16;
+  object-fit: contain;
+  object-position: center;
+  background: #111;
+}
+
+.ts-metrics {
+  display: flex;
+  gap: clamp(3rem, 10vw, 9.5rem);
+  margin: 2.5rem 0 3rem;
+}
+
+.ts-metrics .pfal-stat {
+  text-align: left;
+}
+
+.ts-metrics .pfal-stat__value {
+  margin: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(3.5rem, 8vw, 4.375rem);
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.ts-metric-value {
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(3.5rem, 8vw, 4.375rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--cs-accent);
+}
+
+.ts-metric-label {
+  margin: 0.5rem 0 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(1.25rem, 2.4vw, 1.875rem);
+  font-weight: 300;
+  color: #333;
+}
+
+.ts-rating-group-label {
+  margin: 0 0 1rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
+  color: #333;
+}
+
+.ts-eval-group-gap {
+  margin-top: 2.75rem;
+}
+
+.ts-eval-category-gap {
+  margin-top: 2.75rem;
+}
+
+.ts-rating-row {
+  margin-bottom: 1.25rem;
+}
+
+.ts-rating-row__statement {
+  margin: 0 0 0.35rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.ts-rating-row__viz {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ts-people-rating {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.ts-person {
+  position: relative;
+  width: 0.95rem;
+  height: 1.4rem;
+  color: #d9d9d9;
+}
+
+.ts-person::before,
+.ts-person::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  background: currentColor;
+}
+
+.ts-person::before {
+  top: 0;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+
+.ts-person::after {
+  top: 0.52rem;
+  width: 0.85rem;
+  height: 0.85rem;
+  border-radius: 0.42rem 0.42rem 0.12rem 0.12rem;
+  transform: translateX(-50%);
+}
+
+.ts-person.is-filled {
+  color: var(--cs-accent);
+}
+
+.ts-rating-row__score {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  color: #333;
+  white-space: nowrap;
+}
+
+.ts-rating-row__score span {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  line-height: 1;
+}
+
+.ts-rating-row__score small {
+  font-size: 0.75rem;
+}
+
+.ts-wordmaps-labels,
+.ts-wordmaps-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.ts-wordmaps-labels {
+  margin: 2.5rem 0 1rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 400;
+  color: #333;
+}
+
+.ts-wordmaps-labels p,
+.ts-wordmaps-summary p {
+  margin: 0;
+}
+
+.ts-wordmaps-summary {
+  margin: 1rem 0 3rem;
+}
+
+.ts-quotes {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin: 1.5rem 0 3rem;
+}
+
+.ts-quote {
+  position: relative;
+  margin: 0;
+  padding: 1.25rem 2.5rem;
+  background: #f3f3f3;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+}
+
+.ts-quote p {
+  margin: 0 auto;
+  max-width: 31rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: var(--case-study-body-size);
+  font-weight: 400;
+  line-height: 1.4;
+  text-align: center;
+  color: #333;
+}
+
+.ts-quote__mark {
+  position: absolute;
+  top: -0.75rem;
+  left: -0.85rem;
+  width: 1.7rem;
+  height: auto;
+}
+
+.ts-highlight-copy {
+  font-weight: 500;
+}
+
+.ts-highlight-copy em {
+  font-style: italic;
+}
+
+.ts-future-next {
+  margin-top: 3rem;
+}
+
+#trojan-shoutouts {
+  overflow: visible;
+}
+
+.ts-shoutout-heading {
+  font-weight: 400;
+  overflow: visible;
+}
+
+.ts-hover-phrase {
+  position: relative;
+  display: inline-block;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.ts-hover-phrase__link {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.ts-hover-phrase:focus-visible,
+.ts-hover-phrase__link:focus-visible {
+  outline: 1px dotted currentColor;
+  outline-offset: 0.15em;
+}
+
+.ts-hover-phrase__art {
+  position: absolute;
+  left: 100%;
+  bottom: 0.15em;
+  z-index: 3;
+  width: min(10.8rem, 48vw);
+  height: auto;
+  max-width: none;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(0.2rem, 0.55rem) scale(0.62);
+  transform-origin: 12% 100%;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ts-hover-phrase:hover .ts-hover-phrase__art {
+    animation: ts-phrase-bounce 0.48s cubic-bezier(0.22, 1.45, 0.36, 1) forwards;
+  }
+}
+
+.ts-hover-phrase:has(:focus-visible) .ts-hover-phrase__art,
+.ts-hover-phrase:focus-visible .ts-hover-phrase__art {
+  animation: ts-phrase-bounce 0.48s cubic-bezier(0.22, 1.45, 0.36, 1) forwards;
+}
+
+@keyframes ts-phrase-bounce {
+  0% {
+    opacity: 0;
+    transform: translate(0.2rem, 0.55rem) scale(0.62);
+  }
+
+  62% {
+    opacity: 1;
+    transform: translate(0.4rem, -0.45rem) scale(1.08);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(0.35rem, -0.35rem) scale(1);
+  }
+}
+
+.ts-collab-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 3vw, 2.5rem);
+  margin: 2rem 0 0;
+}
+
+.ts-collab-photo {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.ts-highlights-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.34fr) minmax(0, 0.66fr);
+  grid-template-rows: minmax(0, 1.4fr) minmax(0, 1fr);
+  grid-template-areas:
+    "ed1 ed2"
+    "ed3 ed4";
+  gap: 0.75rem;
+  width: 100%;
+  aspect-ratio: 16 / 11;
+  margin-top: 2.5rem;
+  overflow: hidden;
+}
+
+.ts-highlights-grid img,
+.ts-highlights-grid video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  object-fit: cover;
+  object-position: center;
+  background: #111;
+}
+
+.ts-highlights-grid__ed1 {
+  grid-area: ed1;
+}
+
+.ts-highlights-grid__ed2 {
+  grid-area: ed2;
+}
+
+.ts-highlights-grid__ed3 {
+  grid-area: ed3;
+}
+
+.ts-highlights-grid__ed4 {
+  grid-area: ed4;
+}
+
+.ts-fill-media .cs-volume-video {
+  width: 100%;
+}
+
+.ts-case-study .cs-volume-video video {
+  object-fit: cover;
+  background: #111;
+}
+
+.ts-overview-media .cs-volume-video video {
+  aspect-ratio: 942 / 530;
+}
+
+.ts-catharsis-media video {
+  aspect-ratio: 557 / 313;
+  object-fit: cover;
+  background: #111;
+}
+
+.ts-artifact-media {
+  margin-top: 3rem;
+}
+
+.ts-artifact-media .cs-volume-video video {
+  aspect-ratio: 946 / 532;
+}
+
+.ts-core-flow-media video {
+  aspect-ratio: 548 / 605;
+  object-fit: cover;
+  background: #111;
+}
+
+.ts-eval4-media .cs-volume-video video {
+  aspect-ratio: 930 / 523;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ts-problem-hover__art,
+  .ts-feature-card,
+  .ts-feature-card__caption p {
+    transition: none;
+  }
+
+  .ts-problem-hover--right:hover .ts-problem-hover__art,
+  .ts-problem-hover--right:focus-within .ts-problem-hover__art {
+    animation: none;
+    opacity: 1;
+    transform: translate(0.35rem, -0.35rem) scale(1);
+  }
+
+  .ts-problem-hover--left:hover .ts-problem-hover__art,
+  .ts-problem-hover--left:focus-within .ts-problem-hover__art {
+    animation: none;
+    opacity: 1;
+    transform: translate(-0.35rem, -0.35rem) scale(1);
+  }
+
+  .ts-hover-phrase:hover .ts-hover-phrase__art,
+  .ts-hover-phrase:has(:focus-visible) .ts-hover-phrase__art,
+  .ts-hover-phrase:focus-visible .ts-hover-phrase__art {
+    animation: none;
+    opacity: 1;
+    transform: translate(0.35rem, -0.35rem) scale(1);
+  }
+
+  .ts-feature-card:hover,
+  .ts-feature-card:focus-within {
+    grid-template-rows: auto 1fr;
+  }
+}
+
+@media (max-width: 1023px) {
+  .ts-split,
+  .ts-influence-grid,
+  .ts-skeleton-pair,
+  .ts-skeleton-grid,
+  .ts-core-flow,
+  .ts-feature-grid,
+  .ts-eval-photos,
+  .ts-wordmaps-labels,
+  .ts-wordmaps-summary,
+  .ts-aspects {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ts-collab-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ts-influence-grid,
+  .ts-feature-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ts-research-row,
+  .ts-research-row--flip {
+    grid-template-columns: 1fr;
+  }
+
+  .ts-research-row--flip .ts-problem-hover {
+    order: 0;
+  }
+
+  .ts-core-flow {
+    grid-template-columns: 1fr;
+  }
+
+  .ts-highlights-grid {
+    aspect-ratio: 4 / 5;
+  }
+
+  .ts-dance-journey {
+    --ts-dance-visible: 1.55;
+  }
+}
+
+@media (max-width: 639px) {
+  .ts-split,
+  .ts-influence-grid,
+  .ts-skeleton-pair,
+  .ts-feature-grid,
+  .ts-eval-photos,
+  .ts-wordmaps-labels,
+  .ts-wordmaps-summary,
+  .ts-aspects,
+  .ts-collab-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ts-metrics {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .ts-rating-row__viz {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ts-dance-journey {
+    --ts-dance-visible: 1.15;
+  }
+
+  .ts-highlights-grid {
+    gap: 0.5rem;
+    aspect-ratio: 3 / 4;
+  }
+}

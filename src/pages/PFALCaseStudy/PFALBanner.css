@@ -1,0 +1,93 @@
+.pfal-banner {
+  position: relative;
+  width: 100%;
+  height: clamp(280px, 32vw, 478px);
+  overflow: hidden;
+  background: #0f0f0f;
+}
+
+.pfal-banner__background {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #202020 0%, #0f0f0f 100%);
+}
+
+.pfal-banner__birds {
+  position: absolute;
+  width: auto;
+  height: clamp(120px, 14vw, 209px);
+  object-fit: contain;
+  opacity: 0.95;
+  pointer-events: none;
+}
+
+.pfal-banner__birds--left {
+  top: clamp(12px, 2vw, 23px);
+  left: clamp(12px, 4vw, 48px);
+  transform: scaleX(-1);
+}
+
+.pfal-banner__birds--right {
+  top: clamp(24px, 3vw, 55px);
+  right: clamp(12px, 4vw, 48px);
+}
+
+.pfal-banner__sun-wrap {
+  position: absolute;
+  left: 50%;
+  top: clamp(36px, 5vw, 49px);
+  transform: translateX(-50%);
+  width: min(936px, 72vw);
+  aspect-ratio: 936 / 337;
+  pointer-events: none;
+}
+
+.pfal-banner__sun {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.pfal-banner__timeline {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(28px, 4vw, 48px);
+  transform: translateX(-50%);
+  width: min(1363px, 88vw);
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.pfal-banner__years {
+  display: flex;
+  justify-content: space-between;
+  color: #f3f3f3;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(0.75rem, 1.05vw, 1rem);
+  font-weight: 400;
+}
+
+.pfal-banner__dots {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pfal-banner__dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #f3f3f3;
+  flex-shrink: 0;
+}
+
+@media (max-width: 767px) {
+  .pfal-banner__sun-wrap {
+    width: 92vw;
+  }
+
+  .pfal-banner__timeline {
+    width: 92vw;
+  }
+}
