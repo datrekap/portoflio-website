@@ -1,15 +1,24 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  Alignment,
+  Fit,
+  Layout,
+  useRive,
+  useStateMachineInput,
+} from "@rive-app/react-canvas";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const FALL_FRAMES = 24;
-const FALL_FPS = 24;
-const FALL_SRCS = Array.from(
-  { length: FALL_FRAMES },
-  (_, i) => `/play/fall/${String(i + 1).padStart(2, "0")}.png`,
-);
+const RIVE_SRC = "/play/dk-character.riv";
+const RIVE_ARTBOARD = "Artboard 1";
+const RIVE_STATE_MACHINE = "Footer";
+const RIVE_STRETCH_INPUT = "Boolean 1";
+const RIVE_LAYOUT = new Layout({
+  fit: Fit.Contain,
+  alignment: Alignment.BottomCenter,
+});
 const CLOUD_SRC = "/play/cloud.png";
 const BOB_PX = 10;
 
@@ -19,29 +28,73 @@ const CLOUDS = [
   { id: "large", className: "footer-cloud footer-cloud--large", speed: 520 },
 ];
 
-function setPoseFrame(wrap, frame) {
-  if (!wrap) return;
-  if (wrap.dataset.frame === String(frame)) return;
-  wrap.dataset.frame = String(frame);
-  const frames = wrap.children;
-  for (let i = 0; i < frames.length; i += 1) {
-    frames[i].classList.toggle("is-active", i === frame);
-  }
-}
+function FooterFigure({ paused, reducedMotion, stretchInputRef }) {
+  const { rive, RiveComponent, setContainerRef } = useRive(
+    {
+      src: RIVE_SRC,
+      artboard: RIVE_ARTBOARD,
+      stateMachines: RIVE_STATE_MACHINE,
+      autoplay: !reducedMotion && !paused,
+      layout: RIVE_LAYOUT,
+      shouldDisableRiveListeners: true,
+    },
+    {
+      shouldResizeCanvasToContainer: true,
+    },
+  );
 
-function prefersReducedMotion() {
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const stretchInput = useStateMachineInput(
+    rive,
+    RIVE_STATE_MACHINE,
+    RIVE_STRETCH_INPUT,
+    false,
+  );
+
+  useEffect(() => {
+    if (!stretchInputRef) return undefined;
+    stretchInputRef.current = stretchInput;
+    return () => {
+      stretchInputRef.current = null;
+    };
+  }, [stretchInput, stretchInputRef]);
+
+  useEffect(() => {
+    if (!rive) return;
+    if (reducedMotion || paused) {
+      rive.pause();
+      return;
+    }
+    rive.play();
+  }, [rive, paused, reducedMotion]);
+
+  return (
+    <div ref={setContainerRef} className="footer-faller-rive-wrap">
+      <RiveComponent className="footer-faller-rive" aria-hidden="true" />
+    </div>
+  );
 }
 
 const FooterFall = () => {
   const stageRef = useRef(null);
-  const stripRef = useRef(null);
   const fallerRef = useRef(null);
   const cloudRefs = useRef([]);
   const tweenRef = useRef(null);
   const bobRef = useRef(null);
   const busyRef = useRef(false);
   const reducedRef = useRef(false);
+  const stretchInputRef = useRef(null);
+  const [paused, setPaused] = useState(true);
+  const [reducedMotion, setReducedMotion] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
+
+  const setStretch = useCallback((value) => {
+    const input = stretchInputRef.current;
+    if (!input) return;
+    input.value = value;
+  }, []);
 
   const stopBob = useCallback(() => {
     bobRef.current?.kill();
@@ -66,6 +119,7 @@ const FooterFall = () => {
     const stage = stageRef.current;
     if (!el || !stage) return;
     stopBob();
+    setStretch(false);
     const h = stage.offsetHeight;
     busyRef.current = true;
     tweenRef.current?.kill();
@@ -82,7 +136,7 @@ const FooterFall = () => {
         },
       },
     );
-  }, [startBob, stopBob]);
+  }, [setStretch, startBob, stopBob]);
 
   const onPoke = useCallback(() => {
     if (busyRef.current || reducedRef.current) return;
@@ -91,6 +145,7 @@ const FooterFall = () => {
     if (!el || !stage) return;
     stopBob();
     busyRef.current = true;
+    setStretch(true);
     const h = stage.offsetHeight;
     tweenRef.current?.kill();
     tweenRef.current = gsap.to(el, {
@@ -102,7 +157,7 @@ const FooterFall = () => {
         dropIn();
       },
     });
-  }, [dropIn, stopBob]);
+  }, [dropIn, setStretch, stopBob]);
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -111,15 +166,10 @@ const FooterFall = () => {
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     reducedRef.current = reduced.matches;
-
-    FALL_SRCS.forEach((src) => {
-      const image = new Image();
-      image.src = src;
-    });
+    setReducedMotion(reduced.matches);
 
     let raf = 0;
     let last = performance.now();
-    let time = 0;
     let running = false;
     const cloudTravel = CLOUDS.map(() => 0);
 
@@ -141,14 +191,7 @@ const FooterFall = () => {
     const tick = (now) => {
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
-      if (!reducedRef.current) {
-        time += dt;
-        setPoseFrame(
-          stripRef.current,
-          Math.floor(time * FALL_FPS) % FALL_FRAMES,
-        );
-        paintClouds(dt);
-      }
+      if (!reducedRef.current) paintClouds(dt);
       raf = requestAnimationFrame(tick);
     };
 
@@ -166,7 +209,6 @@ const FooterFall = () => {
 
     if (reduced.matches) {
       gsap.set(el, { y: 0 });
-      setPoseFrame(stripRef.current, 0);
       cloudRefs.current.forEach((node) => {
         if (node) node.style.transform = "translateY(0px)";
       });
@@ -178,6 +220,8 @@ const FooterFall = () => {
       stopBob();
       tweenRef.current?.kill();
       busyRef.current = false;
+      setStretch(false);
+      setPaused(true);
       if (!reducedRef.current) {
         gsap.set(el, { y: -stage.offsetHeight * 0.85 });
       }
@@ -185,6 +229,7 @@ const FooterFall = () => {
 
     const enterFall = () => {
       startLoop();
+      setPaused(false);
       if (reducedRef.current) return;
       dropIn();
     };
@@ -207,12 +252,13 @@ const FooterFall = () => {
 
     const onMotionChange = () => {
       reducedRef.current = reduced.matches;
+      setReducedMotion(reduced.matches);
       stopBob();
       tweenRef.current?.kill();
       busyRef.current = false;
+      setStretch(false);
       if (reduced.matches) {
         gsap.set(el, { y: 0 });
-        setPoseFrame(stripRef.current, 0);
         cloudRefs.current.forEach((node) => {
           if (node) node.style.transform = "translateY(0px)";
         });
@@ -230,7 +276,7 @@ const FooterFall = () => {
       tweenRef.current?.kill();
       trigger.kill();
     };
-  }, [dropIn, startBob, stopBob]);
+  }, [dropIn, setStretch, startBob, stopBob]);
 
   return (
     <div ref={stageRef} className="footer-fall">
@@ -254,27 +300,11 @@ const FooterFall = () => {
           aria-label="Falling figure. Click to drop through the footer."
           onClick={onPoke}
         >
-          <img
-            src={FALL_SRCS[0]}
-            alt=""
-            width={210}
-            height={264}
-            draggable="false"
-            className="footer-faller-sizer"
+          <FooterFigure
+            paused={paused}
+            reducedMotion={reducedMotion}
+            stretchInputRef={stretchInputRef}
           />
-          <div ref={stripRef} className="footer-faller-strip" aria-hidden="true">
-            {FALL_SRCS.map((src, index) => (
-              <img
-                key={src}
-                src={src}
-                alt=""
-                width={210}
-                height={264}
-                draggable="false"
-                className={`footer-faller-frame${index === 0 ? " is-active" : ""}`}
-              />
-            ))}
-          </div>
         </button>
       </div>
     </div>

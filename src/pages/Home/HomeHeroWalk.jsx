@@ -1,4 +1,12 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   Alignment,
   Fit,
@@ -12,6 +20,8 @@ const RIVE_SRC = "/play/dk-character.riv";
 const RIVE_ARTBOARD = "Artboard 1";
 const RIVE_STATE_MACHINE = "Home";
 const RIVE_CLICKED_INPUT = "isClicked";
+const RIVE_DESIGN_ENG_INPUT = "playDesignEng";
+const RIVE_RESEARCHER_INPUT = "playResearcher";
 const RIVE_LAYOUT = new Layout({
   fit: Fit.Contain,
   alignment: Alignment.BottomCenter,
@@ -86,7 +96,11 @@ function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-function HomeFigure({ isClicked, reducedMotion }) {
+function fireRiveTrigger(input) {
+  if (typeof input?.fire === "function") input.fire();
+}
+
+function HomeFigure({ isClicked, reducedMotion, triggerFireRef }) {
   const { rive, RiveComponent, setContainerRef } = useRive(
     {
       src: RIVE_SRC,
@@ -107,10 +121,31 @@ function HomeFigure({ isClicked, reducedMotion }) {
     RIVE_CLICKED_INPUT,
     isClicked,
   );
+  const playDesignEngInput = useStateMachineInput(
+    rive,
+    RIVE_STATE_MACHINE,
+    RIVE_DESIGN_ENG_INPUT,
+  );
+  const playResearcherInput = useStateMachineInput(
+    rive,
+    RIVE_STATE_MACHINE,
+    RIVE_RESEARCHER_INPUT,
+  );
 
   useEffect(() => {
     if (clickedInput) clickedInput.value = isClicked;
   }, [clickedInput, isClicked]);
+
+  useEffect(() => {
+    if (!triggerFireRef) return undefined;
+    triggerFireRef.current = {
+      playDesignEng: () => fireRiveTrigger(playDesignEngInput),
+      playResearcher: () => fireRiveTrigger(playResearcherInput),
+    };
+    return () => {
+      triggerFireRef.current = null;
+    };
+  }, [triggerFireRef, playDesignEngInput, playResearcherInput]);
 
   useEffect(() => {
     if (!rive) return;
@@ -128,10 +163,11 @@ function HomeFigure({ isClicked, reducedMotion }) {
   );
 }
 
-const HomeHeroWalk = () => {
+const HomeHeroWalk = forwardRef((props, ref) => {
   const sceneRef = useRef(null);
   const walkerRef = useRef(null);
   const captionRef = useRef(null);
+  const triggerFireRef = useRef(null);
   const tweenRef = useRef(null);
   const dismissRef = useRef(0);
   const clickPulseRef = useRef(0);
@@ -229,6 +265,15 @@ const HomeHeroWalk = () => {
     },
     [scheduleDismiss],
   );
+
+  useImperativeHandle(ref, () => ({
+    playDesignEng() {
+      triggerFireRef.current?.playDesignEng?.();
+    },
+    playResearcher() {
+      triggerFireRef.current?.playResearcher?.();
+    },
+  }));
 
   const pulseClicked = useCallback(() => {
     if (prefersReducedMotion()) return;
@@ -337,7 +382,11 @@ const HomeHeroWalk = () => {
             event.currentTarget.classList.remove("is-poking");
           }}
         >
-          <HomeFigure isClicked={isClicked} reducedMotion={reducedMotion} />
+          <HomeFigure
+            isClicked={isClicked}
+            reducedMotion={reducedMotion}
+            triggerFireRef={triggerFireRef}
+          />
         </button>
         <span className="home-hero-caption-anchor">
           <span
@@ -352,6 +401,8 @@ const HomeHeroWalk = () => {
       </div>
     </div>
   );
-};
+});
+
+HomeHeroWalk.displayName = "HomeHeroWalk";
 
 export default HomeHeroWalk;

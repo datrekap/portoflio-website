@@ -16,6 +16,7 @@ const Home = () => {
   const location = useLocation();
   const heroTitleRef = useRef(null);
   const bioRef = useRef(null);
+  const walkerRef = useRef(null);
 
   useEffect(() => {
     const titleEl = heroTitleRef.current;
@@ -51,7 +52,7 @@ const Home = () => {
     <main className="home" style={{ backgroundColor: "#f3f3f3" }}>
       <section id="landing" className="home-landing">
         <div className="home-grid-overlay" aria-hidden="true" />
-        <HomeHeroWalk />
+        <HomeHeroWalk ref={walkerRef} />
         <div className="home-landing-content page-content-shell">
           <div className="home-landing-grid">
             <div className="home-landing-inner">
@@ -63,12 +64,26 @@ const Home = () => {
               <p ref={bioRef} className="home-bio">
                 <span className="home-bio-line">
                   <span className="home-bio-line-inner">
-                    Design Engineer{" "}
+                    <button
+                      type="button"
+                      className="home-bio-hotspot"
+                      onClick={() => walkerRef.current?.playDesignEng()}
+                    >
+                      Design Engineer
+                    </button>{" "}
                     <span className="home-bio-ampersand">&amp;</span>
                   </span>
                 </span>
                 <span className="home-bio-line">
-                  <span className="home-bio-line-inner">Researcher</span>
+                  <span className="home-bio-line-inner">
+                    <button
+                      type="button"
+                      className="home-bio-hotspot"
+                      onClick={() => walkerRef.current?.playResearcher()}
+                    >
+                      Researcher
+                    </button>
+                  </span>
                 </span>
               </p>
             </div>

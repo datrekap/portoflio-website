@@ -291,6 +291,44 @@
   font-weight: 400;
 }
 
+.home-bio-hotspot {
+  appearance: none;
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  text-align: inherit;
+  text-decoration: none;
+  text-underline-offset: 0.16em;
+  text-decoration-thickness: 2px;
+  cursor: pointer;
+  transition: color 0.22s ease;
+}
+
+.home-bio-hotspot:focus {
+  outline: none;
+}
+
+.home-bio-hotspot:focus-visible {
+  outline: 2px solid #ff5500;
+  outline-offset: 4px;
+}
+
+.home-bio-hotspot:active {
+  color: #ff5500;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .home-bio-hotspot:hover {
+    color: #ff5500;
+    text-decoration: underline;
+  }
+}
+
 /* ----- Selected work (first 4 projects) ----- */
 .home-selected-work {
   padding-top: var(--home-selected-work-pad-y);
