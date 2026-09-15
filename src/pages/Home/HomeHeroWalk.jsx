@@ -15,6 +15,16 @@ import {
   useStateMachineInput,
 } from "@rive-app/react-canvas";
 import { gsap } from "gsap";
+import {
+  DESIGN_ENG_LINES,
+  OPENER_LINES,
+  RESEARCHER_LINES,
+  SLOT_BEATS,
+  SLOT_NEEDLES,
+  SLOT_OPENERS,
+  SLOT_POINTERS,
+  WALKER_LINES,
+} from "../../data/homeHeroLines";
 
 const RIVE_SRC = "/play/dk-character.riv";
 const RIVE_ARTBOARD = "Artboard 1";
@@ -30,51 +40,20 @@ const GROUND_TILE = 1517;
 const WALK_SPEED = 140;
 const DISMISS_MS = 2400;
 const CLICK_PULSE_MS = 80;
+const RESEARCHER_RIVE_DELAY_MS = 500;
+const INTRO_MIN = 3;
+const INTRO_MAX = 5;
+const RECENT_WINDOW = 8;
+const SLOT_BATCH = 12;
+const MAX_WORDS = 5;
 
-const INTRO_LINES = [
-  "HEY.",
-  "YOU MADE IT.",
-  "DON'T MIND THE SLOPE.",
-  "I LIVE HERE.",
-  "NAME'S ON THE LEFT.",
-  "I JUST WALK.",
-  "I'M STILL HERE.",
-  "THE WORK IS DOWN.",
-  "OR KEEP POKING.",
-  "BUSY.",
-  "I SAW THAT.",
-  "TWO DEGREES. ON PURPOSE.",
-  "I DO NOT JUMP HERE.",
-  "PLAY IS THE OTHER PAGE.",
-  "GRID IS DECORATIVE. MOSTLY.",
-  "THAT IS NOT A BUTTON.",
-  "STILL WALKING.",
-  "NOT THE CASE STUDY.",
-  "&",
-  "AGAIN?",
-];
-
-const SHUFFLE_LINES = [
-  "FINE.",
-  "WE DID THIS.",
-  "STILL HERE.",
-  "WALKING. STILL.",
-  "THE SLOPE HASN'T MOVED.",
-  "YOU'RE PERSISTENT.",
-  "I'LL ALLOW IT.",
-  "SCROLL WHEN YOU'RE READY.",
-  "WORK. DOWN THERE.",
-  "PLAY. OTHER PAGE.",
-  "THIS IS THE HERO.",
-  "NOT A GAME.",
-  "ORANGE IS THE &.",
-  "DON'T FALL IN.",
-  "LEFT FOOT. RIGHT FOOT.",
-  "NO NEW LINES.",
-  "OKAY. ONE MORE.",
-  "NOTED.",
-  "&",
-  "AGAIN?",
+const SLOT_PATTERNS = [
+  [SLOT_OPENERS, SLOT_BEATS],
+  [SLOT_NEEDLES],
+  [SLOT_POINTERS],
+  [SLOT_OPENERS, SLOT_NEEDLES],
+  [SLOT_BEATS],
+  [SLOT_OPENERS, SLOT_POINTERS],
 ];
 
 function wrapMod(n, m) {
@@ -90,6 +69,64 @@ function shuffle(items) {
     next[j] = hold;
   }
   return next;
+}
+
+function pick(items) {
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+function wordCount(line) {
+  return line.trim().split(/\s+/).filter(Boolean).length;
+}
+
+function buildSlotLine(recent) {
+  for (let attempt = 0; attempt < 16; attempt += 1) {
+    const pattern = pick(SLOT_PATTERNS);
+    const line = pattern.map((slot) => pick(slot)).join(" ");
+    if (wordCount(line) > MAX_WORDS) continue;
+    if (recent.includes(line)) continue;
+    return line;
+  }
+  return pick(SLOT_BEATS);
+}
+
+function makeSlotBatch(recent) {
+  const batch = [];
+  const blocked = recent.slice();
+  for (let i = 0; i < SLOT_BATCH; i += 1) {
+    const line = buildSlotLine(blocked);
+    batch.push(line);
+    blocked.push(line);
+  }
+  return batch;
+}
+
+function createSessionDecks() {
+  const openers = shuffle(OPENER_LINES);
+  const introCount = INTRO_MIN + Math.floor(Math.random() * (INTRO_MAX - INTRO_MIN + 1));
+  return {
+    intro: openers.slice(0, introCount),
+    poke: shuffle([...WALKER_LINES, ...openers.slice(introCount)]),
+    design: shuffle(DESIGN_ENG_LINES),
+    research: shuffle(RESEARCHER_LINES),
+    pokeRefills: 0,
+  };
+}
+
+function takeFromDeck(deck, source, recent) {
+  if (deck.length === 0) {
+    deck.push(...shuffle(source));
+  }
+  let line = deck.pop();
+  if (recent.includes(line) && deck.length > 0) {
+    const swapAt = deck.findIndex((item) => !recent.includes(item));
+    if (swapAt >= 0) {
+      const swap = deck[swapAt];
+      deck[swapAt] = line;
+      line = swap;
+    }
+  }
+  return line;
 }
 
 function prefersReducedMotion() {
@@ -171,9 +208,14 @@ const HomeHeroWalk = forwardRef((props, ref) => {
   const tweenRef = useRef(null);
   const dismissRef = useRef(0);
   const clickPulseRef = useRef(0);
-  const introIndexRef = useRef(0);
-  const poolRef = useRef([]);
+  const researcherRiveRef = useRef(0);
+  const decksRef = useRef(null);
+  const recentRef = useRef([]);
+  const hasSpokenRef = useRef(false);
   const captionTextRef = useRef(null);
+  if (decksRef.current === null) {
+    decksRef.current = createSessionDecks();
+  }
   const [caption, setCaption] = useState(null);
   const [isClicked, setIsClicked] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(
@@ -182,16 +224,33 @@ const HomeHeroWalk = forwardRef((props, ref) => {
       window.matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
 
-  const nextLine = useCallback(() => {
-    if (introIndexRef.current < INTRO_LINES.length) {
-      const line = INTRO_LINES[introIndexRef.current];
-      introIndexRef.current += 1;
-      return line;
+  const rememberLine = useCallback((line) => {
+    const recent = recentRef.current;
+    recent.push(line);
+    if (recent.length > RECENT_WINDOW) recent.shift();
+  }, []);
+
+  const nextWalkerLine = useCallback(() => {
+    const decks = decksRef.current;
+    const recent = recentRef.current;
+    if (decks.intro.length > 0) {
+      return decks.intro.shift();
     }
-    if (poolRef.current.length === 0) {
-      poolRef.current = shuffle(SHUFFLE_LINES);
+    if (decks.poke.length === 0) {
+      decks.pokeRefills += 1;
+      decks.poke =
+        decks.pokeRefills % 2 === 1
+          ? makeSlotBatch(recent)
+          : shuffle(WALKER_LINES);
     }
-    return poolRef.current.pop();
+    return takeFromDeck(decks.poke, WALKER_LINES, recent);
+  }, []);
+
+  const nextRoleLine = useCallback((role) => {
+    const decks = decksRef.current;
+    const source = role === "design" ? DESIGN_ENG_LINES : RESEARCHER_LINES;
+    const deck = role === "design" ? decks.design : decks.research;
+    return takeFromDeck(deck, source, recentRef.current);
   }, []);
 
   const clearDismiss = useCallback(() => {
@@ -259,21 +318,14 @@ const HomeHeroWalk = forwardRef((props, ref) => {
 
   const presentLine = useCallback(
     (line) => {
+      hasSpokenRef.current = true;
+      rememberLine(line);
       captionTextRef.current = line;
       setCaption(line);
       scheduleDismiss();
     },
-    [scheduleDismiss],
+    [rememberLine, scheduleDismiss],
   );
-
-  useImperativeHandle(ref, () => ({
-    playDesignEng() {
-      triggerFireRef.current?.playDesignEng?.();
-    },
-    playResearcher() {
-      triggerFireRef.current?.playResearcher?.();
-    },
-  }));
 
   const pulseClicked = useCallback(() => {
     if (prefersReducedMotion()) return;
@@ -284,7 +336,7 @@ const HomeHeroWalk = forwardRef((props, ref) => {
     }, CLICK_PULSE_MS);
   }, []);
 
-  const onPoke = useCallback(() => {
+  const hopWalker = useCallback(() => {
     const walker = walkerRef.current;
     if (walker && !prefersReducedMotion()) {
       walker.classList.remove("is-poking");
@@ -292,15 +344,54 @@ const HomeHeroWalk = forwardRef((props, ref) => {
       walker.classList.add("is-poking");
     }
     pulseClicked();
-    const line = nextLine();
-    clearDismiss();
-    const present = () => presentLine(line);
-    if (captionTextRef.current) {
-      hideCaption(present);
-      return;
-    }
-    present();
-  }, [clearDismiss, hideCaption, nextLine, presentLine, pulseClicked]);
+  }, [pulseClicked]);
+
+  const showLine = useCallback(
+    (line) => {
+      clearDismiss();
+      const present = () => presentLine(line);
+      if (captionTextRef.current) {
+        hideCaption(present);
+        return;
+      }
+      present();
+    },
+    [clearDismiss, hideCaption, presentLine],
+  );
+
+  const playRole = useCallback(
+    (role) => {
+      hopWalker();
+      if (role === "design") {
+        triggerFireRef.current?.playDesignEng?.();
+      } else {
+        window.clearTimeout(researcherRiveRef.current);
+        researcherRiveRef.current = window.setTimeout(() => {
+          triggerFireRef.current?.playResearcher?.();
+        }, RESEARCHER_RIVE_DELAY_MS);
+      }
+      showLine(nextRoleLine(role));
+    },
+    [hopWalker, nextRoleLine, showLine],
+  );
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      playDesignEng() {
+        playRole("design");
+      },
+      playResearcher() {
+        playRole("research");
+      },
+    }),
+    [playRole],
+  );
+
+  const onPoke = useCallback(() => {
+    hopWalker();
+    showLine(nextWalkerLine());
+  }, [hopWalker, nextWalkerLine, showLine]);
 
   useEffect(() => {
     let cancelled = false;
@@ -317,14 +408,14 @@ const HomeHeroWalk = forwardRef((props, ref) => {
 
     Promise.all([afterLoad, afterLanding]).then(() => {
       if (cancelled) return;
-      if (introIndexRef.current !== 0 || captionTextRef.current) return;
-      presentLine(nextLine());
+      if (hasSpokenRef.current || captionTextRef.current) return;
+      presentLine(nextWalkerLine());
     });
 
     return () => {
       cancelled = true;
     };
-  }, [nextLine, presentLine]);
+  }, [nextWalkerLine, presentLine]);
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -362,6 +453,7 @@ const HomeHeroWalk = forwardRef((props, ref) => {
       cancelAnimationFrame(raf);
       window.clearTimeout(dismissRef.current);
       window.clearTimeout(clickPulseRef.current);
+      window.clearTimeout(researcherRiveRef.current);
       tweenRef.current?.kill();
     };
   }, []);
