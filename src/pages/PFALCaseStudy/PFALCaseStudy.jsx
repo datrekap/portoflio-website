@@ -153,7 +153,7 @@ export default function PFALCaseStudy() {
                 taxpayers $2 million in utility costs over the project&apos;s 20-year
                 term. They were able to collect data but they were struggling to inform
                 the county residents and stakeholders such as the commissioners of this
-                effort. Fulton Brighter Futures uses data from those installations.
+                effort.
               </p>
             </Appear>
             <div className="pfal-two-col">
@@ -450,11 +450,10 @@ export default function PFALCaseStudy() {
                     Design for Play and Learning
                   </h3>
                   <p className="pfal-body">
-                    One of my personal goals was to make this playful. Playful
-                    interaction invites curiosity and which leads to people learning. We
+                    One of my personal goals was to make this interaction playful. We
                     framed this project not as an educative informative installation,
-                    but rather a playful experience through which you can learn
-                    something about the county.
+                    rather a playful experience through which you can learn something
+                    about the county.
                   </p>
                 </div>
               </Appear>
@@ -482,11 +481,11 @@ export default function PFALCaseStudy() {
                   &ldquo;Look Ahead&rdquo; - Build Your Own Solar Future
                 </h3>
                 <p className="pfal-body">
-                  The users also had an option to add on to the existing visualization by
+                  The users also have an option to add on to the existing visualization by
                   &ldquo;speculating&rdquo; how the future of their neighborhood could
-                  improve by using renewable energy. They can place a building with
-                  &ldquo;solar panels&rdquo; in their area on the map, and see an
-                  approximate impact of placing that building on the map can have.
+                  improve by using renewable energy. They can place a solar-equipped
+                  building on the map and see its estimated impact on the surrounding
+                  area.
                 </p>
               </div>
             </Appear>

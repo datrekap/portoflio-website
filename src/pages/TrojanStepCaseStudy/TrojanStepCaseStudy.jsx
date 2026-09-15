@@ -193,7 +193,7 @@ export default function TrojanStepCaseStudy() {
 
               <Appear asChild>
                 <figure className="cs-media ts-fill-media ts-overview-media">
-                  <CaseStudyVolumeVideo
+                  <CaseStudyInlineVideo
                     id="overview-1"
                     src={`${TROJAN_CS}/overview-1.mp4`}
                     eager
@@ -220,7 +220,7 @@ export default function TrojanStepCaseStudy() {
                   found its way into my life. From joining dance organizations
                   to founding one myself, I&apos;ve continually looked for ways
                   to stay connected to movement. Dance has become one of the
-                  ways I naturally express, explore, and understand myself
+                  ways I naturally express, explore, and understand myself.
                 </p>
               </Appear>
               <Appear asChild>
@@ -493,14 +493,19 @@ export default function TrojanStepCaseStudy() {
                     delay={index * APPEAR_STAGGER}
                   >
                     <article className="ts-feature-card" tabIndex={0}>
-                      <div className="ts-feature-card__frame">
-                        <CaseStudyInlineVideo
-                          id={`feature-${index + 1}`}
-                          src={feature.src}
-                          aria-label={feature.text}
-                        />
+                      <div className="ts-feature-card__shell">
+                        <div className="ts-feature-card__frame">
+                          <CaseStudyInlineVideo
+                            id={`feature-${index + 1}`}
+                            src={feature.src}
+                            aria-label={feature.text}
+                          />
+                        </div>
+                        <div className="ts-feature-card__caption">
+                          <p>{feature.text}</p>
+                        </div>
                       </div>
-                      <div className="ts-feature-card__caption">
+                      <div className="ts-feature-card__sizer" aria-hidden="true">
                         <p>{feature.text}</p>
                       </div>
                     </article>

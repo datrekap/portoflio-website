@@ -57,7 +57,7 @@ export const PW_SOLUTION_BLOCKS = [
   {
     title: "INSTANTLY SEE WHAT MATTERS",
     titleClass: "cs-heading-display",
-    body: "The action system integrates seamlessly across the platform, letting users attach flags, notes, or tasks to any field without cluttering the interface. Color-coded icons keep priorities and responsibilities clear at a glance, even with multiple actions living on the same page.",
+    body: "I designed an action system that integrated seamlessly across the platform, letting users attach flags, notes, or tasks to any field without cluttering the interface. Color-coded icons kept priorities and responsibilities clear at a glance, even with multiple actions living on the same page.",
     type: "video",
     framed: true,
     src: `${PW_CS}/universal-integration.mp4`,

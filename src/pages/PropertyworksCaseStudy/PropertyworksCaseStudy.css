@@ -208,6 +208,14 @@
   margin: 1.5rem 0 0;
 }
 
+#pw-research {
+  padding-bottom: 0;
+}
+
+.pw-research-block .pw-flow-media {
+  margin-top: 5rem;
+}
+
 .pw-flow-media img {
   display: block;
   width: 100%;

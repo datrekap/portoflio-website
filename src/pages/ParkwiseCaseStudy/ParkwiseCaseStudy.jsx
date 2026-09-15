@@ -120,9 +120,8 @@ export default function ParkwiseCaseStudy() {
               <Appear asChild>
                 <div className="cs-intro-row">
                   <p className="cs-intro-copy">
-                    Simplifying the campus parking experience through a
-                    community-driven app that replaces the stressful scramble
-                    for a spot with real-time, student-led availability data.
+                    Reimagining the campus parking experience with a student-led
+                    app for finding available spots in real time.
                   </p>
                   <CaseStudyButton
                     href={PKW_PROMO_URL}

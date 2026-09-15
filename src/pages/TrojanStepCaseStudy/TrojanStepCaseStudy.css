@@ -397,22 +397,28 @@
 }
 
 .ts-feature-card {
-  display: grid;
-  grid-template-rows: auto 0fr;
-  border: 1px solid #333;
-  background: #f3f3f3;
+  position: relative;
   overflow: hidden;
-  transition: grid-template-rows 0.35s ease;
+  background: transparent;
 }
 
 .ts-feature-card:hover,
 .ts-feature-card:focus-within {
-  grid-template-rows: auto 1fr;
+  z-index: 2;
+}
+
+.ts-feature-card__shell {
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+  border: 1px solid #333;
+  background: #f3f3f3;
 }
 
 .ts-feature-card__frame {
   overflow: hidden;
   aspect-ratio: 224 / 189;
+  background: #111;
 }
 
 .ts-feature-card__frame video {
@@ -423,11 +429,12 @@
   background: #111;
 }
 
-.ts-feature-card__caption {
-  min-height: 0;
-  overflow: hidden;
+.ts-feature-card__sizer {
+  visibility: hidden;
+  pointer-events: none;
 }
 
+.ts-feature-card__sizer p,
 .ts-feature-card__caption p {
   margin: 0;
   padding: 1.5rem 1rem;
@@ -436,6 +443,30 @@
   font-weight: 300;
   line-height: 1.4;
   color: #333;
+}
+
+.ts-feature-card__caption {
+  position: absolute;
+  left: -1px;
+  right: -1px;
+  top: 100%;
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  background: #f3f3f3;
+  border: 1px solid #333;
+  border-top: none;
+  transition: grid-template-rows 0.35s ease;
+}
+
+.ts-feature-card:hover .ts-feature-card__caption,
+.ts-feature-card:focus-within .ts-feature-card__caption {
+  grid-template-rows: 1fr;
+}
+
+.ts-feature-card__caption p {
+  min-height: 0;
+  overflow: hidden;
   transform: translateY(0.35rem);
   opacity: 0;
   transition:
@@ -460,7 +491,7 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.25rem;
-  margin: 0 0 2.5rem;
+  margin: 2.5rem 0 3.5rem;
   align-items: start;
 }
 
@@ -475,9 +506,10 @@
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 9 / 16;
-  object-fit: contain;
-  object-position: center;
+  aspect-ratio: 1080 / 1298;
+  object-fit: cover;
+  object-position: 50% 44.37%;
+  overflow: hidden;
   background: #111;
 }
 
@@ -826,7 +858,8 @@
   background: #111;
 }
 
-.ts-overview-media .cs-volume-video video {
+.ts-overview-media .cs-volume-video video,
+.ts-overview-media .cs-inline-video {
   aspect-ratio: 942 / 530;
 }
 
@@ -856,7 +889,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .ts-problem-hover__art,
-  .ts-feature-card,
+  .ts-feature-card__caption,
   .ts-feature-card__caption p {
     transition: none;
   }
@@ -883,9 +916,9 @@
     transform: translate(0.35rem, -0.35rem) scale(1);
   }
 
-  .ts-feature-card:hover,
-  .ts-feature-card:focus-within {
-    grid-template-rows: auto 1fr;
+  .ts-feature-card:hover .ts-feature-card__caption,
+  .ts-feature-card:focus-within .ts-feature-card__caption {
+    grid-template-rows: 1fr;
   }
 }
 
