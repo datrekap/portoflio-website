@@ -1,4 +1,5 @@
 import React, { forwardRef, useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Link, useNavigate } from "react-router-dom";
 import { useWorkVideoTransition } from "../../context/WorkVideoTransitionContext";
 import { prefetchCaseStudy } from "../../routes/caseStudyRoutes";
@@ -10,6 +11,8 @@ import "./WorkProjectCard.css";
 
 const GRID_MAX_OFFSET = 12;
 const GRID_LERP = 0.14;
+const FOLLOW_OUT_MS = 400;
+const COMING_SOON_HOVER_SRC = "/work/hover-effect-work.svg";
 
 const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
   const navigate = useNavigate();
@@ -20,6 +23,7 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
     getIsTransitioning,
   } = useWorkVideoTransition();
   const CardTag = project.route ? Link : "article";
+  const showComingSoonHover = !project.route;
   const { imageSrc, hoverVideo } = resolveWorkProjectMedia(project.image);
 
   const cardRef = useRef(null);
@@ -31,16 +35,94 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
   const targetOffsetRef = useRef({ x: 0, y: 0 });
   const currentOffsetRef = useRef({ x: 0, y: 0 });
   const isHoveredRef = useRef(false);
+  const followRef = useRef(null);
+  const followPhaseRef = useRef("idle");
+  const hideFollowTimerRef = useRef(0);
+  const [followPhase, setFollowPhase] = useState("idle");
 
   const [isHovered, setIsHovered] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const [videoArmed, setVideoArmed] = useState(false);
+  const [isMobile, setIsMobile] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(max-width: 767px)").matches,
+  );
 
   const canHover =
     typeof window !== "undefined" &&
     window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
   const showVideo = Boolean(hoverVideo) && !videoFailed;
+  const autoplayVideo = showVideo && isMobile;
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 767px)");
+    const sync = () => setIsMobile(media.matches);
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
+    if (!autoplayVideo) return undefined;
+    setVideoArmed(true);
+    return undefined;
+  }, [autoplayVideo]);
+
+  useEffect(() => {
+    if (!autoplayVideo) return undefined;
+    const media = mediaRef.current;
+    if (!media) return undefined;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const video = videoRef.current;
+        if (!video) return;
+        if (entry.isIntersecting) {
+          video.play().catch(() => setVideoFailed(true));
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.2, rootMargin: "80px 0px" },
+    );
+
+    observer.observe(media);
+    return () => observer.disconnect();
+  }, [autoplayVideo, videoArmed]);
+
+  const moveFollow = useCallback((clientX, clientY) => {
+    if (!followRef.current) return;
+    followRef.current.style.transform = `translate3d(${clientX}px, ${clientY}px, 0)`;
+  }, []);
+
+  const showFollow = useCallback(
+    (clientX, clientY) => {
+      if (!showComingSoonHover) return;
+      if (hideFollowTimerRef.current) {
+        window.clearTimeout(hideFollowTimerRef.current);
+        hideFollowTimerRef.current = 0;
+      }
+      moveFollow(clientX, clientY);
+      followPhaseRef.current = "in";
+      setFollowPhase("in");
+    },
+    [moveFollow, showComingSoonHover],
+  );
+
+  const hideFollow = useCallback(() => {
+    if (!showComingSoonHover) return;
+    followPhaseRef.current = "out";
+    setFollowPhase("out");
+    if (hideFollowTimerRef.current) {
+      window.clearTimeout(hideFollowTimerRef.current);
+    }
+    hideFollowTimerRef.current = window.setTimeout(() => {
+      followPhaseRef.current = "idle";
+      setFollowPhase("idle");
+    }, FOLLOW_OUT_MS);
+  }, [showComingSoonHover]);
 
   const stopGridAnimation = useCallback(() => {
     if (rafRef.current !== null) {
@@ -80,6 +162,10 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
 
   const handleMouseMove = useCallback(
     (event) => {
+      if (showComingSoonHover && canHover && followPhaseRef.current === "in") {
+        moveFollow(event.clientX, event.clientY);
+      }
+
       if (!canHover || !mediaRef.current) return;
 
       const rect = mediaRef.current.getBoundingClientRect();
@@ -92,29 +178,37 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
       };
       startGridAnimation();
     },
-    [canHover, startGridAnimation],
+    [canHover, moveFollow, showComingSoonHover, startGridAnimation],
   );
 
-  const handleMouseEnter = useCallback(() => {
-    if (!canHover) return;
+  const handleMouseEnter = useCallback(
+    (event) => {
+      if (showComingSoonHover && canHover) {
+        showFollow(event.clientX, event.clientY);
+      }
 
-    isHoveredRef.current = true;
-    setIsHovered(true);
-    if (showVideo) setVideoArmed(true);
+      if (!canHover) return;
 
-    // Warm the case study chunk now so the click does not pay for it mid-transition.
-    prefetchCaseStudy(project.route);
+      isHoveredRef.current = true;
+      setIsHovered(true);
+      if (showVideo) setVideoArmed(true);
 
-    const video = videoRef.current;
-    if (showVideo && video) {
-      video.currentTime = 0;
-      video.play().catch(() => {
-        setVideoFailed(true);
-      });
-    }
-  }, [canHover, showVideo, project.route]);
+      if (project.route) prefetchCaseStudy(project.route);
+
+      const video = videoRef.current;
+      if (showVideo && video) {
+        video.currentTime = 0;
+        video.play().catch(() => {
+          setVideoFailed(true);
+        });
+      }
+    },
+    [canHover, project.route, showComingSoonHover, showFollow, showVideo],
+  );
 
   const handleMouseLeave = useCallback(() => {
+    if (showComingSoonHover && canHover) hideFollow();
+
     if (!canHover) return;
 
     isHoveredRef.current = false;
@@ -132,7 +226,20 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
       video.pause();
       video.currentTime = 0;
     }, 450);
-  }, [canHover, startGridAnimation]);
+  }, [canHover, hideFollow, showComingSoonHover, startGridAnimation]);
+
+  const handleComingSoonClick = useCallback(
+    (event) => {
+      if (!showComingSoonHover || canHover) return;
+      event.preventDefault();
+      if (followPhaseRef.current === "in") {
+        hideFollow();
+        return;
+      }
+      showFollow(event.clientX, event.clientY);
+    },
+    [canHover, hideFollow, showComingSoonHover, showFollow],
+  );
 
   const handleVideoError = useCallback(() => {
     setVideoFailed(true);
@@ -214,6 +321,28 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
 
   useEffect(() => stopGridAnimation, [stopGridAnimation]);
 
+  useEffect(
+    () => () => {
+      if (hideFollowTimerRef.current) {
+        window.clearTimeout(hideFollowTimerRef.current);
+      }
+    },
+    [],
+  );
+
+  useEffect(() => {
+    if (!showComingSoonHover || canHover) return undefined;
+
+    const onPointerDown = (event) => {
+      if (followPhaseRef.current !== "in") return;
+      if (cardRef.current?.contains(event.target)) return;
+      hideFollow();
+    };
+
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, [canHover, hideFollow, showComingSoonHover]);
+
   const setCardRef = useCallback(
     (node) => {
       cardRef.current = node;
@@ -226,10 +355,15 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
   return (
     <CardTag
       ref={setCardRef}
-      className="work-project-card work-bento-item"
+      className={`work-project-card work-bento-item${
+        showComingSoonHover ? " is-coming-soon" : ""
+      }`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      {...(project.route ? { to: project.route, onClick: handleNavigateClick } : {})}
+      onMouseMove={handleMouseMove}
+      {...(project.route
+        ? { to: project.route, onClick: handleNavigateClick }
+        : { onClick: handleComingSoonClick })}
       data-project-id={project.id}
     >
       <div
@@ -240,23 +374,25 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
       <div
         ref={mediaRef}
         className={`work-project-card__media${isHovered ? " is-hovered" : ""}${
-          isHovered && showVideo ? " is-video-active" : ""
+          (isHovered && showVideo) || autoplayVideo ? " is-video-active" : ""
         }`}
-        onMouseMove={handleMouseMove}
       >
         <div ref={visualRef} className="work-project-card__visual">
-          <img
-            src={imageSrc}
-            alt=""
-            className="work-project-card__image"
-            loading="lazy"
-            decoding="async"
-          />
-          {canHover && showVideo && videoArmed ? (
+          {!(autoplayVideo && !videoFailed) ? (
+            <img
+              src={imageSrc}
+              alt=""
+              className="work-project-card__image"
+              loading="lazy"
+              decoding="async"
+            />
+          ) : null}
+          {(canHover && showVideo && videoArmed) || autoplayVideo ? (
             <video
               ref={videoRef}
               src={hoverVideo}
               className="work-project-card__video"
+              autoPlay={autoplayVideo}
               muted
               playsInline
               loop
@@ -264,7 +400,13 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
               aria-hidden="true"
               onError={handleVideoError}
               onCanPlay={(event) => {
-                if (!isHoveredRef.current) return;
+                if (autoplayVideo) {
+                  event.currentTarget.play().catch(() => {
+                    setVideoFailed(true);
+                  });
+                  return;
+                }
+                if (canHover && !isHoveredRef.current) return;
                 event.currentTarget.play().catch(() => {
                   setVideoFailed(true);
                 });
@@ -288,6 +430,24 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
         </div>
         <p className="work-project-card__summary">{project.summary}</p>
       </div>
+      {showComingSoonHover
+        ? createPortal(
+            <div
+              ref={followRef}
+              className={`work-card-cursor-follow is-${followPhase}`}
+              aria-hidden="true"
+            >
+              <div className="work-card-cursor-follow-anchor">
+                <img
+                  className="work-card-cursor-follow-art"
+                  src={COMING_SOON_HOVER_SRC}
+                  alt=""
+                />
+              </div>
+            </div>,
+            document.body,
+          )
+        : null}
     </CardTag>
   );
 });

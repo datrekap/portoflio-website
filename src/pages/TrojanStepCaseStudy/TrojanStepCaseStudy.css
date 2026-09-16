@@ -329,39 +329,105 @@
 
 .ts-core-flow {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(12rem, 0.6fr);
-  gap: clamp(1.5rem, 6vw, 6rem);
+  grid-template-columns: minmax(24rem, 34rem) minmax(0, 1fr);
+  gap: clamp(0.85rem, 2.4vw, 1.75rem);
   align-items: center;
   margin: 1.5rem 0 3rem;
 }
 
 .ts-core-flow .cs-media {
   min-width: 0;
+  width: 100%;
+}
+
+.ts-core-flow-media {
+  width: 100%;
+  max-width: 34rem;
+}
+
+.ts-core-flow-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 548 / 605;
+  overflow: hidden;
+  background: #111;
+}
+
+.ts-core-flow-layer {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  background: #111;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease;
+}
+
+.ts-core-flow-layer.is-active {
+  opacity: 1;
+}
+
+@property --ts-flow-weight {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 300;
 }
 
 .ts-flow-steps {
   list-style: none;
-  margin: 0;
+  margin: 0 0 0 auto;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 1.75rem;
+  align-items: stretch;
+  gap: 1.35rem;
+  width: max-content;
+  max-width: 100%;
 }
 
 .ts-flow-step {
+  --ts-flow-weight: 300;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 0.5rem;
+  width: 100%;
+  margin: 0;
   padding: 0;
   border: 0;
   background: none;
   font-family: "Montserrat", sans-serif;
   font-size: var(--case-study-body-size);
-  font-weight: 300;
+  font-weight: var(--ts-flow-weight);
+  font-variation-settings: "wght" var(--ts-flow-weight);
   color: #333;
   cursor: pointer;
   text-align: left;
-  transition: font-weight 0.2s ease, color 0.2s ease;
+  white-space: nowrap;
+  transition:
+    --ts-flow-weight 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.35s ease;
+}
+
+.ts-flow-step-label {
+  position: relative;
+  display: inline-block;
+}
+
+.ts-flow-step-label::after {
+  content: attr(data-label);
+  display: block;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+  font-weight: 500;
+  font-variation-settings: "wght" 500;
+  white-space: nowrap;
 }
 
 .ts-flow-step::before {
@@ -374,7 +440,7 @@
 }
 
 .ts-flow-step.is-active {
-  font-weight: 400;
+  --ts-flow-weight: 400;
   color: var(--cs-accent);
 }
 
@@ -384,7 +450,7 @@
 
 @media (hover: hover) and (pointer: fine) {
   .ts-flow-step:hover:not(.is-active) {
-    font-weight: 500;
+    --ts-flow-weight: 500;
   }
 }
 
@@ -877,8 +943,11 @@
   aspect-ratio: 946 / 532;
 }
 
-.ts-core-flow-media video {
-  aspect-ratio: 548 / 605;
+.ts-core-flow-media video,
+.ts-core-flow-media .cs-inline-video {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
   object-fit: cover;
   background: #111;
 }
@@ -890,7 +959,8 @@
 @media (prefers-reduced-motion: reduce) {
   .ts-problem-hover__art,
   .ts-feature-card__caption,
-  .ts-feature-card__caption p {
+  .ts-feature-card__caption p,
+  .ts-flow-step {
     transition: none;
   }
 
@@ -956,6 +1026,17 @@
 
   .ts-core-flow {
     grid-template-columns: 1fr;
+  }
+
+  .ts-core-flow-media {
+    width: min(34rem, 100%);
+    max-width: 34rem;
+    margin-inline: auto;
+  }
+
+  .ts-flow-steps {
+    margin-left: auto;
+    margin-right: 0;
   }
 
   .ts-highlights-grid {

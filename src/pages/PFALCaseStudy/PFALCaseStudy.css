@@ -972,6 +972,14 @@
 
   .pfal-case-nav {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+  }
+
+  .pfal-case-nav__link--previous {
+    align-self: flex-start;
+  }
+
+  .pfal-case-nav__link:not(.pfal-case-nav__link--previous) {
+    align-self: flex-end;
   }
 }

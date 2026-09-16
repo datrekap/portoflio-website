@@ -358,7 +358,15 @@
 
   .cs-case-nav {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+  }
+
+  .cs-case-nav__link--previous {
+    align-self: flex-start;
+  }
+
+  .cs-case-nav__link:not(.cs-case-nav__link--previous) {
+    align-self: flex-end;
   }
 
   .cs-hero-head {

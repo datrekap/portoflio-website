@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLenisScroll } from "../../hooks/useLenisScroll";
 import useInfiniteDragLoop from "../../hooks/useInfiniteDragLoop";
@@ -98,6 +98,76 @@ function RatingRow({ statement, filled }) {
           <small>Agree</small>
         </p>
       </div>
+    </div>
+  );
+}
+
+function CoreFlowPlayer({ src, label }) {
+  const [front, setFront] = useState(0);
+  const [srcs, setSrcs] = useState([src, src]);
+  const layerARef = useRef(null);
+  const layerBRef = useRef(null);
+  const layerRefs = [layerARef, layerBRef];
+
+  useEffect(() => {
+    if (srcs[front] === src) return;
+    const back = 1 - front;
+    setSrcs((prev) => {
+      if (prev[back] === src) return prev;
+      const next = [...prev];
+      next[back] = src;
+      return next;
+    });
+  }, [src, front, srcs]);
+
+  useEffect(() => {
+    const back = 1 - front;
+    if (srcs[front] === src || srcs[back] !== src) return undefined;
+
+    const video = layerRefs[back].current;
+    if (!video) return undefined;
+
+    let done = false;
+    const activate = () => {
+      if (done) return;
+      done = true;
+      video.play().catch(() => {});
+      layerRefs[front].current?.pause();
+      setFront(back);
+    };
+
+    if (video.readyState >= 3) {
+      activate();
+      return undefined;
+    }
+
+    video.addEventListener("canplay", activate);
+    return () => video.removeEventListener("canplay", activate);
+  }, [src, srcs, front]);
+
+  useEffect(() => {
+    const video = layerRefs[front].current;
+    if (!video) return undefined;
+    video.play().catch(() => {});
+    return undefined;
+  }, [front]);
+
+  return (
+    <div className="ts-core-flow-stage">
+      {srcs.map((layerSrc, index) => (
+        <video
+          key={index === 0 ? "core-flow-a" : "core-flow-b"}
+          ref={layerRefs[index]}
+          className={`ts-core-flow-layer${index === front ? " is-active" : ""}`}
+          src={layerSrc}
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-hidden={index !== front}
+          aria-label={index === front ? label : undefined}
+        />
+      ))}
     </div>
   );
 }
@@ -454,11 +524,9 @@ export default function TrojanStepCaseStudy() {
               </Appear>
               <div className="ts-core-flow">
                 <figure className="cs-media ts-fill-media ts-core-flow-media">
-                  <CaseStudyInlineVideo
-                    key={activeCoreFlow.src}
-                    id={`core-flow-${activeFlow}`}
+                  <CoreFlowPlayer
                     src={activeCoreFlow.src}
-                    aria-label={activeCoreFlow.label}
+                    label={activeCoreFlow.label}
                   />
                   <figcaption className="cs-caption ts-caption-left">
                     {activeCoreFlow.caption}
@@ -474,7 +542,9 @@ export default function TrojanStepCaseStudy() {
                         }`}
                         onClick={() => setActiveFlow(index)}
                       >
-                        {step.label}
+                        <span className="ts-flow-step-label" data-label={step.label}>
+                          {step.label}
+                        </span>
                       </button>
                     </li>
                   ))}

@@ -7,15 +7,46 @@ export const OPENER_LINES = [
   "THERE YOU ARE.",
   "PULLED UP. OKAY.",
   "WELCOME TO THE SLOP{E}.",
-  "TITLE(S) UNDER THE NAME.",
   "OH. IT'S YOU.",
   "LOOK WHO SHOWED.",
-  "NAME'S ON THE LEFT.",
   "HEY. COME IN.",
   "YOU LANDED. NICE.",
   "I SAW YOU.",
   "STILL STANDING. HEY.",
   "GREETINGS & SALUTATIONS!",
+];
+
+/** First pokes after the opener: getting used to the figure. */
+export const WARMUP_ACCLIMATE_LINES = [
+  "NAME'S ON THE LEFT.",
+  "THAT'S HOW THIS WORKS.",
+  "I TALK WHEN POKED.",
+  "EASY. I DON'T BITE.",
+  "OKAY. I'M LISTENING.",
+  "GETTING USED TO YOU.",
+  "CLICK & I ANSWER.",
+  "WE JUST MET. HI.",
+  "LOOK AROUND. I'LL WAIT.",
+  "NOT SHY. JUST WALKING.",
+  "YOU CAN POKE AGAIN.",
+  "I WALK & YOU LOOK.",
+  "STILL HERE. WE'RE HERE.",
+  "THIS IS THE INTRO.",
+];
+
+/** First pokes after the opener: point at the rest of the site. */
+export const WARMUP_GUIDE_LINES = [
+  "WORK'S BELOW. SCROLL.",
+  "TITLE(S) UNDER THE NAME.",
+  "CASE STUDIES WAIT BELOW.",
+  "PLAY'S THE OTHER PAGE.",
+  "ABOUT'S UP IN NAV.",
+  "TRY THE TITLE(S).",
+  "NAV HAS THE MAP.",
+  "SCROLL FOR THE WORK.",
+  "WORK. PLAY. ABOUT.",
+  "RESUME'S IN THE NAV.",
+  "POKE AGAIN. OR SCROLL.",
 ];
 
 export const WALKER_LINES = [

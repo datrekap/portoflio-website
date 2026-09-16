@@ -365,11 +365,12 @@
   }
 
   .footer-faller-slot {
-    width: clamp(10rem, 42vw, 13.5rem);
-    left: auto;
-    right: -1.25rem;
+    left: 0;
+    right: 0;
     top: auto;
-    bottom: 3.25rem;
+    bottom: 2.75rem;
+    margin-inline: auto;
+    width: clamp(13.75rem, 58vw, 17.5rem);
     transform: none;
   }
 

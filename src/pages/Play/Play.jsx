@@ -449,6 +449,7 @@ const Play = () => {
             <span className="play-hero-kicker-amp">&amp;</span> letting the
             world be inspired by me
           </p>
+          <div id="play-hero-hi-slot" className="play-hero-hi-slot" />
         </div>
 
         <div className="play-hero-figure">

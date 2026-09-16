@@ -102,7 +102,7 @@ const Nav = () => {
     lenis?.start();
     const menu = mobileMenuRef.current;
     if (menu) {
-      gsap.set(menu, { visibility: "hidden", opacity: 0, y: "-100%" });
+      gsap.set(menu, { visibility: "hidden", opacity: 0, y: "-8%" });
     }
 
     const reveal = () => {
@@ -141,26 +141,17 @@ const Nav = () => {
   useEffect(() => {
     const menu = mobileMenuRef.current;
     if (menu) {
-      gsap.set(menu, { visibility: "hidden", opacity: 0, y: "-100%" });
+      gsap.set(menu, { visibility: "hidden", opacity: 0, y: "-8%" });
     }
   }, []);
 
-  // Effect to sync hamburger lines with menu state
   useEffect(() => {
     const hamburger = hamburgerRef.current;
-    if (!hamburger) return;
-
+    if (!hamburger) return undefined;
     const lines = hamburger.querySelectorAll(".hamburger-line");
-    if (lines.length >= 2) {
-      if (isMobileMenuOpen) {
-        gsap.set(lines[0], { rotation: 45, y: 3 });
-        gsap.set(lines[1], { rotation: -45, y: -3 });
-      } else {
-        gsap.set(lines[0], { rotation: 0, y: 0 });
-        gsap.set(lines[1], { rotation: 0, y: 0 });
-      }
-    }
-  }, [isMobileMenuOpen]);
+    if (lines.length) gsap.set(lines, { clearProps: "transform,rotation,y" });
+    return undefined;
+  }, []);
 
   useEffect(() => {
     const onResize = () => setWindowWidth(window.innerWidth);
@@ -175,7 +166,7 @@ const Nav = () => {
     document.body.classList.remove("mobile-menu-open");
     const menu = mobileMenuRef.current;
     if (menu) {
-      gsap.set(menu, { visibility: "hidden", opacity: 0, y: "-100%" });
+      gsap.set(menu, { visibility: "hidden", opacity: 0, y: "-8%" });
     }
   }, [windowWidth, isMobileMenuOpen, lenis]);
 
@@ -196,12 +187,6 @@ const Nav = () => {
     });
     gsap.set(hamburger, { opacity: 0, scale: 0.8, display: "flex" });
     hamburger.style.pointerEvents = "none";
-
-    const lines = hamburger.querySelectorAll(".hamburger-line");
-    if (lines.length >= 2 && !isMobileMenuOpen) {
-      gsap.set(lines[0], { rotation: 0, y: 0 });
-      gsap.set(lines[1], { rotation: 0, y: 0 });
-    }
   }, [isMobileMenuOpen, location.pathname, lenis, windowWidth]);
 
   const handleResumeClick = (e) => {
@@ -236,56 +221,29 @@ const Nav = () => {
         gsap.set(hamburger, { opacity: 1, scale: 1, zIndex: 1000 });
         hamburger.style.pointerEvents = "auto";
       }
-
-      const lines = hamburger.querySelectorAll(".hamburger-line");
-      if (newState) {
-        gsap.to(lines[0], {
-          rotation: 45,
-          y: 3,
-          duration: 0.3,
-          ease: "power3.easeOut",
-        });
-        gsap.to(lines[1], {
-          rotation: -45,
-          y: -3,
-          duration: 0.3,
-          ease: "power3.easeOut",
-        });
-      } else {
-        gsap.to(lines[0], {
-          rotation: 0,
-          y: 0,
-          duration: 0.3,
-          ease: "power3.easeOut",
-        });
-        gsap.to(lines[1], {
-          rotation: 0,
-          y: 0,
-          duration: 0.3,
-          ease: "power3.easeOut",
-        });
-      }
     }
 
     if (menu) {
       if (newState) {
-        gsap.set(menu, { visibility: "visible", opacity: 1 });
+        gsap.set(menu, { visibility: "visible" });
         gsap.fromTo(
           menu,
-          { y: "-100%" },
+          { y: "-8%", opacity: 0 },
           {
             y: "0%",
-            duration: 0.9,
-            ease: "power3.easeOut",
+            opacity: 1,
+            duration: 0.78,
+            ease: "power3.out",
           },
         );
       } else {
         gsap.to(menu, {
-          y: "-100%",
-          duration: 0.7,
-          ease: "power3.easeOut",
+          y: "-6%",
+          opacity: 0,
+          duration: 0.52,
+          ease: "power2.inOut",
           onComplete: () => {
-            gsap.set(menu, { visibility: "hidden" });
+            gsap.set(menu, { visibility: "hidden", y: "-8%" });
           },
         });
       }
@@ -348,20 +306,6 @@ const Nav = () => {
     >
       <div className="page-content-shell">
         <div className="nav-bar-row flex items-center py-5 z-[1001] relative min-h-[32px]">
-          {/* Mobile: compact logo on the left, hamburger on the right */}
-          <Link
-            to="/"
-            onClick={handleLogoClick}
-            className="logo-link mobile-only"
-            aria-label="Home"
-          >
-            <img
-              src={isMobileMenuOpen ? LightDKLogo : DarkDKLogo}
-              alt="DK logo"
-              className="logo-image"
-            />
-          </Link>
-
           {/* Desktop: single row with the logo centered among the links */}
           <ul className="pill-list desktop-only" ref={navItemsRef}>
             {renderNavItem(navItems[0], 0)}

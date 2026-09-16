@@ -61,6 +61,14 @@
   font-weight: 400;
 }
 
+.play-hero-hi-slot {
+  display: none;
+}
+
+.play-hero-figure-hit {
+  display: none;
+}
+
 .play-hero-title {
   margin: 0;
   overflow: hidden;
@@ -791,6 +799,10 @@
     font-size: clamp(2rem, 11vw, 3.25rem);
   }
 
+  .play-hero-stage {
+    cursor: default;
+  }
+
   .play-hero-kicker {
     max-width: 22rem;
     margin-left: auto;
@@ -799,9 +811,58 @@
     font-size: clamp(0.95rem, 4.2vw, 1.15rem);
   }
 
+  .play-hero-hi-slot {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    max-width: 22rem;
+    margin: 0.45rem 0 0 auto;
+  }
+
+  .play-hero-hi-slot .play-hero-hi {
+    position: static;
+    top: auto;
+    left: auto;
+    align-items: flex-end;
+    text-align: right;
+  }
+
   .play-hero-runner-slot {
     width: clamp(10.5rem, 44vw, 13.75rem);
     left: var(--page-gutter-x);
+    pointer-events: auto;
+  }
+
+  .play-hero-runner {
+    pointer-events: auto;
+  }
+
+  .play-hero-figure-hit {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    appearance: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .play-hero-start {
+    left: var(--page-gutter-x);
+    translate: 0 -50%;
+  }
+
+  .play-hero-start.is-mobile-hint .case-study-button {
+    min-width: 0;
+    padding: 0.55rem 0.7rem;
+    font-size: 0.6875rem;
+    white-space: nowrap;
+    cursor: default;
+    pointer-events: none;
   }
 
   .play-hero-caption {

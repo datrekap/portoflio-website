@@ -24,6 +24,8 @@ import {
   SLOT_OPENERS,
   SLOT_POINTERS,
   WALKER_LINES,
+  WARMUP_ACCLIMATE_LINES,
+  WARMUP_GUIDE_LINES,
 } from "../../data/homeHeroLines";
 
 const RIVE_SRC = "/play/dk-character.riv";
@@ -99,11 +101,18 @@ function makeSlotBatch(recent) {
   return batch;
 }
 
+function pickWarmupDeck() {
+  const acclimate = shuffle(WARMUP_ACCLIMATE_LINES);
+  const guides = shuffle(WARMUP_GUIDE_LINES);
+  return shuffle([acclimate[0], acclimate[1], guides[0]]);
+}
+
 function createSessionDecks() {
-  // One opener on load; every poke after that draws from walker lines only.
+  // One opener on load, then three warmup pokes, then walker lines.
   const openers = shuffle(OPENER_LINES);
   return {
     intro: openers.slice(0, 1),
+    warmup: pickWarmupDeck(),
     poke: shuffle(WALKER_LINES),
     design: shuffle(DESIGN_ENG_LINES),
     research: shuffle(RESEARCHER_LINES),
@@ -233,6 +242,9 @@ const HomeHeroWalk = forwardRef((props, ref) => {
     const recent = recentRef.current;
     if (decks.intro.length > 0) {
       return decks.intro.shift();
+    }
+    if (decks.warmup.length > 0) {
+      return decks.warmup.shift();
     }
     if (decks.poke.length === 0) {
       decks.pokeRefills += 1;

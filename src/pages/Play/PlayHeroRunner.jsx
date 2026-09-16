@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   Alignment,
   Fit,
@@ -335,6 +336,12 @@ function PlayHeroRunner({ paused = false }) {
     canH: 72,
   });
   const [status, setStatus] = useState("ready");
+  const [isMobile, setIsMobile] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(max-width: 767px)").matches,
+  );
+  const [hiHost, setHiHost] = useState(null);
   const [rivePose, setRivePose] = useState(RIVE_POSE_IDLE);
   const rivePoseRef = useRef(RIVE_POSE_IDLE);
   const retryPoseTimerRef = useRef(0);
@@ -345,6 +352,20 @@ function PlayHeroRunner({ paused = false }) {
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
+
+  useLayoutEffect(() => {
+    const media = window.matchMedia("(max-width: 767px)");
+    const sync = () => {
+      const mobile = media.matches;
+      setIsMobile(mobile);
+      setHiHost(
+        mobile ? document.getElementById("play-hero-hi-slot") : null,
+      );
+    };
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
   const captionRef = useRef(null);
   const captionTweenRef = useRef(null);
   const captionTextRef = useRef(null);
@@ -1186,9 +1207,45 @@ function PlayHeroRunner({ paused = false }) {
 
   const onPointerDown = (event) => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
+    if (window.matchMedia("(max-width: 767px)").matches) return;
     jumpHeldRef.current = true;
     jump();
   };
+
+  const onFigurePointerDown = (event) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    event.preventDefault();
+    event.stopPropagation();
+    jumpHeldRef.current = true;
+    jump();
+  };
+
+  const hiBlock = (
+      <div
+        className={`play-hero-hi${IS_DEV ? " is-resettable" : ""}`}
+        title={IS_DEV ? "Click to reset high score" : undefined}
+        onPointerDown={
+          IS_DEV
+            ? (event) => {
+                event.stopPropagation();
+              }
+            : undefined
+        }
+        onClick={IS_DEV ? resetHi : undefined}
+      >
+        <span className="play-hero-hi-label">HIGH</span>
+        <span ref={hiRefEl} className="play-hero-hi-value">
+          00000
+        </span>
+      </div>
+  );
+
+  const startLabel =
+    status === "dead"
+      ? "Try again"
+      : isMobile
+        ? "Tap the Figure to Start"
+        : "Press Space or Tap to Start";
 
   return (
     <div
@@ -1197,10 +1254,10 @@ function PlayHeroRunner({ paused = false }) {
       tabIndex={0}
       aria-label={
         status === "dead"
-          ? "Game over. Press Space or tap to try again."
+          ? "Game over. Press Space or tap the figure to try again."
           : status === "running"
-            ? "Endless runner. Press Space or tap to jump."
-            : "Endless runner. Press Space or tap to start."
+            ? "Endless runner. Press Space or tap the figure to jump."
+            : "Endless runner. Press Space or tap the figure to start."
       }
       onPointerDown={onPointerDown}
     >
@@ -1221,6 +1278,18 @@ function PlayHeroRunner({ paused = false }) {
           paused={paused || pageHidden || !inView}
           reducedMotion={reducedMotion}
         />
+        <button
+          type="button"
+          className="play-hero-figure-hit"
+          aria-label={
+            status === "dead"
+              ? "Tap the figure to try again"
+              : status === "running"
+                ? "Tap the figure to jump"
+                : "Tap the figure to start"
+          }
+          onPointerDown={onFigurePointerDown}
+        />
         <span className="play-hero-caption-anchor">
           <span
             ref={captionRef}
@@ -1233,33 +1302,21 @@ function PlayHeroRunner({ paused = false }) {
         </span>
       </div>
       </div>
-      <div
-        className={`play-hero-hi${IS_DEV ? " is-resettable" : ""}`}
-        title={IS_DEV ? "Click to reset high score" : undefined}
-        onPointerDown={
-          IS_DEV
-            ? (event) => {
-                event.stopPropagation();
-              }
-            : undefined
-        }
-        onClick={IS_DEV ? resetHi : undefined}
-      >
-        <span className="play-hero-hi-label">HIGH</span>
-        <span ref={hiRefEl} className="play-hero-hi-value">
-          00000
-        </span>
-      </div>
+      {hiHost ? createPortal(hiBlock, hiHost) : hiBlock}
       <p ref={scoreWrapRef} className="play-hero-score" aria-hidden="true">
         <span ref={scoreRef}>00000</span>
       </p>
       {status !== "running" ? (
         <div
-          className="play-hero-start"
+          className={`play-hero-start${isMobile ? " is-mobile-hint" : ""}`}
           onPointerDown={(event) => event.stopPropagation()}
         >
-          <CaseStudyButton type="button" onClick={() => jump()}>
-            {status === "dead" ? "Try again" : "Press Space or Tap to Start"}
+          <CaseStudyButton
+            type="button"
+            onClick={isMobile ? undefined : () => jump()}
+            tabIndex={isMobile ? -1 : undefined}
+          >
+            {startLabel}
           </CaseStudyButton>
         </div>
       ) : null}

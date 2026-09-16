@@ -1,6 +1,7 @@
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { gsap } from "gsap";
+import { useLenis } from "@studio-freight/react-lenis";
 import Appear from "../../components/Appear/Appear";
 import Footer from "../../components/Footer/Footer";
 import WorkProjectCard from "../../components/Work/WorkProjectCard";
@@ -56,21 +57,108 @@ function buildGridLines(root) {
   };
 }
 
+function gridLinesKey(lines) {
+  return `${lines.v.length}:${lines.v[lines.v.length - 1] ?? 0}|${lines.h.length}:${lines.h[lines.h.length - 1] ?? 0}`;
+}
+
+function settleGridLines(root) {
+  if (!root) return;
+  const vertical = root.querySelectorAll(".home-grid-line--v");
+  const horizontal = root.querySelectorAll(".home-grid-line--h");
+  gsap.killTweensOf(vertical);
+  gsap.killTweensOf(horizontal);
+  gsap.set(root, { opacity: GRID_REST_OPACITY });
+  if (vertical.length) {
+    gsap.set(vertical, {
+      scaleX: 1,
+      scaleY: 1,
+      backgroundColor: GRID_REST_COLOR,
+    });
+  }
+  if (horizontal.length) {
+    gsap.set(horizontal, {
+      scaleX: 1,
+      scaleY: 1,
+      backgroundColor: GRID_REST_COLOR,
+    });
+  }
+}
+
 function HomeGridOverlay({ overlayRef }) {
   const rootRef = useRef(null);
   const [lines, setLines] = useState({ v: [], h: [] });
+  const initializedRef = useRef(false);
+  const lenis = useLenis();
 
   useLayoutEffect(() => {
     const root = rootRef.current;
     if (!root) return undefined;
 
     overlayRef.current = root;
-    setLines(buildGridLines(root));
+
+    const syncLines = () => {
+      const next = buildGridLines(root);
+      setLines((prev) =>
+        gridLinesKey(prev) === gridLinesKey(next) ? prev : next,
+      );
+    };
+
+    syncLines();
+    const observer = new ResizeObserver(syncLines);
+    observer.observe(root);
 
     return () => {
+      observer.disconnect();
       overlayRef.current = null;
     };
   }, [overlayRef]);
+
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root || (!lines.v.length && !lines.h.length)) return;
+
+    if (!initializedRef.current) {
+      initializedRef.current = true;
+      return;
+    }
+
+    settleGridLines(root);
+  }, [lines]);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return undefined;
+
+    const landing = root.closest(".home-landing");
+    const reduced = prefersReducedMotion();
+
+    const apply = () => {
+      if (reduced || !landing) {
+        root.style.setProperty("--home-grid-parallax-y", "0px");
+        return;
+      }
+      const scrolled = Math.min(
+        Math.max(-landing.getBoundingClientRect().top, 0),
+        landing.offsetHeight,
+      );
+      root.style.setProperty(
+        "--home-grid-parallax-y",
+        `${scrolled * 0.32}px`,
+      );
+    };
+
+    apply();
+
+    if (reduced) return undefined;
+
+    if (lenis) {
+      lenis.on("scroll", apply);
+      return () => lenis.off("scroll", apply);
+    }
+
+    window.addEventListener("scroll", apply, { passive: true });
+    return () => window.removeEventListener("scroll", apply);
+  }, [lenis, lines]);
 
   return (
     <div ref={rootRef} className="home-grid-overlay" aria-hidden="true">
@@ -99,6 +187,7 @@ const Home = () => {
   const heroTitleRef = useRef(null);
   const bioRef = useRef(null);
   const walkerRef = useRef(null);
+  const [bioReady, setBioReady] = useState(false);
 
   useLayoutEffect(() => {
     const landing = landingRef.current;
@@ -112,6 +201,7 @@ const Home = () => {
     if (!titleLetters.length || !bioLines.length) return undefined;
 
     const reduced = prefersReducedMotion();
+    setBioReady(false);
 
     let attempts = 0;
     let frame = 0;
@@ -119,6 +209,7 @@ const Home = () => {
 
     const finish = () => {
       walkerRef.current?.startIdleSpeech?.();
+      setBioReady(true);
       revealNav();
     };
 
@@ -349,7 +440,7 @@ const Home = () => {
                   </span>
                 </span>
               </h1>
-              <p ref={bioRef} className="home-bio">
+              <p ref={bioRef} className={`home-bio${bioReady ? " is-intro-done" : ""}`}>
                 <span className="home-bio-line">
                   <span className="home-bio-line-inner">
                     <button
