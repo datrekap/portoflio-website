@@ -37,7 +37,6 @@ supabase/
 
 # Historical pages (preserved for history tracking)
 src/pages/AboutArchive/
-src/pages/Play/
 src/pages/OldHome/
 src/pages/OlderHome/
 
