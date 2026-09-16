@@ -1,12 +1,17 @@
 .back-to-top-button {
+  --btt-fg: #333333;
+  --btt-bg: #f3f3f3;
+  --btt-border: #333333;
+  --btt-accent: #ff5500;
+
   position: fixed;
   bottom: 2rem;
   right: 1.5rem;
-  width: 42px;
-  height: 42px;
-  border-radius: 3px;
-  background: #0f0f0f;
-  border: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0;
+  background: var(--btt-bg);
+  border: 1px solid var(--btt-border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,14 +20,16 @@
   z-index: 99;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(20px);
+  transform: translateY(1rem);
+  color: var(--btt-fg);
+  box-shadow: none;
   transition:
     opacity 0.3s ease,
     visibility 0.3s ease,
-    transform 0.3s ease,
-    background-color 0.2s ease,
-    color 0.2s ease;
-  color: #f3f3f3;
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .back-to-top-button.visible {
@@ -31,38 +38,61 @@
   transform: translateY(0);
 }
 
-.back-to-top-button:hover {
-  transform: translateY(-2px);
+.back-to-top-button:focus {
+  outline: none;
+}
+
+.back-to-top-button:focus-visible {
+  outline: 2px solid var(--btt-accent);
+  outline-offset: 3px;
+}
+
+.back-to-top-button .back-to-top-arrow {
+  width: 1.125rem;
+  height: 1.125rem;
+  display: block;
+  color: inherit;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .back-to-top-button:hover {
+    background: var(--btt-accent);
+    border-color: var(--btt-accent);
+    color: #f3f3f3;
+    transform: translateY(-2px);
+  }
 }
 
 .back-to-top-button:active {
   transform: translateY(0);
 }
 
-.back-to-top-button .back-to-top-arrow {
-  width: 24px;
-  height: 24px;
-  display: block;
-  color: inherit;
-}
-
-/* When over footer: light background to match site, arrow matches footer */
+/* Over dark footer: keep light chrome, still orange on hover */
 .back-to-top-button.in-footer {
-  background-color: #f5f5f5;
-  color: #333;
+  --btt-fg: #f3f3f3;
+  --btt-bg: #333333;
+  --btt-border: #f3f3f3;
 }
 
-/* Desktop - position closer to center */
+@media (hover: hover) and (pointer: fine) {
+  .back-to-top-button.in-footer:hover {
+    background: var(--btt-accent);
+    border-color: var(--btt-accent);
+    color: #f3f3f3;
+  }
+}
+
 @media (min-width: 769px) {
   .back-to-top-button {
     right: 4rem;
   }
 }
 
-/* Mobile adjustments */
 @media (max-width: 768px) {
   .back-to-top-button {
     bottom: 1.5rem;
     right: 1rem;
+    width: 2.5rem;
+    height: 2.5rem;
   }
 }

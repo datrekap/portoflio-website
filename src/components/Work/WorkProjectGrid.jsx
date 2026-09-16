@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { workProjects } from "../../data/workProjects";
-import WorkCategoryFilter from "./WorkCategoryFilter";
+// import WorkCategoryFilter from "./WorkCategoryFilter";
 import WorkProjectCard from "./WorkProjectCard";
 import "./WorkProjectGrid.css";
 
@@ -14,7 +14,7 @@ const WorkProjectGrid = ({ containerRef }) => {
 
   return (
     <div ref={containerRef} className="work-project-grid-wrap">
-      <WorkCategoryFilter value={category} onChange={setCategory} />
+      {/* <WorkCategoryFilter value={category} onChange={setCategory} /> */}
       <div className="work-project-grid" aria-label="Work projects">
         {filteredProjects.map((project) => (
           <WorkProjectCard key={project.id} project={project} />

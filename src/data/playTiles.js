@@ -45,7 +45,7 @@ export const playTiles = [
   {
     id: "infinad",
     src: "/play/infinad/infinad.mp4",
-    poster: "/work/InfinAD/Thumbnail.png",
+    poster: "/work/InfinAD/Thumbnail.webp",
     alt: "InfinAD, exhibited at the Georgia Tech Library",
     className: "play-tile--infinad",
     labels: ["Interactive Installation", "p5.js"],
@@ -97,7 +97,7 @@ export const playTiles = [
   {
     id: "beeuv",
     src: "/play/beeuv.mp4",
-    poster: "/work/BeeUV/Thumbnail.png",
+    poster: "/work/BeeUV/Thumbnail.webp",
     alt: "BeeUV outdoor UV robot",
     className: "play-tile--beeuv",
     labels: ["Arduino Prototyping"],

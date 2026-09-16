@@ -26,22 +26,32 @@
   inset: -2rem;
   z-index: 0;
   pointer-events: none;
-  background-image:
-    linear-gradient(
-      to right,
-      var(--home-grid-line-color) 0,
-      var(--home-grid-line-color) var(--home-grid-line-width),
-      transparent var(--home-grid-line-width)
-    ),
-    linear-gradient(
-      to bottom,
-      var(--home-grid-line-color) 0,
-      var(--home-grid-line-color) var(--home-grid-line-width),
-      transparent var(--home-grid-line-width)
-    );
-  background-size: var(--home-grid-size) var(--home-grid-size);
-  opacity: var(--site-grid-opacity);
-  filter: blur(0.2px);
+  overflow: hidden;
+  opacity: 1;
+}
+
+/* Lines grow from their own centre (length) while the cross-axis scale carries
+   the bold-to-default thickness. Start black at full opacity, settle to #333. */
+.home-grid-line {
+  position: absolute;
+  background: #333333;
+  pointer-events: none;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+.home-grid-line--v {
+  top: 0;
+  width: var(--home-grid-line-width);
+  height: 100%;
+  transform: scale(1.5, 0);
+}
+
+.home-grid-line--h {
+  left: 0;
+  width: 100%;
+  height: var(--home-grid-line-width);
+  transform: scale(0, 1.5);
 }
 
 .home-landing-content {
@@ -60,6 +70,13 @@
   z-index: 1;
   pointer-events: none;
   overflow: hidden;
+}
+
+.home-hero-floor {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0;
 }
 
 .home-hero-apron {
@@ -86,7 +103,8 @@
   transform: rotate(calc(-1 * atan2(var(--home-ground-rise), 100vw)));
   background-image: url("/play/ground-line.svg");
   background-repeat: repeat-x;
-  background-size: 1517px 100%;
+  /* Must match the SVG viewBox width and GROUND_TILE, or the loop seams. */
+  background-size: 1521.08px 100%;
   background-position: var(--home-ground-x, 0px) center;
 }
 
@@ -102,6 +120,7 @@
   aspect-ratio: 210 / 264;
   overflow: visible;
   pointer-events: none;
+  opacity: 0;
 }
 
 .home-hero-walker {
@@ -175,6 +194,35 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .home-grid-overlay {
+    opacity: var(--site-grid-opacity);
+  }
+
+  .home-grid-line {
+    background: var(--home-grid-line-color);
+  }
+
+  .home-grid-line--v,
+  .home-grid-line--h {
+    transform: none;
+  }
+
+  .home-hero-floor {
+    opacity: 1;
+  }
+
+  .home-hero-walker-slot {
+    opacity: 1;
+  }
+
+  .home-hero-line-inner,
+  .home-bio-line-inner,
+  .home-hero-letter {
+    transform: none;
+    opacity: 1;
+    filter: none;
+  }
+
   .home-hero-rive-wrap {
     transition: none;
   }
@@ -271,9 +319,40 @@
   overflow: hidden;
 }
 
+.home-hero--letters .home-hero-line {
+  overflow: visible;
+}
+
 .home-hero-line-inner,
 .home-bio-line-inner {
   display: block;
+  transform: translateY(100%);
+}
+
+.home-hero--letters .home-hero-line-inner {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  transform: none;
+}
+
+.home-hero-letter {
+  display: inline-block;
+  will-change: transform, opacity;
+  transform-origin: 50% 100%;
+}
+
+.home-hero-letter.is-space {
+  width: 0.35em;
+}
+
+.home-hero--trial-masked-rise .home-hero-letter {
+  overflow: hidden;
+}
+
+.home-hero--trial-masked-rise .home-hero-letter {
+  /* each letter sits in its own clip for the masked-rise trial */
+  line-height: 1;
 }
 
 .home-bio {

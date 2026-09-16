@@ -1,7 +1,8 @@
 import { useLayoutEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useWorkVideoTransition } from "../context/WorkVideoTransitionContext";
+import useTransitionGate from "./useTransitionGate";
+import { scheduleScrollTriggerRefresh } from "../utils/scrollTriggerRefresh";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -26,60 +27,67 @@ export default function useRiseUpOnScroll(ref, options = {}) {
     y = 30,
     triggerOnMount = false,
   } = options;
-  const { isTransitioning } = useWorkVideoTransition();
+  const runWhenSettled = useTransitionGate();
 
   useLayoutEffect(() => {
-    if (!ref?.current) return;
+    const el = ref?.current;
+    if (!el) return undefined;
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      if (isTransitioning) {
-        gsap.set(ref.current, { opacity: 0, y: 0 });
-        return undefined;
-      }
-      gsap.set(ref.current, { opacity: 1, y: 0 });
-      return undefined;
-    }
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
 
-    gsap.set(ref.current, { opacity: 0, y });
+    let tween = null;
+    let scrollTrigger = null;
+    let timeoutId = null;
 
-    if (isTransitioning) {
-      return undefined;
-    }
+    gsap.set(el, { opacity: 0, y: reducedMotion ? 0 : y });
 
-    if (triggerOnMount) {
-      const tween = gsap.to(ref.current, {
+    const rise = () => {
+      tween = gsap.to(el, {
         opacity: 1,
         y: 0,
         duration,
-        delay: 0.15 + delay,
         ease: "power2.out",
+        delay,
       });
-      return () => tween.kill();
-    }
+    };
 
-    let scrollTrigger = null;
-    const timeoutId = setTimeout(() => {
-      ScrollTrigger.refresh();
-      scrollTrigger = ScrollTrigger.create({
-        trigger: ref.current,
-        start,
-        once: true,
-        onEnter: () => {
-          gsap.to(ref.current, {
-            opacity: 1,
-            y: 0,
-            duration,
-            ease: "power2.out",
-            delay,
-          });
-        },
-      });
-      ScrollTrigger.refresh();
-    }, 100);
+    const startReveal = () => {
+      if (reducedMotion) {
+        gsap.set(el, { opacity: 1, y: 0 });
+        return;
+      }
+
+      if (triggerOnMount) {
+        tween = gsap.to(el, {
+          opacity: 1,
+          y: 0,
+          duration,
+          delay: 0.15 + delay,
+          ease: "power2.out",
+        });
+        return;
+      }
+
+      timeoutId = setTimeout(() => {
+        scrollTrigger = ScrollTrigger.create({
+          trigger: el,
+          start,
+          once: true,
+          onEnter: rise,
+        });
+        scheduleScrollTriggerRefresh();
+      }, 100);
+    };
+
+    const cancelGate = runWhenSettled(startReveal);
 
     return () => {
-      clearTimeout(timeoutId);
+      cancelGate();
+      if (timeoutId) clearTimeout(timeoutId);
       if (scrollTrigger) scrollTrigger.kill();
+      if (tween) tween.kill();
     };
-  }, [ref, start, delay, duration, y, triggerOnMount, isTransitioning]);
+  }, [ref, start, delay, duration, y, triggerOnMount, runWhenSettled]);
 }

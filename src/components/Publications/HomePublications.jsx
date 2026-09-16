@@ -1,10 +1,13 @@
-import React, { useEffect, useRef } from "react";
+import React, { forwardRef, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Appear from "../Appear/Appear";
 import { publicationSections } from "../../data/publications";
 import "./HomePublications.css";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const APPEAR_STAGGER = 0.06;
 
 const PublicationAuthors = ({ authors, venue }) => (
   <p className="home-publications-authors">
@@ -22,7 +25,7 @@ const PublicationAuthors = ({ authors, venue }) => (
   </p>
 );
 
-const PublicationEntry = ({ paper }) => {
+const PublicationEntry = forwardRef(function PublicationEntry({ paper }, ref) {
   const content = (
     <>
       <h4 className="home-publications-paper-title">{paper.title}</h4>
@@ -33,6 +36,7 @@ const PublicationEntry = ({ paper }) => {
   if (paper.url) {
     return (
       <a
+        ref={ref}
         href={paper.url}
         className="home-publications-entry home-publications-entry--link"
         target="_blank"
@@ -43,8 +47,12 @@ const PublicationEntry = ({ paper }) => {
     );
   }
 
-  return <article className="home-publications-entry">{content}</article>;
-};
+  return (
+    <article ref={ref} className="home-publications-entry">
+      {content}
+    </article>
+  );
+});
 
 const HomePublications = () => {
   const sectionRef = useRef(null);
@@ -109,28 +117,45 @@ const HomePublications = () => {
     >
       <div ref={gridRef} className="home-publications-grid-overlay" aria-hidden="true" />
       <div className="page-content-shell home-publications-inner">
-        <h2 id="home-publications-title" className="home-publications-title">
-          <img
-            src="/work/icons/dash.svg"
-            alt=""
-            className="home-publications-dash"
-            width={17}
-            height={1}
-          />
-          PUBLICATIONS
-        </h2>
+        <Appear asChild>
+          <h2 id="home-publications-title" className="home-publications-title">
+            <img
+              src="/work/icons/dash.svg"
+              alt=""
+              className="home-publications-dash"
+              width={17}
+              height={1}
+            />
+            PUBLICATIONS
+          </h2>
+        </Appear>
 
         <div className="home-publications-content">
-          {publicationSections.map((section) => (
-            <div key={section.id} className="home-publications-section">
-              <h3 className="home-publications-section-title">{section.title}</h3>
-              <div className="home-publications-list">
-                {section.papers.map((paper) => (
-                  <PublicationEntry key={paper.id} paper={paper} />
-                ))}
+          {publicationSections.map((section, sectionIndex) => {
+            const priorPapers = publicationSections
+              .slice(0, sectionIndex)
+              .reduce((count, item) => count + item.papers.length, 0);
+            const sectionDelay = (sectionIndex + priorPapers + 1) * APPEAR_STAGGER;
+
+            return (
+              <div key={section.id} className="home-publications-section">
+                <Appear asChild delay={sectionDelay}>
+                  <h3 className="home-publications-section-title">{section.title}</h3>
+                </Appear>
+                <div className="home-publications-list">
+                  {section.papers.map((paper, paperIndex) => (
+                    <Appear
+                      key={paper.id}
+                      asChild
+                      delay={(sectionIndex + priorPapers + paperIndex + 2) * APPEAR_STAGGER}
+                    >
+                      <PublicationEntry paper={paper} />
+                    </Appear>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

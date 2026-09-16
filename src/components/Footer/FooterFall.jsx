@@ -7,13 +7,11 @@ import {
   useStateMachineInput,
 } from "@rive-app/react-canvas";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import useTransitionGate from "../../hooks/useTransitionGate";
 import {
   FOOTER_IDLE_LINES,
   FOOTER_POKE_LINES,
 } from "../../data/footerFallLines";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const RIVE_SRC = "/play/dk-character.riv";
 const RIVE_ARTBOARD = "Artboard 1";
@@ -32,6 +30,7 @@ const PREP_Y = -98;
 const PREP_DURATION = 0.5;
 const PREP_HOLD = 0;
 const FALL_DURATION = 0.48;
+const RETURN_GAP = 1.1;
 const STRETCH_DELAY = 0.2;
 
 const CLOUDS = [
@@ -147,6 +146,7 @@ const FooterFall = () => {
   }
   const [paused, setPaused] = useState(true);
   const [caption, setCaption] = useState(null);
+  const runWhenSettled = useTransitionGate();
   const [reducedMotion, setReducedMotion] = useState(
     () =>
       typeof window !== "undefined" &&
@@ -349,7 +349,8 @@ const FooterFall = () => {
         onComplete: () => {
           hideCaptionNowRef.current();
           gsap.set(el, { y: -h * 0.85 });
-          dropIn();
+          // Pause off-screen before dropping back in from the top.
+          tweenRef.current = gsap.delayedCall(RETURN_GAP, dropIn);
         },
       })
       .to(
@@ -482,20 +483,28 @@ const FooterFall = () => {
       dropIn();
     };
 
-    const trigger = ScrollTrigger.create({
-      trigger: stage,
-      start: "top 88%",
-      end: "bottom top",
-      onEnter: enterFall,
-      onEnterBack: enterFall,
-      onLeave: () => {
-        stopLoop();
-        parkAbove();
-      },
-      onLeaveBack: () => {
-        stopLoop();
-        parkAbove();
-      },
+    let observer = null;
+    let cancelled = false;
+    let isInView = false;
+
+    // IntersectionObserver (not ScrollTrigger) so Lenis spy-nav jumps and any
+    // ScrollTrigger.refresh() elsewhere cannot skip or strand the faller.
+    const cancelGate = runWhenSettled(() => {
+      if (cancelled) return;
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          const next = Boolean(entry?.isIntersecting);
+          if (next === isInView) return;
+          isInView = next;
+          if (next) enterFall();
+          else {
+            stopLoop();
+            parkAbove();
+          }
+        },
+        { threshold: 0.08, rootMargin: "0px 0px -12% 0px" },
+      );
+      observer.observe(stage);
     });
 
     const onMotionChange = () => {
@@ -521,6 +530,9 @@ const FooterFall = () => {
     reduced.addEventListener("change", onMotionChange);
 
     return () => {
+      cancelled = true;
+      cancelGate();
+      observer?.disconnect();
       reduced.removeEventListener("change", onMotionChange);
       stopLoop();
       stopBob();
@@ -529,9 +541,8 @@ const FooterFall = () => {
       window.clearTimeout(idleTimerRef.current);
       window.clearTimeout(idleResumeRef.current);
       window.clearTimeout(pokeHoldRef.current);
-      trigger.kill();
     };
-  }, [dropIn, setStretch, startBob, stopBob]);
+  }, [dropIn, runWhenSettled, setStretch, startBob, stopBob]);
 
   return (
     <div ref={stageRef} className="footer-fall">

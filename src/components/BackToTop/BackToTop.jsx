@@ -55,19 +55,19 @@ const BackToTop = () => {
     >
       <svg
         className="back-to-top-arrow"
-        width="16"
-        height="16"
-        viewBox="0 0 16 16"
+        width="18"
+        height="18"
+        viewBox="0 0 18 18"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden
       >
         <path
-          d="M8 3v10M4 7l4-4 4 4"
+          d="M9 14.5V3.5M4.5 8L9 3.5 13.5 8"
           stroke="currentColor"
-          strokeWidth="1.2"
+          strokeWidth="1.35"
           strokeLinecap="square"
-          strokeLinejoin="square"
+          strokeLinejoin="miter"
         />
       </svg>
     </button>

@@ -3,6 +3,7 @@ import { useLenis } from "@studio-freight/react-lenis";
 import { gsap } from "gsap";
 import WorkProjectGrid from "../../components/Work/WorkProjectGrid";
 import Footer from "../../components/Footer/Footer";
+import { revealNav } from "../../constants/navTiming";
 import "./Work.css";
 
 const Work = () => {
@@ -11,22 +12,11 @@ const Work = () => {
   const titleWrapperRef = useRef(null);
   const subtitleRef = useRef(null);
   const pillsContainerRef = useRef(null);
-  const navRef = useRef(null);
   const timelineRef = useRef(null);
   const workGridContainerRef = useRef(null);
 
   useLayoutEffect(() => {
     if (!titleRef.current || !titleWrapperRef.current) return;
-
-    const nav = document.querySelector("nav");
-    if (nav) {
-      navRef.current = nav;
-      gsap.killTweensOf(nav);
-      gsap.set(nav, {
-        opacity: 0,
-        y: -100,
-      });
-    }
 
     gsap.set(titleWrapperRef.current, {
       opacity: 0,
@@ -64,16 +54,9 @@ const Work = () => {
           });
         }
 
-        if (navRef.current) {
-          gsap.killTweensOf(navRef.current);
-          gsap.set(navRef.current, {
-            opacity: 0,
-            y: -100,
-          });
-        }
-
         timelineRef.current = gsap.timeline({
           defaults: { ease: "power2.out" },
+          onComplete: revealNav,
         });
 
         timelineRef.current.to(titleWrapperRef.current, {
@@ -92,19 +75,6 @@ const Work = () => {
               duration: 1,
             },
             "-=1.1",
-          );
-        }
-
-        if (navRef.current) {
-          timelineRef.current.to(
-            navRef.current,
-            {
-              opacity: 1,
-              y: 0,
-              duration: 1.2,
-              ease: "power2.out",
-            },
-            "-=0.3",
           );
         }
 
@@ -202,8 +172,9 @@ const Work = () => {
               </span>
             </h1>
             <p ref={subtitleRef} className="work-page-subtitle">
-              I strive to create not just products, but experiences that invite
-              participation, curiosity, and fun.
+              I strive to solve meaningful problems through products and 
+              experiences that invite participation, spark curiosity, 
+              and make everyday interactions more enjoyable.
             </p>
             <WorkProjectGrid containerRef={workGridContainerRef} />
           </div>

@@ -1,28 +1,38 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useWorkVideoTransition } from "../../context/WorkVideoTransitionContext";
+import { prefetchCaseStudy } from "../../routes/caseStudyRoutes";
+import { playPageExit } from "../../utils/pageExitAnimation";
 import { resolveWorkProjectMedia } from "../../utils/workProjectMedia";
+import ExhibitionBadge from "../ExhibitionBadge/ExhibitionBadge";
+import "../ExhibitionBadge/ExhibitionBadge.css";
 import "./WorkProjectCard.css";
 
 const GRID_MAX_OFFSET = 12;
 const GRID_LERP = 0.14;
 
-function WorkProjectCard({ project }) {
+const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
   const navigate = useNavigate();
-  const { startTransition, claimVideo } = useWorkVideoTransition();
+  const {
+    startTransition,
+    enterOverlayPhase,
+    claimVideo,
+    getIsTransitioning,
+  } = useWorkVideoTransition();
   const CardTag = project.route ? Link : "article";
   const { imageSrc, hoverVideo } = resolveWorkProjectMedia(project.image);
 
+  const cardRef = useRef(null);
   const mediaRef = useRef(null);
   const visualRef = useRef(null);
   const videoRef = useRef(null);
+  const gridRef = useRef(null);
   const rafRef = useRef(null);
   const targetOffsetRef = useRef({ x: 0, y: 0 });
   const currentOffsetRef = useRef({ x: 0, y: 0 });
   const isHoveredRef = useRef(false);
 
   const [isHovered, setIsHovered] = useState(false);
-  const [gridOffset, setGridOffset] = useState({ x: 0, y: 0 });
   const [videoFailed, setVideoFailed] = useState(false);
 
   const canHover =
@@ -45,7 +55,9 @@ function WorkProjectCard({ project }) {
     current.x += (target.x - current.x) * GRID_LERP;
     current.y += (target.y - current.y) * GRID_LERP;
 
-    setGridOffset({ x: current.x, y: current.y });
+    if (gridRef.current) {
+      gridRef.current.style.transform = `translate3d(${current.x}px, ${current.y}px, 0)`;
+    }
 
     const settling =
       Math.abs(target.x - current.x) > 0.05 ||
@@ -88,6 +100,9 @@ function WorkProjectCard({ project }) {
     isHoveredRef.current = true;
     setIsHovered(true);
 
+    // Warm the case study chunk now so the click does not pay for it mid-transition.
+    prefetchCaseStudy(project.route);
+
     const video = videoRef.current;
     if (showVideo && video) {
       video.currentTime = 0;
@@ -95,7 +110,7 @@ function WorkProjectCard({ project }) {
         setVideoFailed(true);
       });
     }
-  }, [canHover, showVideo]);
+  }, [canHover, showVideo, project.route]);
 
   const handleMouseLeave = useCallback(() => {
     if (!canHover) return;
@@ -106,10 +121,15 @@ function WorkProjectCard({ project }) {
     startGridAnimation();
 
     const video = videoRef.current;
-    if (video) {
+    if (!video) return;
+
+    // Keep the last frame while the video fades out; reset after the crossfade
+    // so badges/media don't hitch when the hover ends.
+    window.setTimeout(() => {
+      if (isHoveredRef.current) return;
       video.pause();
       video.currentTime = 0;
-    }
+    }, 450);
   }, [canHover, startGridAnimation]);
 
   const handleVideoError = useCallback(() => {
@@ -130,9 +150,15 @@ function WorkProjectCard({ project }) {
 
       event.preventDefault();
 
+      // A transition is already dissolving the page; swallow further clicks.
+      if (getIsTransitioning()) return;
+
       const rect = visualRef.current.getBoundingClientRect();
       const currentTime = videoRef.current?.currentTime ?? 0;
       const usesClaimedVideo = claimVideo(videoRef.current);
+
+      // Free the main thread for the transition and the destination's mount.
+      stopGridAnimation();
 
       startTransition({
         projectId: project.id,
@@ -149,7 +175,22 @@ function WorkProjectCard({ project }) {
         heroVideoCrop: project.heroVideoCrop,
       });
 
-      navigate(project.route);
+      const goToCaseStudy = () => {
+        enterOverlayPhase();
+        navigate(project.route);
+      };
+
+      const reducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
+      if (reducedMotion || !cardRef.current) {
+        goToCaseStudy();
+        return;
+      }
+
+      // Dissolve the rest of the page first, then hand over to the overlay.
+      playPageExit(cardRef.current, goToCaseStudy);
     },
     [
       project.route,
@@ -161,15 +202,28 @@ function WorkProjectCard({ project }) {
       hoverVideo,
       videoFailed,
       startTransition,
+      enterOverlayPhase,
       claimVideo,
+      getIsTransitioning,
+      stopGridAnimation,
       navigate,
     ],
   );
 
   useEffect(() => stopGridAnimation, [stopGridAnimation]);
 
+  const setCardRef = useCallback(
+    (node) => {
+      cardRef.current = node;
+      if (typeof ref === "function") ref(node);
+      else if (ref) ref.current = node;
+    },
+    [ref],
+  );
+
   return (
     <CardTag
+      ref={setCardRef}
       className="work-project-card work-bento-item"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -177,11 +231,9 @@ function WorkProjectCard({ project }) {
       data-project-id={project.id}
     >
       <div
+        ref={gridRef}
         className="work-project-card__grid"
         aria-hidden="true"
-        style={{
-          transform: `translate3d(${gridOffset.x}px, ${gridOffset.y}px, 0)`,
-        }}
       />
       <div
         ref={mediaRef}
@@ -214,16 +266,7 @@ function WorkProjectCard({ project }) {
         {project.badges?.length ? (
           <div className="work-project-card__badges">
             {project.badges.map((badge) => (
-              <span key={badge} className="work-project-card__badge">
-                <img
-                  src="/work/icons/badge-star.svg"
-                  alt=""
-                  className="work-project-card__badge-icon"
-                  width={16}
-                  height={15}
-                />
-                {badge}
-              </span>
+              <ExhibitionBadge key={badge}>{badge}</ExhibitionBadge>
             ))}
           </div>
         ) : null}
@@ -238,6 +281,6 @@ function WorkProjectCard({ project }) {
       </div>
     </CardTag>
   );
-}
+});
 
 export default WorkProjectCard;

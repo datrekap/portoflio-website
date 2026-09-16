@@ -36,13 +36,11 @@ const RIVE_LAYOUT = new Layout({
   fit: Fit.Contain,
   alignment: Alignment.BottomCenter,
 });
-const GROUND_TILE = 1517;
+const GROUND_TILE = 1521.08;
 const WALK_SPEED = 140;
 const DISMISS_MS = 2400;
 const CLICK_PULSE_MS = 80;
 const RESEARCHER_RIVE_DELAY_MS = 500;
-const INTRO_MIN = 3;
-const INTRO_MAX = 5;
 const RECENT_WINDOW = 8;
 const SLOT_BATCH = 12;
 const MAX_WORDS = 5;
@@ -102,11 +100,11 @@ function makeSlotBatch(recent) {
 }
 
 function createSessionDecks() {
+  // One opener on load; every poke after that draws from walker lines only.
   const openers = shuffle(OPENER_LINES);
-  const introCount = INTRO_MIN + Math.floor(Math.random() * (INTRO_MAX - INTRO_MIN + 1));
   return {
-    intro: openers.slice(0, introCount),
-    poke: shuffle([...WALKER_LINES, ...openers.slice(introCount)]),
+    intro: openers.slice(0, 1),
+    poke: shuffle(WALKER_LINES),
     design: shuffle(DESIGN_ENG_LINES),
     research: shuffle(RESEARCHER_LINES),
     pokeRefills: 0,
@@ -384,38 +382,18 @@ const HomeHeroWalk = forwardRef((props, ref) => {
       playResearcher() {
         playRole("research");
       },
+      startIdleSpeech() {
+        if (hasSpokenRef.current || captionTextRef.current) return;
+        presentLine(nextWalkerLine());
+      },
     }),
-    [playRole],
+    [playRole, presentLine, nextWalkerLine],
   );
 
   const onPoke = useCallback(() => {
     hopWalker();
     showLine(nextWalkerLine());
   }, [hopWalker, nextWalkerLine, showLine]);
-
-  useEffect(() => {
-    let cancelled = false;
-    const LANDING_MS = 1800;
-    const afterLanding = new Promise((resolve) => {
-      window.setTimeout(resolve, LANDING_MS);
-    });
-    const afterLoad =
-      document.readyState === "complete"
-        ? Promise.resolve()
-        : new Promise((resolve) => {
-            window.addEventListener("load", resolve, { once: true });
-          });
-
-    Promise.all([afterLoad, afterLanding]).then(() => {
-      if (cancelled) return;
-      if (hasSpokenRef.current || captionTextRef.current) return;
-      presentLine(nextWalkerLine());
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [nextWalkerLine, presentLine]);
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -460,8 +438,10 @@ const HomeHeroWalk = forwardRef((props, ref) => {
 
   return (
     <div ref={sceneRef} className="home-hero-scene">
-      <div className="home-hero-apron" aria-hidden="true" />
-      <div className="home-hero-ground" aria-hidden="true" />
+      <div className="home-hero-floor" aria-hidden="true">
+        <div className="home-hero-apron" />
+        <div className="home-hero-ground" />
+      </div>
       <div className="home-hero-walker-slot">
         <button
           ref={walkerRef}

@@ -1,5 +1,4 @@
 import React, { useRef } from "react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { caseStudyNavConfig } from "../../data/caseStudyNavConfig";
 import { useLenisScroll } from "../../hooks/useLenisScroll";
 import { usePinnedSpyNav } from "../../hooks/usePinnedSpyNav";
@@ -41,7 +40,8 @@ function CaseStudySpyNav({
       return;
     }
 
-    ScrollTrigger.refresh();
+    // Do not ScrollTrigger.refresh() here — a full refresh mid-navigation
+    // races Lenis and can fire or skip once:true triggers (footer appear/fall).
     lenis?.resize?.();
 
     scrollToSection(el, {

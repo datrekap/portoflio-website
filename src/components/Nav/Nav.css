@@ -2,6 +2,12 @@
    BASE STYLES
    ============================================ */
 
+@property --nav-pill-weight {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 300;
+}
+
 .site-nav {
   background: rgba(250, 250, 250, 0.7);
   backdrop-filter: blur(4px);
@@ -14,9 +20,10 @@
   margin: 1rem auto 0;
   padding: 0 1rem;
   box-sizing: border-box;
-  /* Initial hidden state for GSAP animation - will be animated in by GSAP */
+  /* Hidden until the page intro finishes; GSAP reveals it last. */
   opacity: 0;
-  transform: translateY(-200px);
+  transform: translateY(-110px);
+  pointer-events: none;
 }
 
 .site-nav > .page-content-shell {
@@ -47,7 +54,24 @@
   object-fit: contain;
   border-radius: 0;
   display: block;
-  transition: none;
+  transform-origin: center center;
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .logo-link:hover .logo-image {
+    transform: scale(0.92);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-image {
+    transition: none;
+  }
+
+  .logo-link:hover .logo-image {
+    transform: none;
+  }
 }
 
 .pill-list {
@@ -63,6 +87,7 @@
 
 /* Base pill styles - flat text, no capsule background */
 .pill {
+  --nav-pill-weight: 300;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -72,10 +97,12 @@
   text-decoration: none;
   border: 0;
   background: transparent;
-  font-family: inherit;
+  font-family: "Montserrat", sans-serif;
   border-radius: 0;
   box-sizing: border-box;
-  font-weight: 300;
+  font-weight: var(--nav-pill-weight);
+  font-variation-settings: "wght" var(--nav-pill-weight);
+  font-synthesis: none;
   font-size: 11px;
   line-height: 1;
   text-transform: uppercase;
@@ -83,33 +110,28 @@
   white-space: nowrap;
   cursor: pointer;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   pointer-events: auto;
-  transition: none;
+  transition: --nav-pill-weight 0.42s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Inactive: light weight, dot faded out and collapsed */
 .pill:not(.pill-active) {
-  font-weight: 300;
+  --nav-pill-weight: 300;
 }
 
-/* Hide the active-page dot indicator entirely */
 .pill .pill-active-dot {
   display: none !important;
 }
 
-/* Active: medium weight, dot visible */
 .pill.pill-active {
-  font-weight: 500;
-}
-
-.pill .hover-circle {
-  display: none;
+  --nav-pill-weight: 500;
 }
 
 .pill .label-stack {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
   line-height: 1;
   z-index: 2;
 }
@@ -119,12 +141,30 @@
   z-index: 2;
   display: inline-block;
   line-height: 1;
-  will-change: transform;
   color: inherit;
 }
 
-.pill .pill-label-hover {
-  display: none;
+.pill .pill-label::after {
+  content: attr(data-label);
+  display: block;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+  font-weight: 700;
+  font-variation-settings: "wght" 700;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pill:hover {
+    --nav-pill-weight: 700;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pill {
+    transition: none;
+  }
 }
 
 /* ============================================
@@ -158,18 +198,7 @@
     color: #0f0f0f;
   }
 
-  /* Hover circle isn't used on the flat desktop nav */
-  .pill-list.desktop-only .pill .hover-circle {
-    display: none;
-    opacity: 0;
-    visibility: hidden;
-  }
-
   .pill-list.desktop-only .pill .pill-label {
-    color: #0f0f0f;
-  }
-
-  .pill-list.desktop-only .pill .pill-label-hover {
     color: #0f0f0f;
   }
 }
@@ -319,7 +348,7 @@ body.mobile-menu-open {
   font-family: inherit;
   border: 0;
   border-radius: 0;
-  transition: all 0.2s ease;
+  transition: font-weight 0.42s cubic-bezier(0.4, 0, 0.2, 1);
   text-align: left;
   width: 100%;
 }

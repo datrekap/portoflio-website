@@ -30,7 +30,7 @@ export const playOverlays = {
       "InfinAD is an interactive installation which envisions a speculative future where advertisements dominate every aspect of life, turning viewer attention into currency. Art is no longer a medium of expression but a tool for corporate dominance, repurposed for invasive advertising in personal and cultural spaces.",
     hero: {
       src: "/play/infinad/infinad.mp4",
-      poster: "/work/InfinAD/Thumbnail.png",
+      poster: "/work/InfinAD/Thumbnail.webp",
       alt: "InfinAD, exhibited at the Georgia Tech Library",
     },
     heroTitle: "InfinAD",

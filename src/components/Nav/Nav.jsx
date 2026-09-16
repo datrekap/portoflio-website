@@ -3,11 +3,15 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { gsap } from "gsap";
 import { useLenis } from "@studio-freight/react-lenis";
 import { useLenisScroll } from "../../hooks/useLenisScroll";
-import { LANDING_NAV_DELAY, LANDING_NAV_DURATION } from "../../constants/navTiming";
+import {
+  NAV_REVEAL_DELAY_MS,
+  NAV_REVEAL_DURATION,
+  NAV_REVEAL_TIMEOUT_MS,
+  onNavReveal,
+} from "../../constants/navTiming";
 import {
   isHomePath,
   isGoogleCreativePath,
-  isDefaultHomePath,
 } from "../../constants/homeRoutes";
 import "./Nav.css";
 import DarkDKLogo from "../../assets/img/DarkDKLogo.png";
@@ -18,9 +22,6 @@ const Nav = () => {
   const navigate = useNavigate();
   const lenis = useLenis();
   const { scrollToTop } = useLenisScroll();
-  const circleRefs = useRef([]);
-  const tlRefs = useRef([]);
-  const activeTweenRefs = useRef([]);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(() =>
     typeof window !== "undefined" ? window.innerWidth : 1024,
@@ -31,7 +32,7 @@ const Nav = () => {
   const navRef = useRef(null);
 
   const RESUME_URL =
-    "https://drive.google.com/file/d/1t8BBP__xqK7TDSD1hLv0WFaMLLgeufTK/view?usp=sharing";
+    "https://drive.google.com/file/d/1dxbGxh4xrmuKMV1uSPrl-MKsIY3JT1mn/view?usp=drive_link";
 
   const navItems = [
     { label: "work", href: "/work", isLink: true },
@@ -69,174 +70,64 @@ const Nav = () => {
   };
 
   const renderPillLabel = (item) => (
-    <>
-      <span className="pill-label">{item.label}</span>
-      <span className="pill-label-hover" aria-hidden="true">
-        {item.label}
-      </span>
-    </>
+    <span className="pill-label" data-label={item.label}>
+      {item.label}
+    </span>
   );
 
-  // Nav fade-in: same timing on all non–case-study pages; case studies show nav immediately
-  const CASE_STUDY_PATHS = [
-    "/public-future-arts-lab",
-    "/sitehub-2",
-    "/parkwise",
-    "/trojanstep",
-  ];
-  const NAV_FADE_DELAY = isDefaultHomePath(location.pathname)
-    ? LANDING_NAV_DELAY
-    : 0.5;
-
+  // The nav is the last thing to appear: pages with an intro timeline call
+  // revealNav() when they finish, everything else reveals it shortly after mount.
   useEffect(() => {
-    if (!navRef.current) return;
+    const nav = navRef.current;
+    if (!nav) return undefined;
 
     const path = location.pathname;
-    const isListingPage = path === "/work" || path === "/play";
-    const isCaseStudyPage = CASE_STUDY_PATHS.includes(path);
+    const runsIntroTimeline =
+      isHomePath(path) || path === "/work" || path === "/play";
 
-    // Set initial state - position above viewport
-    gsap.set(navRef.current, {
-      y: -100,
+    let tween = null;
+    let revealed = false;
+
+    gsap.killTweensOf(nav);
+    gsap.set(nav, {
+      y: -110,
       opacity: 0,
+      pointerEvents: "none",
     });
 
-    // Work / Play: let the page component control the navbar animation
-    if (isListingPage) {
-      return;
-    }
+    const reveal = () => {
+      if (revealed) return;
+      revealed = true;
+      tween = gsap.to(nav, {
+        y: 0,
+        opacity: 1,
+        duration: NAV_REVEAL_DURATION,
+        ease: "power2.out",
+        overwrite: "auto",
+        onStart() {
+          nav.style.pointerEvents = "auto";
+        },
+      });
+    };
 
-    // Case study pages: show nav immediately (no fade-in)
-    if (isCaseStudyPage) {
-      gsap.set(navRef.current, { y: 0, opacity: 1 });
-      return;
-    }
-
-    // All other pages (home, not-found): unified fade-in timing
-    const navTl = gsap.timeline({
-      defaults: { ease: "power2.out" },
-    });
-
-    navTl.to(navRef.current, {
-      y: 0,
-      opacity: 1,
-      duration: LANDING_NAV_DURATION,
-      ease: "power2.out",
-      delay: NAV_FADE_DELAY,
-    });
+    const stopListening = onNavReveal(reveal);
+    const fallback = window.setTimeout(
+      reveal,
+      runsIntroTimeline ? NAV_REVEAL_TIMEOUT_MS : NAV_REVEAL_DELAY_MS,
+    );
 
     return () => {
-      navTl.kill();
+      stopListening();
+      window.clearTimeout(fallback);
+      tween?.kill();
     };
   }, [location.pathname]);
 
   useEffect(() => {
-    const layout = () => {
-      const isDesktop = window.innerWidth > 768;
-
-      circleRefs.current.forEach((circle, index) => {
-        if (!circle?.parentElement) return;
-
-        const pill = circle.parentElement;
-        const rect = pill.getBoundingClientRect();
-        const { width: w, height: h } = rect;
-        const R = ((w * w) / 4 + h * h) / (2 * h);
-        const D = Math.ceil(2 * R) + 2;
-        const delta =
-          Math.ceil(R - Math.sqrt(Math.max(0, R * R - (w * w) / 4))) + 1;
-        const originY = D - delta;
-        // On desktop the pills are flat text (no visible pill background),
-        // so the hover circle is only relevant on mobile.
-        const shouldAnimateCircle = !isDesktop;
-
-        if (shouldAnimateCircle) {
-          circle.style.width = `${D}px`;
-          circle.style.height = `${D}px`;
-          circle.style.bottom = `-${delta}px`;
-
-          gsap.set(circle, {
-            xPercent: -50,
-            scale: 0,
-            transformOrigin: `50% ${originY}px`,
-          });
-        } else {
-          gsap.set(circle, {
-            opacity: 0,
-            scale: 0,
-            display: "none",
-          });
-        }
-
-        const label = pill.querySelector(".pill-label");
-        const white = pill.querySelector(".pill-label-hover");
-
-        if (label) gsap.set(label, { y: 0 });
-        if (white) gsap.set(white, { y: h + 12, opacity: 0 });
-
-        tlRefs.current[index]?.kill();
-        const tl = gsap.timeline({ paused: true });
-
-        if (shouldAnimateCircle) {
-          tl.to(
-            circle,
-            {
-              scale: 1.2,
-              xPercent: -50,
-              duration: 2,
-              ease: "power1.easeOut",
-              overwrite: "auto",
-            },
-            0,
-          );
-        }
-
-        if (label) {
-          tl.to(
-            label,
-            {
-              y: -(h + 8),
-              duration: 2,
-              ease: "power1.easeOut",
-              overwrite: "auto",
-            },
-            0,
-          );
-        }
-
-        if (white) {
-          gsap.set(white, { y: Math.ceil(h + 100), opacity: 0 });
-          tl.to(
-            white,
-            {
-              y: 0,
-              opacity: 1,
-              duration: 2,
-              ease: "power1.easeOut",
-              overwrite: "auto",
-            },
-            0,
-          );
-        }
-
-        tlRefs.current[index] = tl;
-      });
-    };
-
-    layout();
-
-    const onResize = () => layout();
-    window.addEventListener("resize", onResize);
-
-    if (document.fonts?.ready) {
-      document.fonts.ready.then(layout).catch(() => {});
-    }
-
     const menu = mobileMenuRef.current;
     if (menu) {
       gsap.set(menu, { visibility: "hidden", opacity: 0, y: "-100%" });
     }
-
-    return () => window.removeEventListener("resize", onResize);
   }, []);
 
   // Effect to sync hamburger lines with menu state
@@ -286,29 +177,6 @@ const Nav = () => {
       gsap.set(lines[1], { rotation: 0, y: 0 });
     }
   }, [isMobileMenuOpen, location.pathname, lenis, windowWidth]);
-
-  const handleEnter = (i) => {
-    const tl = tlRefs.current[i];
-    if (!tl) return;
-    activeTweenRefs.current[i]?.kill();
-    activeTweenRefs.current[i] = tl.tweenTo(tl.duration(), {
-      duration: 0.3,
-      ease: "power3.easeOut",
-      overwrite: "auto",
-    });
-  };
-
-  const handleLeave = (i) => {
-    if (isGoogleCreativePath(location.pathname)) return;
-    const tl = tlRefs.current[i];
-    if (!tl) return;
-    activeTweenRefs.current[i]?.kill();
-    activeTweenRefs.current[i] = tl.tweenTo(0, {
-      duration: 0.2,
-      ease: "power3.easeOut",
-      overwrite: "auto",
-    });
-  };
 
   const handleResumeClick = (e) => {
     e.preventDefault();
@@ -412,19 +280,10 @@ const Nav = () => {
   const renderNavItem = (item, i) => {
     const pillProps = {
       className: `pill${isNavItemActive(item) ? " pill-active" : ""}`,
-      onMouseEnter: () => handleEnter(i),
-      onMouseLeave: () => handleLeave(i),
     };
 
     const pillInner = (
       <>
-        <span
-          className="hover-circle"
-          aria-hidden="true"
-          ref={(el) => {
-            circleRefs.current[i] = el;
-          }}
-        />
         <span className="pill-active-dot" aria-hidden="true" />
         <span className="label-stack">{renderPillLabel(item)}</span>
       </>
@@ -469,10 +328,6 @@ const Nav = () => {
     <nav
       ref={navRef}
       className="site-nav top-0 z-[100] relative"
-      style={{
-        opacity: 0,
-        transform: "translateY(-100px)",
-      }}
     >
       <div className="page-content-shell">
         <div className="flex items-center py-5 z-[1000] relative min-h-[32px]">

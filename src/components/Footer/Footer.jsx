@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLenisScroll } from "../../hooks/useLenisScroll";
+import useTransitionGate from "../../hooks/useTransitionGate";
+import { isHomePath } from "../../constants/homeRoutes";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { FOOTER_SOCIAL_LINKS } from "../../data/footerLinks";
 import footerArrow from "../../assets/footer/arrow.svg";
 import FooterFall from "./FooterFall";
 import "./Footer.css";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const APPEAR_STAGGER = 0.1;
 const EMAIL_COPIED_MS = 2000;
@@ -35,8 +35,22 @@ async function copyText(text) {
 
 const Footer = () => {
   const footerRef = useRef(null);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { scrollToTop } = useLenisScroll();
+  const runWhenSettled = useTransitionGate();
   const [emailCopied, setEmailCopied] = useState(false);
   const copiedTimeoutRef = useRef(null);
+
+  const handleLogoClick = (event) => {
+    event.preventDefault();
+    if (isHomePath(location.pathname)) {
+      scrollToTop({ duration: 1.2 });
+      return;
+    }
+    navigate("/");
+    window.setTimeout(() => scrollToTop({ duration: 1.2 }), 100);
+  };
 
   useEffect(
     () => () => {
@@ -61,14 +75,18 @@ const Footer = () => {
 
     gsap.set(items, { opacity: 0, y: 30 });
 
-    let scrollTrigger = null;
-    const timeoutId = window.setTimeout(() => {
-      ScrollTrigger.refresh();
-      scrollTrigger = ScrollTrigger.create({
-        trigger: footer,
-        start: "top 85%",
-        once: true,
-        onEnter: () => {
+    let observer = null;
+    let hasAppeared = false;
+
+    // IntersectionObserver survives Lenis spy-nav jumps and ScrollTrigger.refresh()
+    // races that previously consumed or skipped the footer's once:true trigger.
+    const cancelGate = runWhenSettled(() => {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          if (!entry?.isIntersecting || hasAppeared) return;
+          hasAppeared = true;
+          observer?.disconnect();
+          observer = null;
           gsap.to(items, {
             opacity: 1,
             y: 0,
@@ -77,14 +95,16 @@ const Footer = () => {
             stagger: APPEAR_STAGGER,
           });
         },
-      });
-    }, 100);
+        { threshold: 0.12, rootMargin: "0px 0px -10% 0px" },
+      );
+      observer.observe(footer);
+    });
 
     return () => {
-      window.clearTimeout(timeoutId);
-      if (scrollTrigger) scrollTrigger.kill();
+      cancelGate();
+      observer?.disconnect();
     };
-  }, []);
+  }, [runWhenSettled]);
 
   const handleCopyEmail = async (href) => {
     try {
@@ -114,52 +134,57 @@ const Footer = () => {
           </h2>
 
           <div className="footer-top-right">
-          <Link to="/" className="footer-logo footer-appear" aria-label="Home">
-            DK
-          </Link>
-          <ul className="footer-socials footer-appear" aria-label="Social links">
-            {FOOTER_SOCIAL_LINKS.map(({ label, href, external, copy }) => (
-              <li key={label}>
-                {copy ? (
-                  <button
-                    type="button"
-                    className="footer-social-link"
-                    onClick={() => handleCopyEmail(href)}
-                    aria-label={
-                      emailCopied
-                        ? "Email copied to clipboard"
-                        : "Copy email address"
-                    }
-                    aria-live="polite"
-                  >
-                    <span>{emailCopied ? "Email copied!" : label}</span>
-                    {!emailCopied && (
+            <Link
+              to="/"
+              className="footer-logo footer-appear"
+              aria-label="Home"
+              onClick={handleLogoClick}
+            >
+              DK
+            </Link>
+            <ul className="footer-socials footer-appear" aria-label="Social links">
+              {FOOTER_SOCIAL_LINKS.map(({ label, href, external, copy }) => (
+                <li key={label}>
+                  {copy ? (
+                    <button
+                      type="button"
+                      className="footer-social-link"
+                      onClick={() => handleCopyEmail(href)}
+                      aria-label={
+                        emailCopied
+                          ? "Email copied to clipboard"
+                          : "Copy email address"
+                      }
+                      aria-live="polite"
+                    >
+                      <span>{emailCopied ? "Email copied!" : label}</span>
+                      {!emailCopied && (
+                        <span className="footer-social-arrow" aria-hidden="true">
+                          <img src={footerArrow} alt="" width={13} height={12} />
+                        </span>
+                      )}
+                    </button>
+                  ) : (
+                    <a
+                      href={href}
+                      className="footer-social-link"
+                      {...(external
+                        ? { target: "_blank", rel: "noopener noreferrer" }
+                        : {})}
+                      aria-label={
+                        external ? `${label} (opens in a new tab)` : label
+                      }
+                    >
+                      <span>{label}</span>
                       <span className="footer-social-arrow" aria-hidden="true">
                         <img src={footerArrow} alt="" width={13} height={12} />
                       </span>
-                    )}
-                  </button>
-                ) : (
-                  <a
-                    href={href}
-                    className="footer-social-link"
-                    {...(external
-                      ? { target: "_blank", rel: "noopener noreferrer" }
-                      : {})}
-                    aria-label={
-                      external ? `${label} (opens in a new tab)` : label
-                    }
-                  >
-                    <span>{label}</span>
-                    <span className="footer-social-arrow" aria-hidden="true">
-                      <img src={footerArrow} alt="" width={13} height={12} />
-                    </span>
-                  </a>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         <p className="footer-copyright footer-appear">© 2026 Daksh Kapoor</p>

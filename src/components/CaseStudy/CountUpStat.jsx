@@ -1,7 +1,8 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useWorkVideoTransition } from "../../context/WorkVideoTransitionContext";
+import useTransitionGate from "../../hooks/useTransitionGate";
+import { scheduleScrollTriggerRefresh } from "../../utils/scrollTriggerRefresh";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -26,54 +27,61 @@ export default function CountUpStat({
 }) {
   const rootRef = useRef(null);
   const [display, setDisplay] = useState((0).toFixed(decimals));
-  const { isTransitioning } = useWorkVideoTransition();
+  const runWhenSettled = useTransitionGate();
 
   useLayoutEffect(() => {
     const el = rootRef.current;
     if (!el) return undefined;
 
     const format = (value) => value.toFixed(decimals);
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      if (isTransitioning) return undefined;
-      setDisplay(format(number));
-      return undefined;
-    }
-
-    const obj = { value: 0 };
-    setDisplay(format(0));
-
-    const tween = gsap.to(obj, {
-      value: number,
-      duration,
-      delay,
-      ease: "power2.out",
-      paused: true,
-      onUpdate: () => setDisplay(format(obj.value)),
-    });
-
-    if (isTransitioning) {
-      return () => tween.kill();
-    }
-
+    let tween = null;
     let scrollTrigger = null;
-    const timeoutId = setTimeout(() => {
-      ScrollTrigger.refresh();
-      scrollTrigger = ScrollTrigger.create({
-        trigger: el,
-        start: "top 80%",
-        once: true,
-        onEnter: () => tween.play(),
+    let timeoutId = null;
+
+    if (!reducedMotion) {
+      const obj = { value: 0 };
+      setDisplay(format(0));
+
+      tween = gsap.to(obj, {
+        value: number,
+        duration,
+        delay,
+        ease: "power2.out",
+        paused: true,
+        onUpdate: () => setDisplay(format(obj.value)),
       });
-      ScrollTrigger.refresh();
-    }, 100);
+    }
+
+    const startCount = () => {
+      if (reducedMotion) {
+        setDisplay(format(number));
+        return;
+      }
+
+      timeoutId = setTimeout(() => {
+        scrollTrigger = ScrollTrigger.create({
+          trigger: el,
+          start: "top 80%",
+          once: true,
+          onEnter: () => tween.play(),
+        });
+        scheduleScrollTriggerRefresh();
+      }, 100);
+    };
+
+    const cancelGate = runWhenSettled(startCount);
 
     return () => {
-      clearTimeout(timeoutId);
-      tween.kill();
+      cancelGate();
+      if (timeoutId) clearTimeout(timeoutId);
       if (scrollTrigger) scrollTrigger.kill();
+      if (tween) tween.kill();
     };
-  }, [number, decimals, delay, duration, isTransitioning]);
+  }, [number, decimals, delay, duration, runWhenSettled]);
 
   const formattedFinal = `${prefix}${number.toFixed(decimals)}${suffix}`;
 

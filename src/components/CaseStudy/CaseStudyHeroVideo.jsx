@@ -66,12 +66,11 @@ export default function CaseStudyHeroVideo({
       return undefined;
     };
 
+    // Reset scroll once. Doing it inside the measure loop interleaves writes
+    // with reads and forces a synchronous layout on every frame.
     scrollToTopNow();
 
-    const readTargetRect = () => {
-      scrollToTopNow();
-      return measureEl.getBoundingClientRect();
-    };
+    const readTargetRect = () => measureEl.getBoundingClientRect();
 
     const tryRegister = (rect) => {
       if (hasRegisteredRef.current) return true;
@@ -93,7 +92,9 @@ export default function CaseStudyHeroVideo({
     let stableFrames = 0;
     let frames = 0;
     let rafId = 0;
-    const maxFrames = 24;
+    // The hero's box is reserved by `aspect-ratio`, so it settles almost
+    // immediately; a long ceiling here just freezes the overlay on the card.
+    const maxFrames = 10;
 
     const tick = () => {
       if (hasRegisteredRef.current) return;

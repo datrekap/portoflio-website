@@ -14,20 +14,13 @@ import Work from "./pages/Work/Work";
 import Play from "./pages/Play/Play";
 import About from "./pages/About/About";
 import NotFound from "./pages/NotFound/NotFound";
+import { caseStudyLoader } from "./routes/caseStudyRoutes";
 import "./App.css";
 
-const PFALCaseStudy = lazy(
-  () => import("./pages/PFALCaseStudy/PFALCaseStudy"),
-);
-const TrojanStepCaseStudy = lazy(
-  () => import("./pages/TrojanStepCaseStudy/TrojanStepCaseStudy"),
-);
-const PropertyworksCaseStudy = lazy(
-  () => import("./pages/PropertyworksCaseStudy/PropertyworksCaseStudy"),
-);
-const ParkwiseCaseStudy = lazy(
-  () => import("./pages/ParkwiseCaseStudy/ParkwiseCaseStudy"),
-);
+const PFALCaseStudy = lazy(caseStudyLoader("/public-future-arts-lab"));
+const TrojanStepCaseStudy = lazy(caseStudyLoader("/trojanstep"));
+const PropertyworksCaseStudy = lazy(caseStudyLoader("/sitehub-2"));
+const ParkwiseCaseStudy = lazy(caseStudyLoader("/parkwise"));
 
 const LenisScrollTriggerIntegration = () => {
   const lenis = useLenis();
@@ -85,9 +78,7 @@ function App() {
               pointerEvents: "none",
             }}
           >
-            <div style={{ pointerEvents: "auto" }}>
-              <Nav />
-            </div>
+            <Nav />
           </div>
           <Routes>
             <Route path="/" element={<Home />} />

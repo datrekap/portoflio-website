@@ -18,6 +18,7 @@ export const workProjects = [
     route: "/public-future-arts-lab",
     videoTransition: true,
     heroVideoCrop: "cover-bottom",
+    badges: ["Exhibited at Fulton County Government Center"],
   },
   {
     id: "sitehub-2",
@@ -52,6 +53,7 @@ export const workProjects = [
     route: "/trojanstep",
     videoTransition: true,
     heroVideoCrop: "cover-bottom",
+    badges: ["Exhibited at Georgia Tech DEMO DAY"],
   },
   {
     id: "soundclouds",
@@ -60,7 +62,8 @@ export const workProjects = [
     category: "research",
     summary:
       "Informing Fulton County residents of the county's solar efforts. Maybe some more lines here.",
-    image: "public/work/SoundClouds/Thumbnail.png",
+    image: "public/work/SoundClouds/Thumbnail.webp",
+    badges: ["Accepted at C&C 2026", "Accepted at NeurIPS 2025"],
   },
   {
     id: "photovoice",
@@ -69,7 +72,7 @@ export const workProjects = [
     category: "motion",
     summary:
       "Some sentences that describe my work as the lead designer and what not.",
-    image: "public/work/PhotoVoice/Thumbnail.png",
+    image: "public/work/PhotoVoice/Thumbnail.webp",
   },
   {
     id: "puffer",
@@ -78,7 +81,8 @@ export const workProjects = [
     category: "research",
     summary:
       "Informing Fulton County residents of the county's solar efforts. Maybe some more lines here.",
-    image: "public/work/Puffer/Thumbnail.png",
+    image: "public/work/Puffer/Thumbnail.webp",
+    badges: ["Accepted at TEI 2026"],
   },
   {
     id: "mossbuds",
@@ -87,6 +91,6 @@ export const workProjects = [
     category: "product-design",
     summary:
       "How do I gamify dancing to remove the barriers of anxiety relating to body expression and movement.",
-    image: "public/work/MossBuds/Thumbnail.png",
+    image: "public/work/MossBuds/Thumbnail.webp",
   },
 ];
