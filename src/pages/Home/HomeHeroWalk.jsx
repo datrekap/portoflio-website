@@ -104,11 +104,11 @@ function makeSlotBatch(recent) {
 function pickWarmupDeck() {
   const acclimate = shuffle(WARMUP_ACCLIMATE_LINES);
   const guides = shuffle(WARMUP_GUIDE_LINES);
-  return shuffle([acclimate[0], acclimate[1], guides[0]]);
+  return [acclimate[0], acclimate[1], guides[0]];
 }
 
 function createSessionDecks() {
-  // One opener on load, then three warmup pokes, then walker lines.
+  // Load: opener. Pokes 1–2: acclimate. Poke 3: guide. Then walker lines.
   const openers = shuffle(OPENER_LINES);
   return {
     intro: openers.slice(0, 1),
