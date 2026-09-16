@@ -42,19 +42,6 @@ npm run build      # production build to dist/
 npm run preview    # serve the production build locally
 ```
 
-## Scripts
-
-| Command | What it does |
-| --- | --- |
-| `npm run dev` | Start the Vite dev server |
-| `npm run build` | Production build |
-| `npm run preview` | Preview the production build |
-| `npm run compress:case-study` | Compress case-study media (`tools/compress-case-study-media.mjs`) |
-
-## Deploy
-
-This repo includes `vercel.json` (Vite build, `dist` output, SPA rewrites). Import the GitHub repository in [Vercel](https://vercel.com) and deploy from `main`.
-
 ## Contact
 
 - Email: [dkreates.design@gmail.com](mailto:dkreates.design@gmail.com)
