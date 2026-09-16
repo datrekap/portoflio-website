@@ -32,16 +32,18 @@ const AboutIntroPhotoTrack = memo(function AboutIntroPhotoTrack({ trackRef }) {
                   src={photo.src}
                   alt={photo.alt}
                   draggable="false"
+                  decoding="async"
                   style={{ objectPosition: photo.objectPosition }}
                 />
               </span>
               <span className="about-intro-card__face about-intro-card__face--back">
-                <img
-                  src={back.src}
-                  alt={back.alt}
-                  draggable="false"
-                  style={{ objectPosition: back.objectPosition }}
-                />
+                  <img
+                    src={back.src}
+                    alt={back.alt}
+                    draggable="false"
+                    decoding="async"
+                    style={{ objectPosition: back.objectPosition }}
+                  />
               </span>
             </span>
           </span>
@@ -157,13 +159,12 @@ const AboutPhoto = ({ photo }) => {
     >
       {isVideo ? (
         <video
-          src={photo.src}
+          data-src={photo.src}
           poster={photo.poster}
           muted
           loop
-          autoPlay
           playsInline
-          preload="metadata"
+          preload="none"
           controls={false}
           disablePictureInPicture
           aria-label={photo.alt}
@@ -176,6 +177,8 @@ const AboutPhoto = ({ photo }) => {
         <img
           src={photo.src}
           alt={photo.alt}
+          loading="lazy"
+          decoding="async"
           style={{ objectPosition: photo.objectPosition }}
           draggable="false"
         />
@@ -208,8 +211,20 @@ function AboutPhotoStrip() {
     const root = scrollerRef.current;
     if (!root) return undefined;
 
+    const videos = () => [...root.querySelectorAll("video")];
+
+    const ensureSources = () => {
+      videos().forEach((video) => {
+        const pending = video.dataset.src;
+        if (pending && video.getAttribute("src") !== pending) {
+          video.src = pending;
+        }
+      });
+    };
+
     const setPlaying = (shouldPlay) => {
-      root.querySelectorAll("video").forEach((video) => {
+      if (shouldPlay) ensureSources();
+      videos().forEach((video) => {
         if (shouldPlay) {
           video.play().catch(() => {});
         } else {
@@ -222,7 +237,7 @@ function AboutPhotoStrip() {
       ([entry]) => {
         setPlaying(entry.isIntersecting);
       },
-      { threshold: 0.08 },
+      { threshold: 0.08, rootMargin: "240px 0px" },
     );
     observer.observe(root);
 

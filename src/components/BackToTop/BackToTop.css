@@ -90,8 +90,8 @@
 
 @media (max-width: 768px) {
   .back-to-top-button {
-    bottom: 1.5rem;
-    right: 1rem;
+    bottom: calc(1.25rem + var(--safe-bottom));
+    right: calc(1rem + var(--safe-right));
     width: 2.5rem;
     height: 2.5rem;
   }

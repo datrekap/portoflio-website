@@ -184,6 +184,11 @@
 }
 
 @media (max-width: 767px) {
+  .work-project-card {
+    padding: 1rem 0.85rem 1.15rem;
+    gap: 1.15rem;
+  }
+
   .work-project-card__header {
     flex-direction: column;
     align-items: flex-start;
@@ -195,8 +200,14 @@
   }
 
   .work-project-card__badges {
-    left: 1.125rem;
-    right: 1.125rem;
-    bottom: 1.125rem;
+    left: 0.85rem;
+    right: 0.85rem;
+    bottom: 0.85rem;
+  }
+
+  .work-project-card__badges .exhibition-badge {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.6875rem;
+    max-width: 100%;
   }
 }

@@ -10,8 +10,8 @@ import React, {
 import { useLenis } from "@studio-freight/react-lenis";
 
 const MAX_PLAYING = 3;
-const LOAD_ROOT_MARGIN = "800px 80px";
-const PLAY_ROOT_MARGIN = "560px 0px";
+const LOAD_ROOT_MARGIN = "480px 40px";
+const PLAY_ROOT_MARGIN = "360px 0px";
 const REVEAL_AFTER_FRAMES = 3;
 let videoOrder = 0;
 

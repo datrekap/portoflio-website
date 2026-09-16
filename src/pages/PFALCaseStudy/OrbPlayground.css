@@ -48,6 +48,13 @@
   user-select: none;
 }
 
+@media (max-width: 768px) {
+  .pfal-orb-playground {
+    max-height: 70dvh;
+    aspect-ratio: 1 / 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pfal-orb-playground__orb {
     will-change: auto;

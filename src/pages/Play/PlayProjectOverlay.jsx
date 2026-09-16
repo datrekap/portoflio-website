@@ -5,7 +5,7 @@ import PlayExhibitionBadge from "./PlayExhibitionBadge";
 
 const SLIDE_MS = 520;
 
-function OverlayMedia({ src, poster, alt, className = "" }) {
+function OverlayMedia({ src, poster, alt, className = "", eager = false }) {
   if (src?.endsWith(".mp4")) {
     return (
       <video
@@ -16,12 +16,21 @@ function OverlayMedia({ src, poster, alt, className = "" }) {
         loop
         playsInline
         autoPlay
+        preload={eager ? "auto" : "metadata"}
         aria-label={alt}
       />
     );
   }
 
-  return <img className={className} src={poster || src} alt={alt} />;
+  return (
+    <img
+      className={className}
+      src={poster || src}
+      alt={alt}
+      loading={eager ? "eager" : "lazy"}
+      decoding="async"
+    />
+  );
 }
 
 function PlayProjectOverlay({ overlay, onClose }) {
@@ -146,6 +155,7 @@ function PlayProjectOverlay({ overlay, onClose }) {
             src={overlay.hero.src}
             poster={overlay.hero.poster}
             alt={overlay.hero.alt}
+            eager
           />
           {overlay.heroTitle ? (
             <p className="play-overlay-hero-title">{overlay.heroTitle}</p>

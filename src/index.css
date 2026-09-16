@@ -24,7 +24,11 @@
 @layer base {
   :root {
     --page-max-width: 96rem;
-    --page-gutter-x: 3.25rem;
+    --page-gutter-x: 1.25rem;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
     --bento-card-radius: 4px;
     --case-study-body-size: 1rem;
     --case-study-body-line-height: 1.6;
@@ -43,7 +47,13 @@
 
   @media (min-width: 640px) {
     :root {
-      --page-gutter-x: 4.25rem;
+      --page-gutter-x: 2rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    :root {
+      --page-gutter-x: 3.25rem;
     }
   }
 
@@ -70,6 +80,10 @@
   body {
     @apply antialiased;
     overflow-x: hidden;
+    min-height: 100vh;
+    min-height: 100dvh;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
   code {

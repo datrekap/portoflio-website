@@ -117,6 +117,8 @@ export default function ImageCompareSlider({
               className="image-compare__img image-compare__img--before"
               style={{ opacity: 1 - fade }}
               draggable={false}
+              loading="lazy"
+              decoding="async"
             />
             <img
               src={afterSrc}
@@ -124,6 +126,8 @@ export default function ImageCompareSlider({
               className="image-compare__img image-compare__img--after"
               style={{ opacity: fade }}
               draggable={false}
+              loading="lazy"
+              decoding="async"
             />
           </div>
           <div
@@ -157,6 +161,8 @@ export default function ImageCompareSlider({
             alt={afterAlt}
             className="image-compare__img image-compare__img--after"
             draggable={false}
+            loading="lazy"
+            decoding="async"
           />
           <div className="image-compare__before" aria-hidden="true">
             <img
@@ -164,6 +170,8 @@ export default function ImageCompareSlider({
               alt=""
               className="image-compare__img image-compare__img--before"
               draggable={false}
+              loading="lazy"
+              decoding="async"
             />
             {beforeLabel ? (
               <span className="image-compare__tag image-compare__tag--before">

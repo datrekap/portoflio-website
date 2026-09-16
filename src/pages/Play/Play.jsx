@@ -182,7 +182,7 @@ function PlayTile({ tile, index, onOpenOverlay }) {
             alt={tile.alt}
           />
         ) : (
-          <img src={tile.src} alt={tile.alt} />
+          <img src={tile.src} alt={tile.alt} loading="lazy" decoding="async" />
         )}
         <PlayExhibitionBadge>{tile.badge}</PlayExhibitionBadge>
       </div>

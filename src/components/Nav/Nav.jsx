@@ -23,6 +23,7 @@ const Nav = () => {
   const lenis = useLenis();
   const { scrollToTop } = useLenisScroll();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [navRevealed, setNavRevealed] = useState(false);
   const [windowWidth, setWindowWidth] = useState(() =>
     typeof window !== "undefined" ? window.innerWidth : 1024,
   );
@@ -89,11 +90,20 @@ const Nav = () => {
     let revealed = false;
 
     gsap.killTweensOf(nav);
+    nav.classList.remove("is-revealed");
+    setNavRevealed(false);
     gsap.set(nav, {
       y: -110,
       opacity: 0,
       pointerEvents: "none",
     });
+    setIsMobileMenuOpen(false);
+    document.body.classList.remove("mobile-menu-open");
+    lenis?.start();
+    const menu = mobileMenuRef.current;
+    if (menu) {
+      gsap.set(menu, { visibility: "hidden", opacity: 0, y: "-100%" });
+    }
 
     const reveal = () => {
       if (revealed) return;
@@ -106,6 +116,11 @@ const Nav = () => {
         overwrite: "auto",
         onStart() {
           nav.style.pointerEvents = "auto";
+        },
+        onComplete() {
+          nav.classList.add("is-revealed");
+          nav.style.transform = "none";
+          setNavRevealed(true);
         },
       });
     };
@@ -121,7 +136,7 @@ const Nav = () => {
       window.clearTimeout(fallback);
       tween?.kill();
     };
-  }, [location.pathname]);
+  }, [location.pathname, lenis]);
 
   useEffect(() => {
     const menu = mobileMenuRef.current;
@@ -152,6 +167,17 @@ const Nav = () => {
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
+
+  useEffect(() => {
+    if (windowWidth <= 768 || !isMobileMenuOpen) return;
+    setIsMobileMenuOpen(false);
+    lenis?.start();
+    document.body.classList.remove("mobile-menu-open");
+    const menu = mobileMenuRef.current;
+    if (menu) {
+      gsap.set(menu, { visibility: "hidden", opacity: 0, y: "-100%" });
+    }
+  }, [windowWidth, isMobileMenuOpen, lenis]);
 
   // On desktop: always show nav items and keep hamburger hidden (no scroll collapse).
   // On small screens, CSS handles collapse via .desktop-only / .mobile-only.
@@ -185,15 +211,10 @@ const Nav = () => {
 
   useEffect(() => {
     return () => {
-      if (isMobileMenuOpen) {
-        if (lenis) {
-          lenis.start();
-        } else {
-          document.body.classList.remove("mobile-menu-open");
-        }
-      }
+      document.body.classList.remove("mobile-menu-open");
+      lenis?.start();
     };
-  }, [isMobileMenuOpen, lenis]);
+  }, [lenis]);
 
   const toggleMobileMenu = () => {
     const newState = !isMobileMenuOpen;
@@ -203,17 +224,11 @@ const Nav = () => {
     const menu = mobileMenuRef.current;
 
     if (newState) {
-      if (lenis) {
-        lenis.stop();
-      } else {
-        document.body.classList.add("mobile-menu-open");
-      }
+      document.body.classList.add("mobile-menu-open");
+      lenis?.stop();
     } else {
-      if (lenis) {
-        lenis.start();
-      } else {
-        document.body.classList.remove("mobile-menu-open");
-      }
+      document.body.classList.remove("mobile-menu-open");
+      lenis?.start();
     }
 
     if (hamburger) {
@@ -327,10 +342,12 @@ const Nav = () => {
   return (
     <nav
       ref={navRef}
-      className="site-nav top-0 z-[100] relative"
+      className={`site-nav top-0 z-[100] relative${
+        navRevealed ? " is-revealed" : ""
+      }${isMobileMenuOpen ? " is-menu-open" : ""}`}
     >
       <div className="page-content-shell">
-        <div className="flex items-center py-5 z-[1000] relative min-h-[32px]">
+        <div className="nav-bar-row flex items-center py-5 z-[1001] relative min-h-[32px]">
           {/* Mobile: compact logo on the left, hamburger on the right */}
           <Link
             to="/"
@@ -372,7 +389,9 @@ const Nav = () => {
               isMobileMenuOpen ? "menu-open" : ""
             }`}
             onClick={toggleMobileMenu}
-            aria-label="Toggle menu"
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="mobile-site-menu"
             ref={hamburgerRef}
           >
             <span className="hamburger-line" />
@@ -380,7 +399,11 @@ const Nav = () => {
           </button>
         </div>
       </div>
-      <div className="mobile-menu-popover" ref={mobileMenuRef}>
+      <div
+        id="mobile-site-menu"
+        className="mobile-menu-popover"
+        ref={mobileMenuRef}
+      >
         <ul className="mobile-menu-list">
           {mobileNavItems.map((item, i) => {
             if (item.isLogo) {

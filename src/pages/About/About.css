@@ -611,9 +611,38 @@
 }
 
 @media (max-width: 768px) {
+  .about-intro {
+    padding-top: clamp(5.25rem, 12vw, 7rem);
+  }
+
+  .about-intro-photos {
+    --about-intro-visible: 1.45;
+  }
+
+  .about-intro-photos-scroller {
+    touch-action: pan-x pan-y;
+  }
+
+  .about-hover-phrase__art {
+    left: 0;
+    right: auto;
+    bottom: auto;
+    top: calc(100% + 0.35rem);
+    width: min(7.5rem, 42vw);
+    transform-origin: 0% 0%;
+  }
+
+  .about-intro-photos__hover {
+    display: none;
+  }
+
   .about-bio p,
   .about-little-things-copy {
     text-align: left;
+  }
+
+  .about-quote {
+    --about-quote-gap: clamp(3.5rem, 10vw, 7rem);
   }
 
   .about-experience-item {
@@ -628,6 +657,19 @@
   .about-photos {
     --about-photo-gap: 1rem;
     --about-photo-stack-gap: 1rem;
+    --about-photo-col-w: clamp(8.25rem, 38vw, 12.5rem);
+  }
+
+  .about-photos-scroller {
+    touch-action: pan-x pan-y;
+  }
+}
+
+@media (hover: none) {
+  .about-hover-phrase:focus .about-hover-phrase__art,
+  .about-hover-phrase:active .about-hover-phrase__art {
+    opacity: 1;
+    transform: translate(0.15rem, 0.15rem) scale(1);
   }
 }
 

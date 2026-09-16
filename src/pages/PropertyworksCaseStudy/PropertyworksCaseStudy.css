@@ -344,3 +344,13 @@
   }
 }
 
+@media (max-width: 768px) {
+  .pw-hover-phrase__art {
+    left: 0;
+    top: calc(100% + 0.35rem);
+    bottom: auto;
+    width: min(7.5rem, 42vw);
+    transform-origin: 0% 0%;
+  }
+}
+

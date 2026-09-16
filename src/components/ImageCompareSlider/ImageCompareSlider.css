@@ -224,3 +224,9 @@
     transition: none;
   }
 }
+
+@media (max-width: 768px) {
+  .image-compare {
+    --compare-handle-size: 3.15rem;
+  }
+}

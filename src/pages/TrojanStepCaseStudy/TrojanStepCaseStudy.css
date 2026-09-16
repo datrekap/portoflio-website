@@ -998,4 +998,12 @@
     gap: 0.5rem;
     aspect-ratio: 3 / 4;
   }
+
+  .ts-hover-phrase__art {
+    left: 0;
+    top: calc(100% + 0.35rem);
+    bottom: auto;
+    width: min(7.5rem, 42vw);
+    transform-origin: 0% 0%;
+  }
 }

@@ -34,6 +34,7 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
 
   const [isHovered, setIsHovered] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
+  const [videoArmed, setVideoArmed] = useState(false);
 
   const canHover =
     typeof window !== "undefined" &&
@@ -99,6 +100,7 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
 
     isHoveredRef.current = true;
     setIsHovered(true);
+    if (showVideo) setVideoArmed(true);
 
     // Warm the case study chunk now so the click does not pay for it mid-transition.
     prefetchCaseStudy(project.route);
@@ -248,8 +250,9 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
             alt=""
             className="work-project-card__image"
             loading="lazy"
+            decoding="async"
           />
-          {showVideo ? (
+          {canHover && showVideo && videoArmed ? (
             <video
               ref={videoRef}
               src={hoverVideo}
@@ -257,9 +260,15 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
               muted
               playsInline
               loop
-              preload="metadata"
+              preload="auto"
               aria-hidden="true"
               onError={handleVideoError}
+              onCanPlay={(event) => {
+                if (!isHoveredRef.current) return;
+                event.currentTarget.play().catch(() => {
+                  setVideoFailed(true);
+                });
+              }}
             />
           ) : null}
         </div>

@@ -6,6 +6,7 @@
   --home-grid-line-width: var(--site-grid-line-width);
   --home-selected-work-pad-y: clamp(3.5rem, 7vh, 5.5rem);
   min-height: 100vh;
+  min-height: 100dvh;
   width: 100%;
 }
 
@@ -16,6 +17,7 @@
   --home-ground-rise: calc(var(--home-ground-right) - var(--home-ground-left));
   position: relative;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -274,14 +276,36 @@
 }
 
 @media (max-width: 700px) {
+  .home-landing {
+    --home-ground-left: clamp(3.25rem, 9vh, 4.25rem);
+    --home-ground-right: clamp(4rem, 11vh, 5.25rem);
+    align-items: flex-start;
+  }
+
+  .home-landing-content {
+    padding-top: clamp(5.75rem, 14vh, 7rem);
+    padding-bottom: calc(var(--home-ground-left) + clamp(8rem, 24vh, 11rem));
+  }
+
   .home-hero-walker-slot {
-    width: clamp(13.5rem, 56vw, 17rem);
+    --home-walker-inset: 0rem;
+    right: var(--page-gutter-x);
+    width: clamp(9.75rem, 42vw, 13.5rem);
+    bottom: calc(var(--home-ground-right) - 1.35rem);
   }
 
   .home-hero-caption {
     max-width: min(9.5rem, 58vw);
     font-size: 0.6875rem;
     padding: 0.32rem 0.55rem 0.34rem;
+  }
+
+  .home-hero--letters .home-hero-line-inner {
+    max-width: 100%;
+  }
+
+  .home-grid-overlay {
+    --home-grid-size: 80px;
   }
 }
 
@@ -305,7 +329,7 @@
 .home-hero {
   margin: 0 0 0 0.3rem;
   font-family: "Major Mono Display", monospace;
-  font-size: 80px;
+  font-size: clamp(1.85rem, 6.4vw, 80px);
   font-weight: 400;
   line-height: 0.95;
   letter-spacing: -0.04em;
@@ -358,7 +382,7 @@
 .home-bio {
   margin: 0 0 0 clamp(0.75rem, 1.6vw, 0rem);
   font-family: "Montserrat", sans-serif;
-  font-size: 30px;
+  font-size: clamp(1.05rem, 2.4vw, 30px);
   font-weight: 400;
   line-height: 1.25;
   color: #333333;

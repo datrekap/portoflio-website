@@ -3,7 +3,7 @@
 .home-publications {
   position: relative;
   width: 100%;
-  padding: var(--home-selected-work-pad-y) 0 8rem;
+  padding: var(--home-selected-work-pad-y) 0 clamp(4rem, 10vw, 8rem);
   overflow: hidden;
 }
 
