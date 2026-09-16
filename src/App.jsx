@@ -8,6 +8,7 @@ import WorkVideoTransitionOverlay from "./components/WorkVideoTransition/WorkVid
 import WorkVideoTransitionLenisBridge from "./components/WorkVideoTransition/WorkVideoTransitionLenisBridge";
 import Nav from "./components/Nav/Nav";
 import ScrollToTop from "./components/ScrollToTop";
+import DocumentMeta from "./components/DocumentMeta";
 import BackToTop from "./components/BackToTop/BackToTop";
 import Home from "./pages/Home/Home";
 import Work from "./pages/Work/Work";
@@ -67,6 +68,7 @@ function App() {
         <WorkVideoTransitionProvider>
           <LenisScrollTriggerIntegration />
           <WorkVideoTransitionLenisBridge />
+          <DocumentMeta />
           <ScrollToTop />
           <BackToTop />
           <WorkVideoTransitionOverlay />
