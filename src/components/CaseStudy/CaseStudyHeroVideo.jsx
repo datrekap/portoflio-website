@@ -1,10 +1,36 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { useLocation } from "react-router-dom";
 import { useWorkVideoTransition } from "../../context/WorkVideoTransitionContext";
 import {
   useCaseStudyManagedVideo,
   useCaseStudyMedia,
 } from "./CaseStudyMedia";
+
+/** Wait until the video has been painted in its new parent before the overlay drops. */
+function waitForVideoPaint(video) {
+  return new Promise((resolve) => {
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      window.clearTimeout(safety);
+      resolve();
+    };
+
+    const safety = window.setTimeout(finish, 160);
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (video && typeof video.requestVideoFrameCallback === "function") {
+          video.requestVideoFrameCallback(() => finish());
+          return;
+        }
+        finish();
+      });
+    });
+  });
+}
 
 export default function CaseStudyHeroVideo({
   projectId,
@@ -51,19 +77,28 @@ export default function CaseStudyHeroVideo({
         claimedVideo.className = "cs-hero-media__video pfal-hero-media__video";
         claimedVideo.style.cssText = "";
         mediaEl.prepend(claimedVideo);
-        setHasTransferredVideo(true);
-        setRevealed(true);
+
+        // Flush reveal before we wait — the overlay still holds a freeze frame
+        // on top until this promise resolves.
+        flushSync(() => {
+          setHasTransferredVideo(true);
+          setRevealed(true);
+        });
+
         register("page-hero", claimedVideo, 0);
         setVisible("page-hero", true);
         setInView("page-hero", true);
         if (!reducedMotion) claimedVideo.play().catch(() => {});
-        return undefined;
+
+        return waitForVideoPaint(claimedVideo);
       }
 
       const video = videoRef.current;
-      setRevealed(true);
+      flushSync(() => {
+        setRevealed(true);
+      });
       if (!reducedMotion) video?.play().catch(() => {});
-      return undefined;
+      return waitForVideoPaint(video);
     };
 
     // Reset scroll once. Doing it inside the measure loop interleaves writes

@@ -50,6 +50,16 @@
   object-fit: cover;
 }
 
+.work-video-transition-freeze {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
 .work-video-transition-shell--cover-bottom .work-video-transition-video,
 .work-video-transition-shell--pfal .work-video-transition-video {
   top: auto;

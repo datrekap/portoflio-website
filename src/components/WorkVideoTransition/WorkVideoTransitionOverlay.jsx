@@ -83,6 +83,52 @@ function attachClaimedVideo(inner, claimed) {
   inner.appendChild(claimed);
 }
 
+/**
+ * Leave a still of the current frame in the overlay so reparenting the live
+ * <video> cannot flash the page chrome or an empty black shell.
+ */
+function pinFreezeFrame(inner, video, coverBottom) {
+  if (!inner || !video) return null;
+
+  const width = Math.max(1, Math.round(inner.clientWidth || video.clientWidth || 1));
+  const height = Math.max(
+    1,
+    Math.round(inner.clientHeight || video.clientHeight || 1),
+  );
+  const ratio = window.devicePixelRatio || 1;
+  const canvas = document.createElement("canvas");
+  canvas.className = "work-video-transition-freeze";
+  canvas.width = Math.max(1, Math.round(width * ratio));
+  canvas.height = Math.max(1, Math.round(height * ratio));
+  canvas.setAttribute("aria-hidden", "true");
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return null;
+
+  const vw = video.videoWidth || width;
+  const vh = video.videoHeight || height;
+  if (vw < 2 || vh < 2) return null;
+
+  // Match object-fit: cover. Cover-bottom heroes use a taller crop anchored
+  // to the bottom (same idea as the 165% CSS rule).
+  const sourceH = coverBottom ? vh / 1.65 : vh;
+  const sourceY = coverBottom ? vh - sourceH : 0;
+  const scale = Math.max(canvas.width / vw, canvas.height / sourceH);
+  const dw = vw * scale;
+  const dh = sourceH * scale;
+  const dx = (canvas.width - dw) / 2;
+  const dy = coverBottom ? canvas.height - dh : (canvas.height - dh) / 2;
+
+  try {
+    ctx.drawImage(video, 0, sourceY, vw, sourceH, dx, dy, dw, dh);
+  } catch {
+    return null;
+  }
+
+  inner.appendChild(canvas);
+  return canvas;
+}
+
 function WorkVideoTransitionOverlay() {
   const { transition, completeTransition, getClaimedVideo } =
     useWorkVideoTransition();
@@ -185,18 +231,25 @@ function WorkVideoTransitionOverlay() {
     shell.style.transform = frames.shell[0].transform;
     inner.style.transform = frames.inner[0].transform;
 
-    const settle = () => {
+    const settleTransforms = () => {
       shell.style.transform = "none";
       inner.style.transform = "none";
-      shell.style.willChange = "auto";
-      inner.style.willChange = "auto";
     };
 
     const finish = () => {
       if (hasCompletedRef.current) return;
       hasCompletedRef.current = true;
-      settle();
-      // Release the chrome the exit faded out but the route change kept.
+
+      settleTransforms();
+
+      // Freeze the current frame in the overlay, then hand the live video to
+      // the hero underneath. The still covers the shell until the hero has
+      // painted, so neither #000 nor the page grey can flash through.
+      const liveVideo = transition.usesClaimedVideo
+        ? getClaimedVideo()
+        : fallbackVideoRef.current;
+      pinFreezeFrame(inner, liveVideo, coverBottom);
+
       resetPageExit();
       completeTransition();
     };
@@ -237,7 +290,13 @@ function WorkVideoTransitionOverlay() {
     const innerAnimation = inner.animate(frames.inner, options);
 
     const onFinished = () => {
-      settle();
+      if (hasCompletedRef.current) return;
+      try {
+        shellAnimation.commitStyles?.();
+        innerAnimation.commitStyles?.();
+      } catch {
+        /* commitStyles can throw if the element was detached */
+      }
       shellAnimation.cancel();
       innerAnimation.cancel();
       finish();
