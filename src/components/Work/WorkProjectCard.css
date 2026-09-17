@@ -1,6 +1,4 @@
 .work-project-card {
-  --work-card-inset: 0.875rem;
-
   position: relative;
   display: flex;
   flex-direction: column;
@@ -46,7 +44,7 @@
 
 .work-project-card__media {
   width: 100%;
-  padding: var(--work-card-inset);
+  padding: 0;
   overflow: hidden;
   background: transparent;
   box-sizing: border-box;
@@ -158,8 +156,6 @@
   flex-direction: column;
   gap: 0.5rem;
   width: 100%;
-  padding-left: var(--work-card-inset);
-  padding-right: var(--work-card-inset);
   box-sizing: border-box;
 }
 
@@ -207,7 +203,6 @@
   .work-project-card {
     padding: 1rem 0.85rem 1.15rem;
     gap: 1.15rem;
-    --work-card-inset: 1rem;
   }
 
   .work-project-card__header {
