@@ -31,6 +31,8 @@ const Nav = () => {
   const mobileMenuRef = useRef(null);
   const navItemsRef = useRef(null);
   const navRef = useRef(null);
+  const menuOpenRef = useRef(false);
+  const menuClosingRef = useRef(false);
 
   const RESUME_URL =
     "https://drive.google.com/file/d/1dxbGxh4xrmuKMV1uSPrl-MKsIY3JT1mn/view?usp=drive_link";
@@ -98,10 +100,13 @@ const Nav = () => {
       pointerEvents: "none",
     });
     setIsMobileMenuOpen(false);
+    menuOpenRef.current = false;
+    menuClosingRef.current = false;
     document.body.classList.remove("mobile-menu-open");
     lenis?.start();
     const menu = mobileMenuRef.current;
     if (menu) {
+      gsap.killTweensOf(menu);
       gsap.set(menu, { visibility: "hidden", opacity: 0, y: "-8%" });
     }
 
@@ -162,10 +167,13 @@ const Nav = () => {
   useEffect(() => {
     if (windowWidth <= 768 || !isMobileMenuOpen) return;
     setIsMobileMenuOpen(false);
+    menuOpenRef.current = false;
+    menuClosingRef.current = false;
     lenis?.start();
     document.body.classList.remove("mobile-menu-open");
     const menu = mobileMenuRef.current;
     if (menu) {
+      gsap.killTweensOf(menu);
       gsap.set(menu, { visibility: "hidden", opacity: 0, y: "-8%" });
     }
   }, [windowWidth, isMobileMenuOpen, lenis]);
@@ -174,10 +182,17 @@ const Nav = () => {
   // On small screens, CSS handles collapse via .desktop-only / .mobile-only.
   useEffect(() => {
     const isDesktop = windowWidth > 768;
-    if (!isDesktop) return;
+    const hamburger = hamburgerRef.current;
+
+    if (!isDesktop) {
+      if (hamburger) {
+        gsap.set(hamburger, { clearProps: "opacity,transform,scale" });
+        hamburger.style.pointerEvents = "auto";
+      }
+      return;
+    }
 
     const navItems = navItemsRef.current?.children;
-    const hamburger = hamburgerRef.current;
 
     if (!navItems || navItems.length === 0 || !hamburger) return;
 
@@ -196,58 +211,114 @@ const Nav = () => {
 
   useEffect(() => {
     return () => {
+      const menu = mobileMenuRef.current;
+      if (menu) gsap.killTweensOf(menu);
       document.body.classList.remove("mobile-menu-open");
       lenis?.start();
     };
   }, [lenis]);
 
-  const toggleMobileMenu = () => {
-    const newState = !isMobileMenuOpen;
-    setIsMobileMenuOpen(newState);
+  const prefersReducedMotion = () =>
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const openMobileMenu = () => {
+    const menu = mobileMenuRef.current;
+    if (!menu) return;
+
+    menuClosingRef.current = false;
+    menuOpenRef.current = true;
+    setIsMobileMenuOpen(true);
+    document.body.classList.add("mobile-menu-open");
+    lenis?.stop();
+    gsap.killTweensOf(menu);
+    gsap.set(menu, { visibility: "visible" });
 
     const hamburger = hamburgerRef.current;
+    if (hamburger) {
+      gsap.set(hamburger, { opacity: 1, scale: 1, zIndex: 1100 });
+      hamburger.style.pointerEvents = "auto";
+    }
+
+    if (prefersReducedMotion()) {
+      gsap.set(menu, { y: "0%", opacity: 1 });
+      return;
+    }
+
+    gsap.to(menu, {
+      y: "0%",
+      opacity: 1,
+      duration: 0.72,
+      ease: "power3.out",
+      overwrite: true,
+    });
+  };
+
+  const closeMobileMenu = (afterClose) => {
     const menu = mobileMenuRef.current;
 
-    if (newState) {
-      document.body.classList.add("mobile-menu-open");
-      lenis?.stop();
-    } else {
+    const finish = () => {
+      menuClosingRef.current = false;
+      menuOpenRef.current = false;
+      if (menu) {
+        gsap.set(menu, { visibility: "hidden", y: "-8%", opacity: 0 });
+      }
+      setIsMobileMenuOpen(false);
       document.body.classList.remove("mobile-menu-open");
       lenis?.start();
+      afterClose?.();
+    };
+
+    if (!menuOpenRef.current && !isMobileMenuOpen) {
+      afterClose?.();
+      return;
     }
 
-    if (hamburger) {
-      if (newState) {
-        gsap.set(hamburger, { opacity: 1, scale: 1, zIndex: 1000 });
-        hamburger.style.pointerEvents = "auto";
-      }
+    if (menuClosingRef.current && !afterClose) return;
+
+    menuClosingRef.current = true;
+    if (!menu || prefersReducedMotion()) {
+      finish();
+      return;
     }
 
-    if (menu) {
-      if (newState) {
-        gsap.set(menu, { visibility: "visible" });
-        gsap.fromTo(
-          menu,
-          { y: "-8%", opacity: 0 },
-          {
-            y: "0%",
-            opacity: 1,
-            duration: 0.78,
-            ease: "power3.out",
-          },
-        );
-      } else {
-        gsap.to(menu, {
-          y: "-6%",
-          opacity: 0,
-          duration: 0.52,
-          ease: "power2.inOut",
-          onComplete: () => {
-            gsap.set(menu, { visibility: "hidden", y: "-8%" });
-          },
-        });
-      }
+    gsap.killTweensOf(menu);
+    gsap.to(menu, {
+      y: "-8%",
+      opacity: 0,
+      duration: 0.56,
+      ease: "power3.in",
+      overwrite: true,
+      onComplete: finish,
+    });
+  };
+
+  const toggleMobileMenu = () => {
+    if (menuClosingRef.current) {
+      openMobileMenu();
+      return;
     }
+    if (menuOpenRef.current || isMobileMenuOpen) {
+      closeMobileMenu();
+      return;
+    }
+    openMobileMenu();
+  };
+
+  const closeThenGo = (href) => {
+    closeMobileMenu(() => {
+      if (href === "/") {
+        if (isHomePath(location.pathname)) {
+          window.history.pushState(null, "", location.pathname);
+          scrollToTop({ duration: 1.2 });
+          return;
+        }
+        navigate("/");
+        setTimeout(() => scrollToTop({ duration: 1.2 }), 100);
+        return;
+      }
+      if (href !== location.pathname) navigate(href);
+    });
   };
 
   const renderNavItem = (item, i) => {
@@ -358,9 +429,8 @@ const Nav = () => {
                     className="mobile-menu-link mobile-menu-logo"
                     aria-label="Home"
                     onClick={(e) => {
-                      handleLogoClick(e);
-                      setIsMobileMenuOpen(false);
-                      toggleMobileMenu();
+                      e.preventDefault();
+                      closeThenGo("/");
                     }}
                   >
                     <img src={LightDKLogo} alt="DK logo" className="logo-image" />
@@ -379,8 +449,7 @@ const Nav = () => {
                     className="mobile-menu-link"
                     onClick={(e) => {
                       handleResumeClick(e);
-                      setIsMobileMenuOpen(false);
-                      toggleMobileMenu();
+                      closeMobileMenu();
                     }}
                   >
                     {item.label}
@@ -396,8 +465,7 @@ const Nav = () => {
                     type="button"
                     className="mobile-menu-link"
                     onClick={() => {
-                      setIsMobileMenuOpen(false);
-                      toggleMobileMenu();
+                      closeMobileMenu();
                     }}
                   >
                     {item.label}
@@ -411,9 +479,9 @@ const Nav = () => {
                 <Link
                   to={item.href}
                   className={`mobile-menu-link${isNavItemActive(item) ? " mobile-menu-link-active" : ""}`}
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    toggleMobileMenu();
+                  onClick={(e) => {
+                    e.preventDefault();
+                    closeThenGo(item.href);
                   }}
                 >
                   {item.label}

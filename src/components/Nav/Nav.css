@@ -272,6 +272,10 @@
     right: calc(1.15rem + var(--safe-right));
     margin: 0;
     background: #f3f3f3;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: auto !important;
+    z-index: 1100;
   }
 
   .mobile-menu-button {
@@ -319,7 +323,8 @@
 
 /* Mobile: hamburger always visible (768px and smaller) */
 @media (max-width: 768px) {
-  .mobile-menu-button:not(.menu-open) {
+  .mobile-menu-button:not(.menu-open),
+  .mobile-menu-button.menu-open {
     opacity: 1 !important;
     transform: none !important;
     pointer-events: auto !important;
@@ -391,6 +396,10 @@
   visibility: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  pointer-events: none;
+}
+
+.site-nav.is-menu-open .mobile-menu-popover {
   pointer-events: auto;
 }
 
