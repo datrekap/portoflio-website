@@ -602,7 +602,10 @@ function PlayHeroRunner({ paused = false }) {
     const runner = runnerRef.current;
     if (!stage) return;
     const stageH = stage.clientHeight || 320;
-    const canH = Math.round(Math.min(90, Math.max(54, stageH * 0.17)));
+    const mobile = window.matchMedia("(max-width: 767px)").matches;
+    const canH = mobile
+      ? Math.round(Math.min(58, Math.max(40, stageH * 0.12)))
+      : Math.round(Math.min(90, Math.max(54, stageH * 0.17)));
     const canW = Math.round(canH * TRASHCAN_ASPECT);
     // Measure the absolutely positioned slot (not the relative runner),
     // otherwise offsetLeft is ~0 after the intro wrapper and hitboxes drift.
@@ -1214,6 +1217,16 @@ function PlayHeroRunner({ paused = false }) {
 
   const onFigurePointerDown = (event) => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
+    // Mobile uses the start button / apron jump pad instead.
+    if (window.matchMedia("(max-width: 767px)").matches) return;
+    event.preventDefault();
+    event.stopPropagation();
+    jumpHeldRef.current = true;
+    jump();
+  };
+
+  const onJumpPadPointerDown = (event) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
     event.preventDefault();
     event.stopPropagation();
     jumpHeldRef.current = true;
@@ -1244,7 +1257,7 @@ function PlayHeroRunner({ paused = false }) {
     status === "dead"
       ? "Try again"
       : isMobile
-        ? "Tap the Figure to Start"
+        ? "Tap to start"
         : "Press Space or Tap to Start";
 
   return (
@@ -1254,10 +1267,16 @@ function PlayHeroRunner({ paused = false }) {
       tabIndex={0}
       aria-label={
         status === "dead"
-          ? "Game over. Press Space or tap the figure to try again."
+          ? isMobile
+            ? "Game over. Tap Try again to play."
+            : "Game over. Press Space or tap to try again."
           : status === "running"
-            ? "Endless runner. Press Space or tap the figure to jump."
-            : "Endless runner. Press Space or tap the figure to start."
+            ? isMobile
+              ? "Endless runner. Tap the ground area to jump."
+              : "Endless runner. Press Space or tap to jump."
+            : isMobile
+              ? "Endless runner. Tap to start."
+              : "Endless runner. Press Space or Tap to Start."
       }
       onPointerDown={onPointerDown}
     >
@@ -1266,6 +1285,16 @@ function PlayHeroRunner({ paused = false }) {
         <div className="play-hero-apron" />
         <div className="play-hero-ground" />
       </div>
+      {isMobile && status === "running" ? (
+        <button
+          type="button"
+          className="play-hero-jump-pad"
+          aria-label="Tap here to jump"
+          onPointerDown={onJumpPadPointerDown}
+        >
+          Tap here to jump.
+        </button>
+      ) : null}
       <div className="play-hero-runner-slot">
       <div
         ref={runnerRef}
@@ -1308,14 +1337,10 @@ function PlayHeroRunner({ paused = false }) {
       </p>
       {status !== "running" ? (
         <div
-          className={`play-hero-start${isMobile ? " is-mobile-hint" : ""}`}
+          className="play-hero-start"
           onPointerDown={(event) => event.stopPropagation()}
         >
-          <CaseStudyButton
-            type="button"
-            onClick={isMobile ? undefined : () => jump()}
-            tabIndex={isMobile ? -1 : undefined}
-          >
+          <CaseStudyButton type="button" onClick={() => jump()}>
             {startLabel}
           </CaseStudyButton>
         </div>

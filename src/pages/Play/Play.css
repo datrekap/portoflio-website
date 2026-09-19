@@ -830,25 +830,43 @@
   .play-hero-runner-slot {
     width: clamp(10.5rem, 44vw, 13.75rem);
     left: var(--page-gutter-x);
-    pointer-events: auto;
+    pointer-events: none;
   }
 
   .play-hero-runner {
-    pointer-events: auto;
+    pointer-events: none;
   }
 
   .play-hero-figure-hit {
-    display: block;
+    display: none;
+  }
+
+  .play-hero-jump-pad {
     position: absolute;
-    inset: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     z-index: 6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--play-ground);
     margin: 0;
-    padding: 0;
+    padding: 0 1rem;
     border: 0;
     background: transparent;
+    color: rgba(51, 51, 51, 0.72);
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+    text-align: center;
     cursor: pointer;
     appearance: none;
     -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    user-select: none;
   }
 
   .play-hero-start {
@@ -856,13 +874,11 @@
     translate: 0 -50%;
   }
 
-  .play-hero-start.is-mobile-hint .case-study-button {
+  .play-hero-start .case-study-button {
     min-width: 0;
-    padding: 0.55rem 0.7rem;
+    padding: 0.55rem 0.9rem;
     font-size: 0.6875rem;
     white-space: nowrap;
-    cursor: default;
-    pointer-events: none;
   }
 
   .play-hero-caption {
