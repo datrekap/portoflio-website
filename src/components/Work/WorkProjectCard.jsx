@@ -1,6 +1,7 @@
 import React, { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useNavigate } from "react-router-dom";
+import { gsap } from "gsap";
 import { useWorkVideoTransition } from "../../context/WorkVideoTransitionContext";
 import { prefetchCaseStudy } from "../../routes/caseStudyRoutes";
 import { playPageExit } from "../../utils/pageExitAnimation";
@@ -9,10 +10,40 @@ import ExhibitionBadge from "../ExhibitionBadge/ExhibitionBadge";
 import "../ExhibitionBadge/ExhibitionBadge.css";
 import "./WorkProjectCard.css";
 
-const GRID_MAX_OFFSET = 12;
-const GRID_LERP = 0.14;
 const FOLLOW_OUT_MS = 400;
 const COMING_SOON_HOVER_SRC = "/work/hover-effect-work.svg";
+const GRID_MAX_OFFSET = 12;
+const GRID_LERP = 0.14;
+const GRID_REST_COLOR = "#333333";
+const GRID_REST_OPACITY = 0.05;
+const DRAW_EASE = "back.out(1.6)";
+const GRID_DRAW_DUR = 0.62;
+const GRID_STAGGER = 0.014;
+
+function prefersReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function buildGridLines(root) {
+  const size =
+    parseFloat(getComputedStyle(root).getPropertyValue("--site-grid-size")) ||
+    60;
+  const width = root.offsetWidth;
+  const height = root.offsetHeight;
+  return {
+    v: Array.from({ length: Math.ceil(width / size) + 1 }, (_, i) => i * size),
+    h: Array.from({ length: Math.ceil(height / size) + 1 }, (_, i) => i * size),
+  };
+}
+
+function gridLinesEqual(a, b) {
+  return (
+    a.v.length === b.v.length &&
+    a.h.length === b.h.length &&
+    a.v[a.v.length - 1] === b.v[b.v.length - 1] &&
+    a.h[a.h.length - 1] === b.h[b.h.length - 1]
+  );
+}
 
 const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
   const navigate = useNavigate();
@@ -31,6 +62,8 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
   const visualRef = useRef(null);
   const videoRef = useRef(null);
   const gridRef = useRef(null);
+  const gridShiftRef = useRef(null);
+  const gridTweenRef = useRef(null);
   const rafRef = useRef(null);
   const targetOffsetRef = useRef({ x: 0, y: 0 });
   const currentOffsetRef = useRef({ x: 0, y: 0 });
@@ -39,6 +72,7 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
   const followPhaseRef = useRef("idle");
   const hideFollowTimerRef = useRef(0);
   const [followPhase, setFollowPhase] = useState("idle");
+  const [gridLines, setGridLines] = useState({ v: [], h: [] });
 
   const [isHovered, setIsHovered] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
@@ -125,21 +159,26 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
   }, [showComingSoonHover]);
 
   const stopGridAnimation = useCallback(() => {
+    gridTweenRef.current?.kill();
+    gridTweenRef.current = null;
+  }, []);
+
+  const stopGridFollow = useCallback(() => {
     if (rafRef.current !== null) {
       cancelAnimationFrame(rafRef.current);
       rafRef.current = null;
     }
   }, []);
 
-  const tickGrid = useCallback(() => {
+  const tickGridFollow = useCallback(() => {
     const current = currentOffsetRef.current;
     const target = targetOffsetRef.current;
 
     current.x += (target.x - current.x) * GRID_LERP;
     current.y += (target.y - current.y) * GRID_LERP;
 
-    if (gridRef.current) {
-      gridRef.current.style.transform = `translate3d(${current.x}px, ${current.y}px, 0)`;
+    if (gridShiftRef.current) {
+      gridShiftRef.current.style.transform = `translate3d(${current.x}px, ${current.y}px, 0)`;
     }
 
     const settling =
@@ -148,17 +187,114 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
       isHoveredRef.current;
 
     if (settling) {
-      rafRef.current = requestAnimationFrame(tickGrid);
+      rafRef.current = requestAnimationFrame(tickGridFollow);
     } else {
       rafRef.current = null;
     }
   }, []);
 
-  const startGridAnimation = useCallback(() => {
+  const startGridFollow = useCallback(() => {
     if (rafRef.current === null) {
-      rafRef.current = requestAnimationFrame(tickGrid);
+      rafRef.current = requestAnimationFrame(tickGridFollow);
     }
-  }, [tickGrid]);
+  }, [tickGridFollow]);
+
+  const playGridIn = useCallback(() => {
+    const root = gridRef.current;
+    if (!root) return;
+    const vertical = root.querySelectorAll(".work-project-card__grid-line--v");
+    const horizontal = root.querySelectorAll(".work-project-card__grid-line--h");
+    if (!vertical.length && !horizontal.length) return;
+
+    stopGridAnimation();
+
+    if (prefersReducedMotion()) {
+      gsap.set(root, { opacity: GRID_REST_OPACITY });
+      gsap.set(vertical, {
+        scaleX: 1,
+        scaleY: 1,
+        backgroundColor: GRID_REST_COLOR,
+      });
+      gsap.set(horizontal, {
+        scaleX: 1,
+        scaleY: 1,
+        backgroundColor: GRID_REST_COLOR,
+      });
+      return;
+    }
+
+    gsap.set(root, { opacity: GRID_REST_OPACITY });
+    gsap.set(vertical, {
+      scaleX: 1,
+      scaleY: 0,
+      backgroundColor: GRID_REST_COLOR,
+    });
+    gsap.set(horizontal, {
+      scaleX: 0,
+      scaleY: 1,
+      backgroundColor: GRID_REST_COLOR,
+    });
+
+    const tl = gsap.timeline();
+    gridTweenRef.current = tl;
+    tl.to(
+      vertical,
+      {
+        scaleY: 1,
+        duration: GRID_DRAW_DUR,
+        ease: DRAW_EASE,
+        stagger: { each: GRID_STAGGER, from: "center" },
+      },
+      0,
+    );
+    tl.to(
+      horizontal,
+      {
+        scaleX: 1,
+        duration: GRID_DRAW_DUR,
+        ease: DRAW_EASE,
+        stagger: { each: GRID_STAGGER, from: "center" },
+      },
+      0,
+    );
+  }, [stopGridAnimation]);
+
+  const playGridOut = useCallback(() => {
+    const root = gridRef.current;
+    if (!root) return;
+    const vertical = root.querySelectorAll(".work-project-card__grid-line--v");
+    const horizontal = root.querySelectorAll(".work-project-card__grid-line--h");
+    stopGridAnimation();
+
+    if (prefersReducedMotion() || (!vertical.length && !horizontal.length)) {
+      gsap.set(root, { opacity: 0 });
+      return;
+    }
+
+    const tl = gsap.timeline();
+    gridTweenRef.current = tl;
+    tl.to(root, { opacity: 0, duration: 0.32, ease: "power2.in" }, 0);
+    tl.to(
+      vertical,
+      {
+        scaleY: 0,
+        duration: 0.38,
+        ease: "power2.in",
+        stagger: { each: 0.01, from: "center" },
+      },
+      0,
+    );
+    tl.to(
+      horizontal,
+      {
+        scaleX: 0,
+        duration: 0.38,
+        ease: "power2.in",
+        stagger: { each: 0.01, from: "center" },
+      },
+      0,
+    );
+  }, [stopGridAnimation]);
 
   const handleMouseMove = useCallback(
     (event) => {
@@ -166,9 +302,9 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
         moveFollow(event.clientX, event.clientY);
       }
 
-      if (!canHover || !mediaRef.current) return;
+      if (!canHover || !cardRef.current) return;
 
-      const rect = mediaRef.current.getBoundingClientRect();
+      const rect = cardRef.current.getBoundingClientRect();
       const xRatio = (event.clientX - rect.left) / rect.width - 0.5;
       const yRatio = (event.clientY - rect.top) / rect.height - 0.5;
 
@@ -176,9 +312,9 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
         x: xRatio * GRID_MAX_OFFSET * 2,
         y: yRatio * GRID_MAX_OFFSET * 2,
       };
-      startGridAnimation();
+      startGridFollow();
     },
-    [canHover, moveFollow, showComingSoonHover, startGridAnimation],
+    [canHover, moveFollow, showComingSoonHover, startGridFollow],
   );
 
   const handleMouseEnter = useCallback(
@@ -191,6 +327,7 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
 
       isHoveredRef.current = true;
       setIsHovered(true);
+      playGridIn();
       if (showVideo) setVideoArmed(true);
 
       if (project.route) prefetchCaseStudy(project.route);
@@ -203,7 +340,14 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
         });
       }
     },
-    [canHover, project.route, showComingSoonHover, showFollow, showVideo],
+    [
+      canHover,
+      playGridIn,
+      project.route,
+      showComingSoonHover,
+      showFollow,
+      showVideo,
+    ],
   );
 
   const handleMouseLeave = useCallback(() => {
@@ -213,20 +357,19 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
 
     isHoveredRef.current = false;
     setIsHovered(false);
+    playGridOut();
     targetOffsetRef.current = { x: 0, y: 0 };
-    startGridAnimation();
+    startGridFollow();
 
     const video = videoRef.current;
     if (!video) return;
 
-    // Keep the last frame while the video fades out; reset after the crossfade
-    // so badges/media don't hitch when the hover ends.
     window.setTimeout(() => {
       if (isHoveredRef.current) return;
       video.pause();
       video.currentTime = 0;
     }, 450);
-  }, [canHover, hideFollow, showComingSoonHover, startGridAnimation]);
+  }, [canHover, hideFollow, playGridOut, showComingSoonHover, startGridFollow]);
 
   const handleComingSoonClick = useCallback(
     (event) => {
@@ -268,6 +411,7 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
 
       // Free the main thread for the transition and the destination's mount.
       stopGridAnimation();
+      stopGridFollow();
 
       startTransition({
         projectId: project.id,
@@ -315,11 +459,17 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
       claimVideo,
       getIsTransitioning,
       stopGridAnimation,
+      stopGridFollow,
       navigate,
     ],
   );
 
-  useEffect(() => stopGridAnimation, [stopGridAnimation]);
+  useEffect(() => {
+    return () => {
+      stopGridAnimation();
+      stopGridFollow();
+    };
+  }, [stopGridAnimation, stopGridFollow]);
 
   useEffect(
     () => () => {
@@ -329,6 +479,21 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
     },
     [],
   );
+
+  useEffect(() => {
+    const card = cardRef.current;
+    if (!card) return undefined;
+
+    const syncLines = () => {
+      const next = buildGridLines(card);
+      setGridLines((prev) => (gridLinesEqual(prev, next) ? prev : next));
+    };
+
+    syncLines();
+    const observer = new ResizeObserver(syncLines);
+    observer.observe(card);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (!showComingSoonHover || canHover) return undefined;
@@ -357,7 +522,7 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
       ref={setCardRef}
       className={`work-project-card work-bento-item${
         showComingSoonHover ? " is-coming-soon" : ""
-      }`}
+      }${isHovered ? " is-hovered" : ""}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onMouseMove={handleMouseMove}
@@ -370,7 +535,24 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
         ref={gridRef}
         className="work-project-card__grid"
         aria-hidden="true"
-      />
+      >
+        <div ref={gridShiftRef} className="work-project-card__grid-shift">
+          {gridLines.v.map((x, index) => (
+            <span
+              key={`v-${index}`}
+              className="work-project-card__grid-line work-project-card__grid-line--v"
+              style={{ left: `${x}px` }}
+            />
+          ))}
+          {gridLines.h.map((y, index) => (
+            <span
+              key={`h-${index}`}
+              className="work-project-card__grid-line work-project-card__grid-line--h"
+              style={{ top: `${y}px` }}
+            />
+          ))}
+        </div>
+      </div>
       <div
         ref={mediaRef}
         className={`work-project-card__media${isHovered ? " is-hovered" : ""}${
