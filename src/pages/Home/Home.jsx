@@ -8,6 +8,7 @@ import WorkProjectCard from "../../components/Work/WorkProjectCard";
 import HomePublications from "../../components/Publications/HomePublications";
 import { workProjects } from "../../data/workProjects";
 import { revealNav } from "../../constants/navTiming";
+import { useLenisScroll } from "../../hooks/useLenisScroll";
 import HomeHeroWalk from "./HomeHeroWalk";
 import "./Home.css";
 
@@ -32,6 +33,8 @@ const LETTER_TRIAL = "elastic-pop"; // elastic-pop | masked-rise | center-wave
 const LETTER_EASE = "back.out(2.6)";
 const HOME_TITLE = "DAKSH KAPOOR";
 const HOME_SELECTED_WORK = workProjects.slice(0, 4);
+/* Flip to true to restore the home “SEE MORE WORK” link to /work. */
+const SHOW_HOME_SEE_MORE_WORK = false;
 
 function splitTitleLetters(text) {
   return Array.from(text).map((char, index) => ({
@@ -182,6 +185,7 @@ function HomeGridOverlay({ overlayRef }) {
 
 const Home = () => {
   const location = useLocation();
+  const { scrollToElement } = useLenisScroll();
   const landingRef = useRef(null);
   const overlayRef = useRef(null);
   const heroTitleRef = useRef(null);
@@ -414,6 +418,17 @@ const Home = () => {
     };
   }, [location.pathname]);
 
+  useEffect(() => {
+    if (location.hash !== "#work") return undefined;
+
+    const id = window.setTimeout(() => {
+      const el = document.getElementById("work");
+      if (el) scrollToElement(el, { duration: 1.2 });
+    }, 80);
+
+    return () => window.clearTimeout(id);
+  }, [location.hash, location.pathname, scrollToElement]);
+
   return (
     <main className="home" style={{ backgroundColor: "#f3f3f3" }}>
       <section ref={landingRef} id="landing" className="home-landing">
@@ -495,20 +510,22 @@ const Home = () => {
               </Appear>
             ))}
           </div>
-          <Appear asChild delay={HOME_SELECTED_WORK.length * APPEAR_STAGGER}>
-            <div className="home-selected-work-more">
-              <Link to="/work" className="home-see-more-work">
-                <span>SEE MORE WORK</span>
-                <img
-                  src="/work/icons/arrow.svg"
-                  alt=""
-                  className="home-see-more-work-arrow"
-                  width={34}
-                  height={8}
-                />
-              </Link>
-            </div>
-          </Appear>
+          {SHOW_HOME_SEE_MORE_WORK ? (
+            <Appear asChild delay={HOME_SELECTED_WORK.length * APPEAR_STAGGER}>
+              <div className="home-selected-work-more">
+                <Link to="/work" className="home-see-more-work">
+                  <span>SEE MORE WORK</span>
+                  <img
+                    src="/work/icons/arrow.svg"
+                    alt=""
+                    className="home-see-more-work-arrow"
+                    width={34}
+                    height={8}
+                  />
+                </Link>
+              </div>
+            </Appear>
+          ) : null}
         </div>
       </section>
 

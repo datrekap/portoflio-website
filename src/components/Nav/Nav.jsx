@@ -21,7 +21,7 @@ const Nav = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const lenis = useLenis();
-  const { scrollToTop } = useLenisScroll();
+  const { scrollToTop, scrollToElement } = useLenisScroll();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [navRevealed, setNavRevealed] = useState(false);
   const [windowWidth, setWindowWidth] = useState(() =>
@@ -38,7 +38,7 @@ const Nav = () => {
     "https://drive.google.com/file/d/1dxbGxh4xrmuKMV1uSPrl-MKsIY3JT1mn/view?usp=drive_link";
 
   const navItems = [
-    { label: "work", href: "/work", isLink: true },
+    { label: "work", href: "/#work", isLink: true },
     { label: "play", href: "/play", isLink: true },
     { label: "about", href: "/about", isLink: true },
     { label: "resume", href: RESUME_URL, isLink: false },
@@ -67,7 +67,9 @@ const Nav = () => {
     const path = location.pathname;
     if (isGoogleCreativePath(path)) return false;
     if (item.label === "about") return path === "/about";
-    if (item.label === "work") return path === "/work";
+    if (item.label === "work") {
+      return path === "/work" || (isHomePath(path) && location.hash === "#work");
+    }
     if (item.label === "play") return path === "/play";
     return false;
   };
@@ -305,6 +307,14 @@ const Nav = () => {
     openMobileMenu();
   };
 
+  const scrollToHomeWork = () => {
+    const el = document.getElementById("work");
+    if (location.hash !== "#work") {
+      navigate("/#work", { replace: true });
+    }
+    if (el) scrollToElement(el, { duration: 1.2 });
+  };
+
   const closeThenGo = (href) => {
     closeMobileMenu(() => {
       if (href === "/") {
@@ -315,6 +325,14 @@ const Nav = () => {
         }
         navigate("/");
         setTimeout(() => scrollToTop({ duration: 1.2 }), 100);
+        return;
+      }
+      if (href === "/#work") {
+        if (isHomePath(location.pathname)) {
+          scrollToHomeWork();
+          return;
+        }
+        navigate("/#work");
         return;
       }
       if (href !== location.pathname) navigate(href);
@@ -355,6 +373,24 @@ const Nav = () => {
           <button type="button" {...pillProps}>
             {pillInner}
           </button>
+        </li>
+      );
+    }
+
+    if (item.label === "work") {
+      return (
+        <li key={item.href || `item-${i}`}>
+          <Link
+            to={item.href}
+            {...pillProps}
+            onClick={(e) => {
+              if (!isHomePath(location.pathname)) return;
+              e.preventDefault();
+              scrollToHomeWork();
+            }}
+          >
+            {pillInner}
+          </Link>
         </li>
       );
     }

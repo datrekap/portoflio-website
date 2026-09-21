@@ -882,7 +882,7 @@ export default function TrojanStepCaseStudy() {
                     />
                     <span>VIEW PREVIOUS</span>
                   </Link>
-                  <Link to="/work" className="home-see-more-work cs-case-nav__link">
+                  <Link to="/#work" className="home-see-more-work cs-case-nav__link">
                     <span>VIEW NEXT</span>
                     <img
                       src="/work/icons/arrow.svg"

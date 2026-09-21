@@ -719,7 +719,7 @@ export default function PFALCaseStudy() {
             <Appear asChild>
               <nav className="pfal-case-nav" aria-label="Case study navigation">
                 <Link
-                  to="/work"
+                  to="/#work"
                   className="home-see-more-work pfal-case-nav__link pfal-case-nav__link--previous"
                 >
                   <img

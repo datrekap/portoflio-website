@@ -32,7 +32,6 @@ export const FOOTER_ANOTHER_ONE_ROUTES = [
   "/sitehub-2",
   "/parkwise",
   "/trojanstep",
-  "/work",
   "/play",
   "/about",
 ];
