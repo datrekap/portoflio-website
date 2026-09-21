@@ -11,16 +11,15 @@ export default {
       },
       fontFamily: {
         sans: [
-          "Satoshi",
+          "Montserrat",
           "ui-sans-serif",
           "system-ui",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "Segoe UI",
-          "Roboto",
-          "Helvetica Neue",
-          "Arial",
           "sans-serif",
+        ],
+        display: [
+          "Major Mono Display",
+          "ui-monospace",
+          "monospace",
         ],
       },
     },

@@ -41,7 +41,6 @@
 
 .cs-label {
   margin: 0 0 2.5rem;
-  font-family: "Montserrat", sans-serif;
   font-size: var(--case-study-label-size);
   font-weight: var(--case-study-label-weight);
   letter-spacing: var(--case-study-label-tracking);
@@ -55,7 +54,6 @@
 
 .cs-hero-kicker {
   margin: 0 0 0.5rem;
-  font-family: "Montserrat", sans-serif;
   font-size: clamp(1rem, 1.8vw, 1.25rem);
   font-weight: 300;
   line-height: 1.2;
@@ -64,7 +62,7 @@
 
 .cs-hero-title {
   margin: 0;
-  font-family: "Major Mono Display", monospace;
+  font-family: var(--font-display);
   font-size: clamp(2rem, 7vw, 4.375rem);
   font-weight: 400;
   line-height: 1;
@@ -73,7 +71,6 @@
 
 .cs-hero-subtitle {
   margin: 0.5rem 0 0;
-  font-family: "Montserrat", sans-serif;
   font-size: clamp(1.25rem, 2.4vw, 1.875rem);
   font-weight: 300;
   line-height: 1.2;
@@ -89,7 +86,6 @@
 
 .cs-meta-item dt {
   margin: 0 0 1rem;
-  font-family: "Montserrat", sans-serif;
   font-size: 0.75rem;
   font-weight: 300;
   color: #333;
@@ -97,7 +93,6 @@
 
 .cs-meta-item dd {
   margin: 0;
-  font-family: "Montserrat", sans-serif;
   font-size: clamp(1rem, 1.6vw, 1.25rem);
   font-weight: 700;
   line-height: 1.3;
@@ -116,7 +111,6 @@
 .cs-intro-copy {
   margin: 0;
   max-width: 40rem;
-  font-family: "Montserrat", sans-serif;
   font-size: var(--case-study-body-size);
   font-weight: 300;
   line-height: var(--case-study-body-line-height);
@@ -125,7 +119,6 @@
 
 .cs-heading-md {
   margin: 0;
-  font-family: "Montserrat", sans-serif;
   font-size: var(--case-study-body-size);
   font-weight: 400;
   line-height: 1.35;
@@ -139,7 +132,6 @@
 
 .cs-heading-lg {
   margin: 0 0 1.5rem;
-  font-family: "Montserrat", sans-serif;
   font-size: var(--case-study-body-size);
   line-height: 1.35;
   color: #333;
@@ -147,7 +139,6 @@
 
 .cs-heading-display {
   margin: 0 0 1.5rem;
-  font-family: "Montserrat", sans-serif;
   font-size: clamp(1.5rem, 3vw, 1.875rem);
   font-weight: 700;
   line-height: 1.2;
@@ -157,7 +148,6 @@
 
 .cs-body {
   margin: 0;
-  font-family: "Montserrat", sans-serif;
   font-size: var(--case-study-body-size);
   font-weight: 300;
   line-height: var(--case-study-body-line-height);
@@ -166,7 +156,6 @@
 
 .cs-caption {
   margin: 1rem 0 0;
-  font-family: "Montserrat", sans-serif;
   font-size: 0.9375rem;
   font-weight: 300;
   text-align: center;

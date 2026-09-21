@@ -30,6 +30,8 @@
     --safe-bottom: env(safe-area-inset-bottom, 0px);
     --safe-left: env(safe-area-inset-left, 0px);
     --bento-card-radius: 4px;
+    --font-text: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+    --font-display: "Major Mono Display", ui-monospace, monospace;
     --case-study-body-size: 1rem;
     --case-study-body-line-height: 1.6;
     --case-study-body-weight: 300;
@@ -79,6 +81,8 @@
   html,
   body {
     @apply antialiased;
+    font-family: var(--font-text);
+    font-synthesis: none;
     overflow-x: hidden;
     min-height: 100vh;
     min-height: 100dvh;

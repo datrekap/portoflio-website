@@ -43,7 +43,6 @@
   border: none;
   outline: none;
   background: transparent;
-  font-family: "Montserrat", sans-serif;
   font-size: 0.9375rem;
   font-weight: var(--cs-btn-weight);
   font-variation-settings: "wght" var(--cs-btn-weight);

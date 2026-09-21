@@ -73,7 +73,6 @@
 
   .case-study-spy-nav--editorial .case-study-spy-nav__link,
   .case-study-spy-nav--pfal .case-study-spy-nav__link {
-    font-family: "Montserrat", sans-serif;
     font-size: var(--case-study-label-size);
     font-weight: 400;
     color: #666;

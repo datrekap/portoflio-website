@@ -203,7 +203,6 @@
   margin: 0;
   min-width: 0;
   flex: 1 1 auto;
-  font-family: "Montserrat", sans-serif;
   font-size: clamp(1rem, 1.5vw, 1.25rem);
   font-weight: 700;
   line-height: 1.2;
@@ -213,7 +212,6 @@
 .work-project-card__role {
   margin: 0;
   flex-shrink: 0;
-  font-family: "Montserrat", sans-serif;
   font-size: 0.75rem;
   font-weight: 400;
   line-height: 1.2;
@@ -224,7 +222,6 @@
 
 .work-project-card__summary {
   margin: 0;
-  font-family: "Montserrat", sans-serif;
   font-size: 0.75rem;
   font-weight: 400;
   line-height: 1.5;

@@ -159,7 +159,6 @@
   align-items: center;
   justify-content: flex-start;
   gap: 0;
-  font-family: "Montserrat", sans-serif;
   font-size: clamp(3.25rem, 6.5vw, 4.5rem);
   font-weight: 800;
   line-height: 1;
@@ -181,7 +180,6 @@
 
 .pw-stat__label {
   margin: 1.9375rem 0 0;
-  font-family: "Montserrat", sans-serif;
   font-size: var(--case-study-body-size);
   font-weight: 300;
   line-height: 1.35;
@@ -243,7 +241,6 @@
 
 .pw-flag-col__label {
   margin: 0;
-  font-family: "Montserrat", sans-serif;
   font-size: 1rem;
   font-weight: 700;
   text-align: center;
@@ -266,7 +263,6 @@
 }
 
 .pw-flag-row span {
-  font-family: "Montserrat", sans-serif;
   font-size: 1rem;
   font-weight: 300;
   color: #333;

@@ -29,14 +29,12 @@
 }
 
 .work-category-filter__label {
-  font-family: "Montserrat", sans-serif;
   font-size: 0.9375rem;
   font-weight: 400;
   color: rgba(0, 0, 0, 0.5);
 }
 
 .work-category-filter__value {
-  font-family: "Montserrat", sans-serif;
   font-size: 0.9375rem;
   font-weight: 700;
   color: #333;
@@ -71,7 +69,6 @@
   border: 0;
   background: transparent;
   text-align: left;
-  font-family: "Montserrat", sans-serif;
   font-size: 0.875rem;
   font-weight: 400;
   color: #333;

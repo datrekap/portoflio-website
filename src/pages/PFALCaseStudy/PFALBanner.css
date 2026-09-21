@@ -63,7 +63,6 @@
   display: flex;
   justify-content: space-between;
   color: #f3f3f3;
-  font-family: "Montserrat", sans-serif;
   font-size: clamp(0.75rem, 1.05vw, 1rem);
   font-weight: 400;
 }
