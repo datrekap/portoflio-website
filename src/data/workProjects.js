@@ -61,26 +61,26 @@ export const workProjects = [
     role: "DESIGN ENGINEER & RESEARCHER",
     category: "research",
     summary:
-      "Informing Fulton County residents of the county's solar efforts. Maybe some more lines here.",
+      "Discovering how people make sense of ambient AI through play.",
     image: "public/work/SoundClouds/Thumbnail.webp",
     badges: ["Accepted at C&C 2026", "Accepted at NeurIPS 2025"],
   },
   {
     id: "photovoice",
-    title: "PhotoVoice",
+    title: "Prismatic: Belonging in View",
     role: "MOTION DESIGNER",
     category: "motion",
     summary:
-      "Some sentences that describe my work as the lead designer and what not.",
+      "Turning qualitative stories of graduate life into a spatial digital experience shaped by motion, color, and visual narrative.",
     image: "public/work/PhotoVoice/Thumbnail.webp",
   },
   {
     id: "puffer",
-    title: "Puffer",
+    title: "Puffer: Soft, Sequential Robotics for Breathing Regulations",
     role: "DESIGN ENGINEER & RESEARCHER",
     category: "research",
     summary:
-      "Informing Fulton County residents of the county's solar efforts. Maybe some more lines here.",
+      "Guiding calmer breathing through a soft robot with responsive tactile cues.",
     image: "public/work/Puffer/Thumbnail.webp",
     badges: ["Accepted at TEI 2026"],
   },
@@ -90,7 +90,7 @@ export const workProjects = [
     role: "PRODUCT DESIGNER",
     category: "product-design",
     summary:
-      "How do I gamify dancing to remove the barriers of anxiety relating to body expression and movement.",
+      "Reimagining noise cancellation as a more personal way to experience the world.",
     image: "public/work/MossBuds/Thumbnail.webp",
   },
 ];
