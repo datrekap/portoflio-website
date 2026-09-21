@@ -76,7 +76,7 @@ export const workProjects = [
   },
   {
     id: "puffer",
-    title: "Puffer: Soft, Sequential Robotics for Breathing Regulations",
+    title: "Puffer Soft Robotics",
     role: "DESIGN ENGINEER & RESEARCHER",
     category: "research",
     summary:
