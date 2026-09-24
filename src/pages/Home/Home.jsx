@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { gsap } from "gsap";
 import { useLenis } from "@studio-freight/react-lenis";
 import Appear from "../../components/Appear/Appear";
-import Footer from "../../components/Footer/Footer";
+import PageShell from "../../components/PageShell/PageShell";
 import WorkProjectCard from "../../components/Work/WorkProjectCard";
 import HomePublications from "../../components/Publications/HomePublications";
 import { workProjects } from "../../data/workProjects";
@@ -430,7 +430,7 @@ const Home = () => {
   }, [location.hash, location.pathname, scrollToElement]);
 
   return (
-    <main className="home" style={{ backgroundColor: "#f3f3f3" }}>
+    <PageShell className="home" style={{ backgroundColor: "#f3f3f3" }}>
       <section ref={landingRef} id="landing" className="home-landing">
         <HomeGridOverlay overlayRef={overlayRef} />
         <HomeHeroWalk ref={walkerRef} />
@@ -530,9 +530,7 @@ const Home = () => {
       </section>
 
       <HomePublications />
-
-      <Footer />
-    </main>
+    </PageShell>
   );
 };
 

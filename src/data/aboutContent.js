@@ -65,11 +65,6 @@ export const ABOUT_INTRO_PHOTOS = [
     objectPosition: "center",
   },
   {
-    src: "/about-intro/photo-grey.webp",
-    alt: "Presenting a laptop demo at an exhibition",
-    objectPosition: "center",
-  },
-  {
     src: "/about-intro/photo-sideways.webp",
     alt: "Walking down stone steps in a tan suit",
     objectPosition: "center",
@@ -95,11 +90,6 @@ export const ABOUT_INTRO_FLIP_PHOTOS = [
   {
     src: "/about-intro/image-1.webp",
     alt: "Costume party group selfie",
-    objectPosition: "center",
-  },
-  {
-    src: "/about-intro/image-4.webp",
-    alt: "Group photo at Digital Media",
     objectPosition: "center",
   },
   {
@@ -243,3 +233,68 @@ export const ABOUT_PHOTO_COLUMNS = [
 ];
 
 export const ABOUT_STRIP_DRIFT = 28;
+
+export const ABOUT_QUOTES = [
+  {
+    text: "Stuff your eyes with wonder. Live as if you’d drop dead in ten seconds",
+    cite: "Ray Bradbury, Fahrenheit 451",
+  },
+];
+
+export const ABOUT_HERO_SLOTS = [
+  { side: -1, yRatio: 0.1, centerOffset: 0.32, parallax: 0.16 },
+  { side: -1, yRatio: 0.54, centerOffset: 0.34, parallax: -0.1 },
+  { side: 1, yRatio: 0.08, centerOffset: 0.32, parallax: 0.2 },
+  { side: 1, yRatio: 0.52, centerOffset: 0.34, parallax: -0.14 },
+];
+
+export const ABOUT_HERO_THEMES = [
+  {
+    id: "smile",
+    title: "happy path.png",
+    photos: [
+      { src: "/about-intro/smile1.webp", alt: "Graduation portrait", objectPosition: "center" },
+      { src: "/about-intro/smile2.webp", alt: "Smile portrait", objectPosition: "center" },
+      { src: "/about-intro/smile3.webp", alt: "Cafe portrait", objectPosition: "center" },
+    ],
+  },
+  {
+    id: "group",
+    title: "stakeholder engagement.png",
+    photos: [
+      { src: "/about-intro/group1.webp", alt: "Group photo", objectPosition: "center" },
+      { src: "/about-intro/group2.webp", alt: "Community photo", objectPosition: "center" },
+      { src: "/about-intro/group3.webp", alt: "Friends photo", objectPosition: "center" },
+    ],
+  },
+  {
+    id: "goofy",
+    title: "behind the interface.png",
+    photos: [
+      { src: "/about-intro/goofy1.webp", alt: "Behind the scenes", objectPosition: "center" },
+      { src: "/about-intro/goofy2.webp", alt: "Blooper portrait", objectPosition: "center" },
+      { src: "/about-intro/goofy3.webp", alt: "Goofy portrait", objectPosition: "center" },
+    ],
+  },
+  {
+    id: "discovery",
+    title: "discovery phase.png",
+    photos: [
+      {
+        src: "/about-intro/discovery1.webp",
+        alt: "Discovery phase photo one",
+        objectPosition: "center",
+      },
+      {
+        src: "/about-intro/discovery2.webp",
+        alt: "Discovery phase photo two",
+        objectPosition: "center",
+      },
+      {
+        src: "/about-intro/discovery3.webp",
+        alt: "Discovery phase photo three",
+        objectPosition: "center",
+      },
+    ],
+  },
+];

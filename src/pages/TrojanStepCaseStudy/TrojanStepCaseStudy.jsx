@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLenisScroll } from "../../hooks/useLenisScroll";
 import useInfiniteDragLoop from "../../hooks/useInfiniteDragLoop";
-import Footer from "../../components/Footer/Footer";
+import PageShell from "../../components/PageShell/PageShell";
 import Appear from "../../components/Appear/Appear";
 import CaseStudyLayout from "../../components/CaseStudyLayout/CaseStudyLayout";
 import CaseStudyButton from "../../components/CaseStudyButton/CaseStudyButton";
@@ -191,7 +191,7 @@ export default function TrojanStepCaseStudy() {
 
   return (
     <CaseStudyMediaProvider maxPlaying={6}>
-      <div className="cs-case-study ts-case-study">
+      <PageShell as="div" className="cs-case-study ts-case-study">
         <div
           ref={heroMediaRef}
           className="cs-hero-media-wrap cs-hero-media-wrap--page-top"
@@ -902,8 +902,7 @@ export default function TrojanStepCaseStudy() {
             </div>
           </section>
         </CaseStudyLayout>
-        <Footer />
-      </div>
+      </PageShell>
     </CaseStudyMediaProvider>
   );
 }

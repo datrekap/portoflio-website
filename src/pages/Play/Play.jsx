@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { useLenis } from "@studio-freight/react-lenis";
 import { gsap } from "gsap";
 import Appear from "../../components/Appear/Appear";
-import Footer from "../../components/Footer/Footer";
+import PageShell from "../../components/PageShell/PageShell";
 import { revealNav } from "../../constants/navTiming";
 import {
   CaseStudyMediaProvider,
@@ -436,7 +436,8 @@ const Play = () => {
   }, [lenis]);
 
   return (
-    <main className="play-page">
+    <>
+    <PageShell className="play-page">
       <section ref={heroRef} className="play-hero" aria-labelledby="play-title">
         <div className="page-content-shell play-hero-type">
           <h1 ref={titleRef} id="play-title" className="play-hero-title">
@@ -474,7 +475,7 @@ const Play = () => {
         </section>
       </CaseStudyMediaProvider>
 
-      <Footer />
+    </PageShell>
 
       {overlay ? (
         <PlayProjectOverlay
@@ -482,7 +483,7 @@ const Play = () => {
           onClose={closeOverlay}
         />
       ) : null}
-    </main>
+    </>
   );
 };
 

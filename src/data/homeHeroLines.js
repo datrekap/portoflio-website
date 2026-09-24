@@ -5,7 +5,7 @@ export const OPENER_LINES = [
   "YOU MADE IT.",
   "YOU FOUND ME.",
   "THERE YOU ARE.",
-  "PULLED UP. OKAY.",
+  "YOU FOUND THE HILL",
   "WELCOME TO THE SLOP{E}.",
   "OH. IT'S YOU.",
   "LOOK WHO SHOWED.",
@@ -181,7 +181,7 @@ export const RESEARCHER_LINES = [
   "METHODS WITH TEETH.",
   "NOT JUST THE LAB.",
   "I DIG. THEN MAKE.",
-  "RESEARCH PAYS RENT.",
+  "SOMEONE HAS TO ASK.",
   "YES. THE ASKING.",
 ];
 

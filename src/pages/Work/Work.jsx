@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useLayoutEffect } from "react";
 import { useLenis } from "@studio-freight/react-lenis";
 import { gsap } from "gsap";
 import WorkProjectGrid from "../../components/Work/WorkProjectGrid";
-import Footer from "../../components/Footer/Footer";
+import PageShell from "../../components/PageShell/PageShell";
 import { revealNav } from "../../constants/navTiming";
 import "./Work.css";
 
@@ -159,11 +159,10 @@ const Work = () => {
   }, [lenis]);
 
   return (
-    <>
-      <main
-        className="work-page min-h-screen relative"
-        style={{ backgroundColor: "#f3f3f3" }}
-      >
+    <PageShell
+      className="work-page min-h-screen relative"
+      style={{ backgroundColor: "#f3f3f3" }}
+    >
         <section className="work-page__hero">
           <div className="page-content-shell">
             <h1 ref={titleRef} className="work-page-title">
@@ -179,9 +178,7 @@ const Work = () => {
             <WorkProjectGrid containerRef={workGridContainerRef} />
           </div>
         </section>
-        <Footer />
-      </main>
-    </>
+    </PageShell>
   );
 };
 

@@ -6,7 +6,7 @@ import { isHomePath } from "../../constants/homeRoutes";
 import { gsap } from "gsap";
 import { FOOTER_SOCIAL_LINKS } from "../../data/footerLinks";
 import footerArrow from "../../assets/footer/arrow.svg";
-import FooterFall from "./FooterFall";
+import FooterWalk from "./FooterWalk";
 import "./Footer.css";
 
 const APPEAR_STAGGER = 0.1;
@@ -65,6 +65,27 @@ const Footer = () => {
     const footer = footerRef.current;
     if (!footer) return undefined;
 
+    const syncHeight = () => {
+      document.documentElement.style.setProperty(
+        "--footer-reveal-height",
+        `${footer.offsetHeight}px`,
+      );
+    };
+
+    syncHeight();
+    const resizeObserver = new ResizeObserver(syncHeight);
+    resizeObserver.observe(footer);
+
+    return () => {
+      resizeObserver.disconnect();
+      document.documentElement.style.removeProperty("--footer-reveal-height");
+    };
+  }, []);
+
+  useEffect(() => {
+    const footer = footerRef.current;
+    if (!footer) return undefined;
+
     const items = footer.querySelectorAll(".footer-appear");
     if (!items.length) return undefined;
 
@@ -74,6 +95,10 @@ const Footer = () => {
     }
 
     gsap.set(items, { opacity: 0, y: 30 });
+
+    const sentinel =
+      footer.parentElement?.querySelector("[data-footer-reveal-sentinel]") ??
+      footer;
 
     let observer = null;
     let hasAppeared = false;
@@ -95,9 +120,9 @@ const Footer = () => {
             stagger: APPEAR_STAGGER,
           });
         },
-        { threshold: 0.12, rootMargin: "0px 0px -10% 0px" },
+        { threshold: 0, rootMargin: "0px 0px -12% 0px" },
       );
-      observer.observe(footer);
+      observer.observe(sentinel);
     });
 
     return () => {
@@ -125,7 +150,6 @@ const Footer = () => {
 
   return (
     <footer ref={footerRef} id="contact" className="footer">
-      <FooterFall />
       <div className="footer-container page-content-shell">
         <div className="footer-bar">
           <h2 className="footer-heading footer-appear">
@@ -186,9 +210,11 @@ const Footer = () => {
             </ul>
           </div>
         </div>
-
-        <p className="footer-copyright footer-appear">© 2026 Daksh Kapoor</p>
       </div>
+
+      <FooterWalk />
+
+      <p className="footer-copyright footer-appear">© 2026 Daksh Kapoor</p>
     </footer>
   );
 };

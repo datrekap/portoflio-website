@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useLenisScroll } from "../../hooks/useLenisScroll";
-import Footer from "../../components/Footer/Footer";
+import PageShell from "../../components/PageShell/PageShell";
 import Appear from "../../components/Appear/Appear";
 import CaseStudyLayout from "../../components/CaseStudyLayout/CaseStudyLayout";
 import CaseStudyButton from "../../components/CaseStudyButton/CaseStudyButton";
@@ -93,7 +93,7 @@ export default function PropertyworksCaseStudy() {
 
   return (
     <CaseStudyMediaProvider maxPlaying={4}>
-      <div className="cs-case-study pw-case-study">
+      <PageShell as="div" className="cs-case-study pw-case-study">
         <CaseStudyLayout projectId={PW_PROJECT_ID}>
           <section
             id="pw-overview"
@@ -549,8 +549,7 @@ export default function PropertyworksCaseStudy() {
             </div>
           </section>
         </CaseStudyLayout>
-        <Footer />
-      </div>
+      </PageShell>
     </CaseStudyMediaProvider>
   );
 }

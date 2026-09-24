@@ -19,6 +19,7 @@ let touchedElements = [];
 function isAnimatable(el) {
   if (!(el instanceof HTMLElement)) return false;
   if (el.matches(PRESERVED_SELECTOR)) return false;
+  if (el.matches(".footer") || el.closest(".footer")) return false;
   const rect = el.getBoundingClientRect();
   return rect.width > 0 && rect.height > 0;
 }

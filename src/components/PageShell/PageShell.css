@@ -1,0 +1,18 @@
+.page-shell {
+  position: relative;
+}
+
+.page-shell__sheet {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-color: inherit;
+  margin-bottom: var(--footer-reveal-height, clamp(16rem, 28vw, 20rem));
+}
+
+.page-shell__reveal-sentinel {
+  width: 100%;
+  height: 1px;
+  pointer-events: none;
+}

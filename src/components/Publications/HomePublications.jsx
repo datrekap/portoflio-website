@@ -149,7 +149,9 @@ const HomePublications = () => {
                       asChild
                       delay={(sectionIndex + priorPapers + paperIndex + 2) * APPEAR_STAGGER}
                     >
-                      <PublicationEntry paper={paper} />
+                      <div className="home-publications-item">
+                        <PublicationEntry paper={paper} />
+                      </div>
                     </Appear>
                   ))}
                 </div>

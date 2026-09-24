@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useLenisScroll } from "../../hooks/useLenisScroll";
-import Footer from "../../components/Footer/Footer";
+import PageShell from "../../components/PageShell/PageShell";
 import Appear from "../../components/Appear/Appear";
 import CaseStudyLayout from "../../components/CaseStudyLayout/CaseStudyLayout";
 import CaseStudyButton from "../../components/CaseStudyButton/CaseStudyButton";
@@ -64,7 +64,7 @@ export default function ParkwiseCaseStudy() {
 
   return (
     <CaseStudyMediaProvider maxPlaying={4}>
-      <div className="cs-case-study pkw-case-study">
+      <PageShell as="div" className="cs-case-study pkw-case-study">
         <CaseStudyLayout projectId={PKW_PROJECT_ID}>
           <section
             id="pkw-overview"
@@ -556,8 +556,7 @@ export default function ParkwiseCaseStudy() {
             </div>
           </section>
         </CaseStudyLayout>
-        <Footer />
-      </div>
+      </PageShell>
     </CaseStudyMediaProvider>
   );
 }

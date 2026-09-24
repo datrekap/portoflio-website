@@ -45,6 +45,7 @@
     --site-grid-line-color: #333333;
     --site-grid-line-width: 1px;
     --site-grid-opacity: 0.05;
+    --footer-reveal-height: clamp(16rem, 28vw, 20rem);
   }
 
   @media (min-width: 640px) {

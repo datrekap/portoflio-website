@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useLenisScroll } from "../../hooks/useLenisScroll";
-import Footer from "../../components/Footer/Footer";
+import PageShell from "../../components/PageShell/PageShell";
 import Appear from "../../components/Appear/Appear";
 import CaseStudyLayout from "../../components/CaseStudyLayout/CaseStudyLayout";
 import CaseStudyButton from "../../components/CaseStudyButton/CaseStudyButton";
@@ -47,7 +47,7 @@ export default function PFALCaseStudy() {
 
   return (
     <PfalMediaProvider maxPlaying={6}>
-    <div className="pfal-case-study">
+    <PageShell as="div" className="pfal-case-study">
       <div ref={heroMediaRef} className="cs-hero-media-wrap cs-hero-media-wrap--page-top pfal-hero-media-wrap pfal-hero-media-wrap--page-top">
         <CaseStudyHeroVideo
           projectId={PFAL_PROJECT_ID}
@@ -754,9 +754,7 @@ export default function PFALCaseStudy() {
           </div>
         </section>
       </CaseStudyLayout>
-
-      <Footer />
-    </div>
+    </PageShell>
     </PfalMediaProvider>
   );
 }
