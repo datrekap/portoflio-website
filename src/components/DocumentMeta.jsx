@@ -30,6 +30,11 @@ const PAGE_META = {
     description:
       "Bio, photos, and experience for Daksh Kapoor, a designer engineer and researcher.",
   },
+  "/about/creative": {
+    title: "Creative work | Daksh Kapoor",
+    description:
+      "Video, motion graphics, and cinematography by Daksh Kapoor from before product design.",
+  },
   "/public-future-arts-lab": {
     title: "FultonBrighterFutures | Daksh Kapoor",
     description:

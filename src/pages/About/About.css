@@ -110,6 +110,44 @@
   font-weight: 700;
 }
 
+.about-bio-hotspot {
+  appearance: none;
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 700;
+  color: var(--about-accent);
+  letter-spacing: inherit;
+  text-align: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  cursor: pointer;
+  transition: color 0.22s ease;
+}
+
+.about-bio-hotspot:focus {
+  outline: none;
+}
+
+.about-bio-hotspot:focus-visible {
+  outline: 2px solid var(--about-accent);
+  outline-offset: 3px;
+}
+
+.about-bio-hotspot:active {
+  color: var(--about-ink);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .about-bio-hotspot:hover {
+    color: var(--about-ink);
+  }
+}
+
 .about-hero-stage {
   position: absolute;
   inset: 0;

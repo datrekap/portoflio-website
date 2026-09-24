@@ -13,6 +13,7 @@ import {
   isHomePath,
   isGoogleCreativePath,
 } from "../../constants/homeRoutes";
+import { ABOUT_CREATIVE_PATH } from "../../data/aboutCreativeWork";
 import "./Nav.css";
 import DarkDKLogo from "../../assets/img/DarkDKLogo.png";
 import LightDKLogo from "../../assets/img/LightDKLogo.png";
@@ -66,7 +67,9 @@ const Nav = () => {
   const isNavItemActive = (item) => {
     const path = location.pathname;
     if (isGoogleCreativePath(path)) return false;
-    if (item.label === "about") return path === "/about";
+    if (item.label === "about") {
+      return path === "/about" || path === ABOUT_CREATIVE_PATH;
+    }
     if (item.label === "work") {
       return path === "/work" || (isHomePath(path) && location.hash === "#work");
     }

@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Appear from "../../components/Appear/Appear";
 import PageShell from "../../components/PageShell/PageShell";
 import AboutHeroWindows from "./AboutHeroWindows";
 import AboutQuote from "./AboutQuote";
+import AboutCreativeOverlay from "./AboutCreativeOverlay";
 import useInfiniteDragLoop from "../../hooks/useInfiniteDragLoop";
 import {
   ABOUT_EXPERIENCE,
@@ -10,6 +12,7 @@ import {
   ABOUT_PHOTO_COLUMNS,
   ABOUT_STRIP_DRIFT,
 } from "../../data/aboutContent";
+import { ABOUT_CREATIVE_PATH } from "../../data/aboutCreativeWork";
 import "./About.css";
 
 function calloutPhaseClass(phase) {
@@ -126,10 +129,27 @@ function AboutPhotoStrip() {
 }
 
 const About = () => {
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
   const [littleThingsCallout, setLittleThingsCallout] = useState(null);
   const heroCopyRef = useRef(null);
+  const creativeTriggerRef = useRef(null);
+  const creativeOpen = pathname === ABOUT_CREATIVE_PATH;
+
+  const openCreativeOverlay = () => {
+    if (pathname === ABOUT_CREATIVE_PATH) return;
+    navigate(ABOUT_CREATIVE_PATH, { replace: true });
+  };
+
+  const closeCreativeOverlay = () => {
+    navigate("/about", { replace: true });
+    window.requestAnimationFrame(() => {
+      creativeTriggerRef.current?.focus();
+    });
+  };
 
   return (
+    <>
     <PageShell className="about-page">
       <section className="about-hero" aria-label="Introduction">
         <div className="about-wide about-hero-layout">
@@ -147,7 +167,18 @@ const About = () => {
               <p>
                 My creative path began as an undergraduate exploring animation,
                 video, and digital arts, which laid the foundation for my career
-                as a creative specialist. Along the way, I became fascinated not
+                as a{" "}
+                <button
+                  ref={creativeTriggerRef}
+                  type="button"
+                  className="about-bio-hotspot"
+                  aria-haspopup="dialog"
+                  aria-expanded={creativeOpen}
+                  onClick={openCreativeOverlay}
+                >
+                  creative specialist
+                </button>
+                . Along the way, I became fascinated not
                 only by how people connect with my work, but also by{" "}
                 <strong>how they interact</strong> with it.
               </p>
@@ -260,6 +291,10 @@ const About = () => {
         THANKS FOR VISITING!
       </Appear>
     </PageShell>
+      {creativeOpen ? (
+        <AboutCreativeOverlay onClose={closeCreativeOverlay} />
+      ) : null}
+    </>
   );
 };
 

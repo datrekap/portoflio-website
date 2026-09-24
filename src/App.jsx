@@ -88,6 +88,7 @@ function App() {
             <Route path="/work" element={<Work />} />
             <Route path="/play" element={<Play />} />
             <Route path="/about" element={<About />} />
+            <Route path="/about/creative" element={<About />} />
             <Route
               path="/public-future-arts-lab"
               element={
