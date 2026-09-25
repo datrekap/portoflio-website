@@ -521,6 +521,7 @@
 /* ----- Selected work (first 4 projects) ----- */
 .home-selected-work {
   padding-top: var(--home-selected-work-pad-y);
+  padding-bottom: clamp(5.5rem, 12vh, 9rem);
 }
 
 .home-selected-work-title {
