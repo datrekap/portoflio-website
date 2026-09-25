@@ -593,3 +593,14 @@
     transform: translateX(4px);
   }
 }
+
+@media (max-width: 768px) {
+  .home-see-more-work:active {
+    color: #ff5500;
+    gap: 1rem;
+  }
+
+  .home-see-more-work:active .home-see-more-work-arrow {
+    transform: translateX(4px);
+  }
+}

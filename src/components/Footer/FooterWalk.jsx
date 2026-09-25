@@ -21,6 +21,9 @@ const RIVE_LAYOUT = new Layout({
 });
 const GROUND_TILE = 1521.08;
 const WALK_SPEED = 90;
+const WALK_SPEED_PHONE = 36;
+const RIVE_SPEED_PHONE = 0.45;
+const PHONE_MQ = "(max-width: 768px)";
 const DISMISS_MS = 2400;
 const IDLE_GAP_MS = 4200;
 const MAX_WORDS = 5;
@@ -78,6 +81,17 @@ function FooterWalkerFigure({ paused, reducedMotion }) {
     if (reducedMotion || paused) rive.pause();
     else rive.play();
   }, [rive, paused, reducedMotion]);
+
+  useEffect(() => {
+    if (!rive || !("speed" in rive)) return undefined;
+    const apply = () => {
+      rive.speed = window.matchMedia(PHONE_MQ).matches ? RIVE_SPEED_PHONE : 1;
+    };
+    apply();
+    const mq = window.matchMedia(PHONE_MQ);
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, [rive]);
 
   return (
     <div ref={setContainerRef} className="footer-walker-rive">
@@ -241,6 +255,8 @@ export default function FooterWalk() {
     let raf = 0;
     let last = performance.now();
     const walkerWidth = () => walker.offsetWidth || 160;
+    const speedForView = () =>
+      window.matchMedia(PHONE_MQ).matches ? WALK_SPEED_PHONE : WALK_SPEED;
 
     const reset = () => {
       xRef.current = -walkerWidth();
@@ -258,10 +274,11 @@ export default function FooterWalk() {
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
       const width = stage.clientWidth;
-      xRef.current += WALK_SPEED * dt;
+      const speed = speedForView();
+      xRef.current += speed * dt;
       if (xRef.current > width) xRef.current = -walkerWidth();
       groundRef.current = wrapMod(
-        groundRef.current + WALK_SPEED * dt,
+        groundRef.current + speed * dt,
         GROUND_TILE,
       );
       walker.style.transform = `translate3d(${xRef.current}px, 0, 0)`;

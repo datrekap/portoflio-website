@@ -222,6 +222,30 @@
   }
 }
 
+@media (max-width: 768px) {
+  .case-study-button:active {
+    box-shadow: var(--cs-btn-shadow);
+    --cs-btn-weight: 700;
+  }
+
+  .case-study-button:active .case-study-button__edge--top-left,
+  .case-study-button:active .case-study-button__edge--top-right,
+  .case-study-button:active .case-study-button__edge--bottom-left,
+  .case-study-button:active .case-study-button__edge--bottom-right {
+    transform: scaleX(1);
+  }
+
+  .case-study-button:active .case-study-button__grid-h {
+    clip-path: inset(0 0 0 0);
+    transition-delay: 0.08s;
+  }
+
+  .case-study-button:active .case-study-button__grid-v {
+    clip-path: inset(0 0 0 0);
+    transition-delay: 0.16s;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .case-study-button,
   .case-study-button__edge,

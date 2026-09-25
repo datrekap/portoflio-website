@@ -177,6 +177,16 @@
   }
 }
 
+@media (max-width: 768px) {
+  .pill:active {
+    --nav-pill-weight: 700;
+  }
+
+  .logo-link:active .logo-image {
+    transform: scale(0.92);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pill {
     transition: none;
@@ -450,7 +460,7 @@ body.mobile-menu-open {
   content: none;
 }
 
-.mobile-menu-popover .mobile-menu-link:hover {
+.mobile-menu-popover .mobile-menu-link:active {
   cursor: pointer;
   background-color: transparent;
   color: #f3f3f3;
@@ -496,7 +506,7 @@ body.mobile-menu-open {
   }
 
   .mobile-menu-popover .mobile-menu-link,
-  .mobile-menu-popover .mobile-menu-link:hover {
+  .mobile-menu-popover .mobile-menu-link:active {
     color: #f3f3f3;
   }
 

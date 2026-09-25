@@ -75,8 +75,21 @@
   cursor: pointer;
 }
 
-.work-category-filter__option:hover,
 .work-category-filter__option.is-active {
   background: rgba(51, 51, 51, 0.06);
   font-weight: 700;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .work-category-filter__option:hover {
+    background: rgba(51, 51, 51, 0.06);
+    font-weight: 700;
+  }
+}
+
+@media (max-width: 768px) {
+  .work-category-filter__option:active {
+    background: rgba(51, 51, 51, 0.06);
+    font-weight: 700;
+  }
 }

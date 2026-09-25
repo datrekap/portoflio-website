@@ -861,6 +861,21 @@
   border-radius: 2px;
 }
 
+@media (max-width: 768px) {
+  .about-hero-window__close:active {
+    color: var(--about-accent);
+  }
+
+  .about-experience-entry:active {
+    transform: translateX(6px);
+  }
+
+  .about-experience-entry:active .about-experience-company,
+  .about-experience-entry:active .about-experience-role {
+    color: #333333;
+  }
+}
+
 /* ----- Little things + photos ----- */
 .about-little-things {
   padding-top: var(--about-section-gap);

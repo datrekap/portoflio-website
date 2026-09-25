@@ -95,4 +95,12 @@
     width: 2.5rem;
     height: 2.5rem;
   }
+
+  .back-to-top-button:active,
+  .back-to-top-button.in-footer:active {
+    background: var(--btt-accent);
+    border-color: var(--btt-accent);
+    color: #f3f3f3;
+    transform: translateY(0);
+  }
 }
