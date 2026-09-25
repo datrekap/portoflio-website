@@ -963,17 +963,42 @@
 }
 
 @media (max-width: 768px) {
+  .about-page {
+    --about-title-size: clamp(1.15rem, 5.4vw, 1.25rem);
+    --about-body-size: 0.875rem;
+    --about-section-gap: clamp(3rem, 10vw, 4.25rem);
+  }
+
+  .about-section-title {
+    margin-bottom: 1.75rem;
+  }
+
   .about-hero {
-    padding-top: clamp(5.5rem, 14vw, 7rem);
+    padding-top: clamp(5.25rem, 14vw, 6.5rem);
+    padding-bottom: clamp(2rem, 6vw, 3rem);
     min-height: 0;
   }
 
   .about-hero-layout {
-    min-height: clamp(28rem, 78vh, 40rem);
+    justify-content: flex-start;
+    min-height: clamp(24rem, 68vh, 34rem);
   }
 
   .about-hero-copy {
-    width: min(100%, 28rem);
+    width: min(62%, 20rem);
+    margin: 0 auto 0 0;
+    padding: 0.35rem 0.45rem 0.35rem 0;
+    background: #ffffff;
+  }
+
+  .about-hero-title {
+    margin-bottom: 0.9rem;
+    font-size: clamp(1.5rem, 7vw, 1.75rem);
+    text-align: left;
+  }
+
+  .about-hero .about-bio {
+    gap: 0.8rem;
   }
 
   .about-hero-stage {
@@ -1010,20 +1035,59 @@
     text-align: left;
   }
 
+  .about-quote {
+    margin-top: 1.25rem;
+  }
+
   .about-quote-layout {
     grid-template-columns: 1fr;
-    row-gap: 1.25rem;
+    justify-items: center;
+    row-gap: 1.75rem;
     min-height: 0;
   }
 
   .about-quote-walker {
-    width: clamp(12rem, 58vw, 16rem);
+    width: clamp(9rem, 42vw, 11rem);
+    justify-self: center;
+    margin-bottom: -0.65rem;
   }
 
   .about-quote-copy {
     order: -1;
+    width: 100%;
     text-align: left;
     padding-bottom: 0;
+  }
+
+  .about-quote-text {
+    font-size: 0.9375rem;
+  }
+
+  .about-quote-cite {
+    font-size: 0.8125rem;
+  }
+
+  .about-quote-next {
+    width: 100%;
+    padding: 0 var(--page-gutter-x);
+    justify-content: center;
+    margin-top: 1.5rem;
+  }
+
+  .about-quote-next .case-study-button {
+    min-width: 0;
+    padding: 0.55rem 0.9rem;
+    font-size: 0.6875rem;
+    white-space: nowrap;
+  }
+
+  .about-experience-company {
+    font-size: 1rem;
+  }
+
+  .about-experience-role,
+  .about-experience-dates {
+    font-size: 0.8125rem;
   }
 
   .about-experience-item {
@@ -1044,7 +1108,6 @@
   .about-photos-scroller {
     touch-action: pan-x pan-y;
   }
-
 }
 
 @media (hover: none) {

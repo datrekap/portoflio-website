@@ -85,12 +85,13 @@ function photoMaskExcludeText(winX, winY, winW, imageH, text) {
 }
 
 function sharedWidth(aspect, heroW, heroH) {
-  let width = Math.round(heroW * 0.2);
-  const maxW = heroW * 0.26;
-  const maxH = heroH * 0.42;
+  const compact = heroW < 768;
+  let width = Math.round(heroW * (compact ? 0.24 : 0.2));
+  const maxW = heroW * (compact ? 0.3 : 0.26);
+  const maxH = heroH * (compact ? 0.26 : 0.42);
   if (width > maxW) width = maxW;
   if (aspect > 0 && width / aspect > maxH) width = maxH * aspect;
-  return Math.max(132, Math.round(width));
+  return Math.max(compact ? 92 : 132, Math.round(width));
 }
 
 function sessionTilt() {
@@ -98,7 +99,12 @@ function sessionTilt() {
   return (Math.random() < 0.5 ? -1 : 1) * magnitude;
 }
 
-function slotOriginX(heroW, winW, side, centerOffset) {
+function slotOriginX(heroW, winW, side, centerOffset, compactIndex = 0) {
+  const compact = heroW < 768;
+  if (compact) {
+    const inset = 8 + (compactIndex % 2) * 16;
+    return Math.max(0, heroW - winW - inset);
+  }
   const center = heroW / 2;
   const winCenter = center + side * centerOffset * heroW;
   return winCenter - winW / 2;
@@ -197,10 +203,22 @@ export default function AboutHeroWindows({ copyRef }) {
       const box = windowBox(windowWidth, cafeAspect);
       let changed = false;
       const next = list.map((win) => {
+        const compact = hero.clientWidth < 768;
+        const compactIndex = Math.max(0, (win.z - 1) % 4);
         const originX = win.userMoved
           ? win.xRatio * hero.clientWidth
-          : slotOriginX(hero.clientWidth, box.w, win.side, win.centerOffset);
-        const originY = win.yRatio * hero.clientHeight;
+          : slotOriginX(
+              hero.clientWidth,
+              box.w,
+              win.side,
+              win.centerOffset,
+              compactIndex,
+            );
+        const compactYs = [0.08, 0.28, 0.48, 0.66];
+        const originY = win.userMoved
+          ? win.yRatio * hero.clientHeight
+          : (compact ? compactYs[compactIndex] : win.yRatio) *
+            hero.clientHeight;
         const pos = clampToBox(
           originX,
           originY,

@@ -14,7 +14,7 @@ import { ABOUT_QUOTES } from "../../data/aboutContent";
 const RIVE_SRC = "/play/dk-character.riv";
 const RIVE_ARTBOARD = "Artboard 1";
 const RIVE_STATE_MACHINE = "About";
-const DANCE_INPUTS = ["Dance1", "Dance2", "Dance3"];
+const DANCE_INPUTS = ["Dance1", "Dance2", "Dance3", "Dance4"];
 const RIVE_LAYOUT = new Layout({
   fit: Fit.Contain,
   alignment: Alignment.BottomCenter,
@@ -46,7 +46,8 @@ function AboutQuoteWalker({ danceIndex }) {
   const dance1 = useStateMachineInput(rive, RIVE_STATE_MACHINE, DANCE_INPUTS[0]);
   const dance2 = useStateMachineInput(rive, RIVE_STATE_MACHINE, DANCE_INPUTS[1]);
   const dance3 = useStateMachineInput(rive, RIVE_STATE_MACHINE, DANCE_INPUTS[2]);
-  const dances = [dance1, dance2, dance3];
+  const dance4 = useStateMachineInput(rive, RIVE_STATE_MACHINE, DANCE_INPUTS[3]);
+  const dances = [dance1, dance2, dance3, dance4];
 
   useEffect(() => {
     if (!rive) return undefined;
@@ -58,7 +59,7 @@ function AboutQuoteWalker({ danceIndex }) {
   useEffect(() => {
     if (reducedMotion) return;
     fireRiveTrigger(dances[danceIndex % DANCE_INPUTS.length]);
-  }, [danceIndex, dance1, dance2, dance3, reducedMotion]);
+  }, [danceIndex, dance1, dance2, dance3, dance4, reducedMotion]);
 
   return (
     <div ref={rootRef} className="about-quote-walker" aria-hidden="true">
@@ -84,14 +85,19 @@ export default function AboutQuote() {
       <div className="about-quote-stage">
         <div className="about-wide about-quote-layout">
           <AboutQuoteWalker danceIndex={danceIndex} />
-          <Appear as="blockquote" className="about-quote-copy" delay={0.08}>
+          <Appear
+            as="blockquote"
+            className="about-quote-copy"
+            delay={0.08}
+            triggerOnMount
+          >
             <p className="about-quote-text">&ldquo;{quote.text}&rdquo;</p>
             <footer className="about-quote-cite">-- {quote.cite}</footer>
           </Appear>
         </div>
         <div className="about-quote-ground" aria-hidden="true" />
       </div>
-      <Appear className="about-quote-next" delay={0.16}>
+      <Appear className="about-quote-next" delay={0.16} triggerOnMount>
         <CaseStudyButton type="button" onClick={onAnother}>
           Another One
         </CaseStudyButton>
