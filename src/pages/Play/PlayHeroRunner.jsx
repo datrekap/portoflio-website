@@ -1253,12 +1253,8 @@ function PlayHeroRunner({ paused = false }) {
       </div>
   );
 
-  const startLabel =
-    status === "dead"
-      ? "Try again"
-      : isMobile
-        ? "Tap to start"
-        : "Press Space or Tap to Start";
+  const jumpPrompt = "Tap & Hold to Jump";
+  const startLabel = status === "dead" ? "Try again" : jumpPrompt;
 
   return (
     <div
@@ -1270,13 +1266,9 @@ function PlayHeroRunner({ paused = false }) {
           ? isMobile
             ? "Game over. Tap Try again to play."
             : "Game over. Press Space or tap to try again."
-          : status === "running"
-            ? isMobile
-              ? "Endless runner. Tap the ground area to jump."
-              : "Endless runner. Press Space or tap to jump."
-            : isMobile
-              ? "Endless runner. Tap to start."
-              : "Endless runner. Press Space or Tap to Start."
+          : isMobile
+            ? "Endless runner. Tap and hold to jump."
+            : "Endless runner. Press Space or tap and hold to jump."
       }
       onPointerDown={onPointerDown}
     >
@@ -1289,10 +1281,10 @@ function PlayHeroRunner({ paused = false }) {
         <button
           type="button"
           className="play-hero-jump-pad"
-          aria-label="Tap here to jump"
+          aria-label="Tap and hold to jump"
           onPointerDown={onJumpPadPointerDown}
         >
-          Tap here to jump.
+          Tap & Hold to Jump
         </button>
       ) : null}
       <div className="play-hero-runner-slot">
@@ -1313,9 +1305,7 @@ function PlayHeroRunner({ paused = false }) {
           aria-label={
             status === "dead"
               ? "Tap the figure to try again"
-              : status === "running"
-                ? "Tap the figure to jump"
-                : "Tap the figure to start"
+              : "Tap and hold the figure to jump"
           }
           onPointerDown={onFigurePointerDown}
         />
