@@ -2,12 +2,6 @@
   --work-card-pad-y: 1.25rem;
   --work-card-pad-x: clamp(1.25rem, 3vw, 2.5rem);
   --work-card-gap: 1.5rem;
-  --work-card-body-pad-top: 0.7rem;
-  --work-card-body-pad-bottom: 0.95rem;
-  --work-card-hover-extra: calc(
-    (2 * var(--work-card-pad-y)) + var(--work-card-gap) -
-      var(--work-card-body-pad-top) - var(--work-card-body-pad-bottom)
-  );
 
   position: relative;
   display: flex;
@@ -106,10 +100,6 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .work-project-card {
-    padding: 0 0 var(--work-card-hover-extra);
-  }
-
   .work-project-card.is-hovered {
     padding: var(--work-card-pad-y) var(--work-card-pad-x);
     gap: var(--work-card-gap);
@@ -197,7 +187,7 @@
   gap: 0.5rem;
   width: 100%;
   box-sizing: border-box;
-  padding: var(--work-card-body-pad-top) 0 var(--work-card-body-pad-bottom);
+  padding: 0.7rem 0 0.95rem;
   transition: padding 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 

@@ -5,6 +5,7 @@
   --home-grid-line-color: var(--site-grid-line-color);
   --home-grid-line-width: var(--site-grid-line-width);
   --home-selected-work-pad-y: clamp(3.5rem, 7vh, 5.5rem);
+  --home-work-hover-room: 2.35rem;
   min-height: 100vh;
   min-height: 100dvh;
   width: 100%;
@@ -521,7 +522,7 @@
 /* ----- Selected work (first 4 projects) ----- */
 .home-selected-work {
   padding-top: var(--home-selected-work-pad-y);
-  padding-bottom: clamp(5.5rem, 12vh, 9rem);
+  padding-bottom: clamp(5.75rem, 12vh, 9.5rem);
 }
 
 .home-selected-work-title {
@@ -550,10 +551,35 @@
   width: 100%;
 }
 
+.home-selected-work-slot {
+  min-width: 0;
+}
+
 @media (min-width: 1025px) {
   .home-selected-work-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 2.5rem 3rem;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .home-selected-work-grid {
+    gap: 0.15rem;
+  }
+
+  @media (min-width: 1025px) {
+    .home-selected-work-grid {
+      gap: 0.15rem 3rem;
+    }
+  }
+
+  .home-selected-work-slot {
+    margin-bottom: var(--home-work-hover-room);
+    transition: margin-bottom 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .home-selected-work-slot:has(.is-hovered) {
+    margin-bottom: 0;
   }
 }
 

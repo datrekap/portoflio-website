@@ -505,9 +505,11 @@ const Home = () => {
           </Appear>
           <div className="home-selected-work-grid">
             {HOME_SELECTED_WORK.map((project, index) => (
-              <Appear key={project.id} asChild delay={index * APPEAR_STAGGER}>
-                <WorkProjectCard project={project} />
-              </Appear>
+              <div key={project.id} className="home-selected-work-slot">
+                <Appear asChild delay={index * APPEAR_STAGGER}>
+                  <WorkProjectCard project={project} />
+                </Appear>
+              </div>
             ))}
           </div>
           {SHOW_HOME_SEE_MORE_WORK ? (
