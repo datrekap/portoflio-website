@@ -14,7 +14,7 @@ import { ABOUT_QUOTES } from "../../data/aboutContent";
 const RIVE_SRC = "/play/dk-character.riv";
 const RIVE_ARTBOARD = "Artboard 1";
 const RIVE_STATE_MACHINE = "About";
-const DANCE_INPUTS = ["Dance1", "Dance2", "Dance3", "Dance4"];
+const DANCE_INPUTS = ["Dance1", "Dance2", "Dance3", "Dance4", "Dance5"];
 const RIVE_LAYOUT = new Layout({
   fit: Fit.Contain,
   alignment: Alignment.BottomCenter,
@@ -47,7 +47,8 @@ function AboutQuoteWalker({ danceIndex }) {
   const dance2 = useStateMachineInput(rive, RIVE_STATE_MACHINE, DANCE_INPUTS[1]);
   const dance3 = useStateMachineInput(rive, RIVE_STATE_MACHINE, DANCE_INPUTS[2]);
   const dance4 = useStateMachineInput(rive, RIVE_STATE_MACHINE, DANCE_INPUTS[3]);
-  const dances = [dance1, dance2, dance3, dance4];
+  const dance5 = useStateMachineInput(rive, RIVE_STATE_MACHINE, DANCE_INPUTS[4]);
+  const dances = [dance1, dance2, dance3, dance4, dance5];
 
   useEffect(() => {
     if (!rive) return undefined;
@@ -59,7 +60,7 @@ function AboutQuoteWalker({ danceIndex }) {
   useEffect(() => {
     if (reducedMotion) return;
     fireRiveTrigger(dances[danceIndex % DANCE_INPUTS.length]);
-  }, [danceIndex, dance1, dance2, dance3, dance4, reducedMotion]);
+  }, [danceIndex, dance1, dance2, dance3, dance4, dance5, reducedMotion]);
 
   return (
     <div ref={rootRef} className="about-quote-walker" aria-hidden="true">
