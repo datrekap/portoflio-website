@@ -101,6 +101,7 @@ export const playTiles = [
     alt: "BeeUV outdoor UV robot",
     className: "play-tile--beeuv",
     labels: ["Arduino Prototyping"],
+    externalHref: "https://youtu.be/T5l4IapuQus",
   },
   {
     id: "circles",

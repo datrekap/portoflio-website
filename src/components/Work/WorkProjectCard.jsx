@@ -53,8 +53,10 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
     claimVideo,
     getIsTransitioning,
   } = useWorkVideoTransition();
-  const CardTag = project.route ? Link : "article";
+  const isExternal = Boolean(project.externalUrl);
+  const CardTag = project.route ? Link : isExternal ? "a" : "article";
   const showComingSoonHover = !project.route;
+  const hoverArtSrc = project.hoverEffect || COMING_SOON_HOVER_SRC;
   const { imageSrc, hoverVideo } = resolveWorkProjectMedia(project.image);
 
   const cardRef = useRef(null);
@@ -528,7 +530,13 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
       onMouseMove={handleMouseMove}
       {...(project.route
         ? { to: project.route, onClick: handleNavigateClick }
-        : { onClick: handleComingSoonClick })}
+        : isExternal
+          ? {
+              href: project.externalUrl,
+              target: "_blank",
+              rel: "noopener noreferrer",
+            }
+          : { onClick: handleComingSoonClick })}
       data-project-id={project.id}
     >
       <div
@@ -622,7 +630,7 @@ const WorkProjectCard = forwardRef(function WorkProjectCard({ project }, ref) {
               <div className="work-card-cursor-follow-anchor">
                 <img
                   className="work-card-cursor-follow-art"
-                  src={COMING_SOON_HOVER_SRC}
+                  src={hoverArtSrc}
                   alt=""
                 />
               </div>

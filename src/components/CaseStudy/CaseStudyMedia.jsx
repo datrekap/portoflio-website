@@ -429,31 +429,49 @@ export function CaseStudyVolumeVideo({
   const { videoRef, shouldLoad } = useCaseStudyManagedVideo(id, { eager });
   const unmuted = activeVolumeId === id;
 
+  const keepMuted = (video) => {
+    if (unmuted || !video) return;
+    video.defaultMuted = true;
+    video.muted = true;
+    video.volume = 0;
+  };
+
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return undefined;
+    video.defaultMuted = !unmuted;
     video.muted = !unmuted;
-    if (unmuted) video.volume = 1;
+    video.volume = unmuted ? 1 : 0;
     return undefined;
-  }, [unmuted, videoRef]);
+  }, [unmuted, videoRef, shouldLoad]);
 
   return (
     <div
       className={`cs-volume-video pfal-volume-video${className ? ` ${className}` : ""}`}
     >
       <video
-        ref={videoRef}
+        ref={(node) => {
+          videoRef.current = node;
+          if (node && !unmuted) {
+            node.defaultMuted = true;
+            node.muted = true;
+            node.volume = 0;
+          }
+        }}
         loop
-        muted={!unmuted}
         playsInline
         preload={shouldLoad ? "auto" : "none"}
         {...props}
+        muted={!unmuted}
+        defaultMuted={!unmuted}
         src={shouldLoad ? src : undefined}
         onLoadedMetadata={(event) => {
+          keepMuted(event.currentTarget);
           props.onLoadedMetadata?.(event);
           if (reducedMotion) paintFirstFrame(event.currentTarget);
         }}
         onLoadedData={(event) => {
+          keepMuted(event.currentTarget);
           props.onLoadedData?.(event);
           if (reducedMotion) {
             paintFirstFrame(event.currentTarget);
@@ -466,10 +484,12 @@ export function CaseStudyVolumeVideo({
           if (event.currentTarget.readyState >= 3) notifyReady();
         }}
         onCanPlay={(event) => {
+          keepMuted(event.currentTarget);
           props.onCanPlay?.(event);
           if (!reducedMotion) notifyReady();
         }}
         onPlaying={(event) => {
+          keepMuted(event.currentTarget);
           props.onPlaying?.(event);
           revealAfterPresentedFrames(event.currentTarget);
         }}

@@ -51,4 +51,17 @@ export const caseStudyNavConfig = {
       { id: "trojan-future-work", label: "Future Work" },
     ],
   },
+  soundclouds: {
+    navVariant: "editorial",
+    accentColor: "#10419d",
+    sections: [
+      { id: "sc-overview", label: "Overview" },
+      { id: "sc-problem", label: "Problem" },
+      { id: "sc-solution", label: "Solution" },
+      { id: "sc-interactions", label: "Interactions" },
+      { id: "sc-design-approach", label: "Design Approach" },
+      { id: "sc-result", label: "Result" },
+      { id: "sc-reflection", label: "Reflection & Future" },
+    ],
+  },
 };

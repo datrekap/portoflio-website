@@ -20,6 +20,7 @@ import "./App.css";
 
 const PFALCaseStudy = lazy(caseStudyLoader("/public-future-arts-lab"));
 const TrojanStepCaseStudy = lazy(caseStudyLoader("/trojanstep"));
+const SoundCloudsCaseStudy = lazy(caseStudyLoader("/soundclouds"));
 const PropertyworksCaseStudy = lazy(caseStudyLoader("/sitehub-2"));
 const ParkwiseCaseStudy = lazy(caseStudyLoader("/parkwise"));
 
@@ -118,6 +119,14 @@ function App() {
               element={
                 <Suspense fallback={<div className="min-h-screen" style={{ background: "#f3f3f3" }} />}>
                   <TrojanStepCaseStudy />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/soundclouds"
+              element={
+                <Suspense fallback={<div className="min-h-screen" style={{ background: "#f3f3f3" }} />}>
+                  <SoundCloudsCaseStudy />
                 </Suspense>
               }
             />

@@ -63,6 +63,8 @@ export const workProjects = [
     summary:
       "Discovering how people make sense of ambient AI through play.",
     image: "public/work/SoundClouds/Thumbnail.webp",
+    route: "/soundclouds",
+    videoTransition: true,
     badges: ["Accepted at C&C 2026", "Accepted at NeurIPS 2025"],
   },
   {
@@ -73,6 +75,8 @@ export const workProjects = [
     summary:
       "Turning qualitative stories of graduate life into a spatial digital experience shaped by motion, color, and visual narrative.",
     image: "public/work/PhotoVoice/Thumbnail.webp",
+    externalUrl:
+      "https://sites.gatech.edu/belonging-studio/prismatic-belonging-in-view/",
   },
   {
     id: "puffer",
@@ -83,6 +87,7 @@ export const workProjects = [
       "Guiding calmer breathing through a soft robot with responsive tactile cues.",
     image: "public/work/Puffer/Thumbnail.webp",
     badges: ["Accepted at TEI 2026"],
+    externalUrl: "https://youtu.be/sdCgfE7PkMk",
   },
   {
     id: "mossbuds",
@@ -92,5 +97,6 @@ export const workProjects = [
     summary:
       "Reimagining noise cancellation as a more personal way to experience the world.",
     image: "public/work/MossBuds/Thumbnail.webp",
+    hoverEffect: "/work/hover-effect-under-development.svg",
   },
 ];

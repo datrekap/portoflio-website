@@ -142,8 +142,11 @@ function PlayTileVideo({ id, src, poster, alt }) {
 function PlayTile({ tile, index, onOpenOverlay }) {
   const labels = (tile.labels || []).slice(0, 2);
   const isOverlayTile = Boolean(tile.overlayId);
-  const showView = Boolean(tile.showView) && !isOverlayTile;
-  const cursorFollow = usePlayTileCursorFollow(isOverlayTile);
+  const isExternalTile = Boolean(tile.externalHref);
+  const isInteractive = isOverlayTile || isExternalTile;
+  const showView = Boolean(tile.showView) && !isInteractive;
+  const cursorFollow = usePlayTileCursorFollow(isInteractive);
+  const MediaTag = isExternalTile ? "a" : "div";
 
   const openOverlay = () => {
     if (tile.overlayId) onOpenOverlay(tile.overlayId);
@@ -152,11 +155,14 @@ function PlayTile({ tile, index, onOpenOverlay }) {
   return (
     <Appear
       as="figure"
-      className={`play-tile ${tile.className}${isOverlayTile ? " is-clickable" : ""}`}
+      className={`play-tile ${tile.className}${isInteractive ? " is-clickable" : ""}`}
       delay={index * TILE_STAGGER}
     >
-      <div
+      <MediaTag
         className="play-tile-media"
+        href={isExternalTile ? tile.externalHref : undefined}
+        target={isExternalTile ? "_blank" : undefined}
+        rel={isExternalTile ? "noopener noreferrer" : undefined}
         role={isOverlayTile ? "button" : undefined}
         tabIndex={isOverlayTile ? 0 : undefined}
         onClick={isOverlayTile ? openOverlay : undefined}
@@ -170,9 +176,9 @@ function PlayTile({ tile, index, onOpenOverlay }) {
               }
             : undefined
         }
-        onPointerEnter={isOverlayTile ? cursorFollow.onPointerEnter : undefined}
-        onPointerMove={isOverlayTile ? cursorFollow.onPointerMove : undefined}
-        onPointerLeave={isOverlayTile ? cursorFollow.onPointerLeave : undefined}
+        onPointerEnter={isInteractive ? cursorFollow.onPointerEnter : undefined}
+        onPointerMove={isInteractive ? cursorFollow.onPointerMove : undefined}
+        onPointerLeave={isInteractive ? cursorFollow.onPointerLeave : undefined}
       >
         {isVideoSrc(tile.src) ? (
           <PlayTileVideo
@@ -185,7 +191,7 @@ function PlayTile({ tile, index, onOpenOverlay }) {
           <img src={tile.src} alt={tile.alt} loading="lazy" decoding="async" />
         )}
         <PlayExhibitionBadge>{tile.badge}</PlayExhibitionBadge>
-      </div>
+      </MediaTag>
       {cursorFollow.active
         ? createPortal(
             <div

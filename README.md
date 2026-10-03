@@ -16,6 +16,7 @@ Built with React and Vite. Deployed on Vercel.
 | `/sitehub-2` | SiteHub 2.0 / PropertyWorks case study |
 | `/parkwise` | ParkWise case study |
 | `/trojanstep` | TrojanStep case study |
+| `/soundclouds` | SoundClouds case study |
 
 ## Stack
 

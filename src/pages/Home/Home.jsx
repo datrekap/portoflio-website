@@ -34,7 +34,7 @@ const LETTER_EASE = "back.out(2.6)";
 const HOME_TITLE = "DAKSH KAPOOR";
 const HOME_SELECTED_WORK = workProjects.slice(0, 4);
 /* Flip to true to restore the home “SEE MORE WORK” link to /work. */
-const SHOW_HOME_SEE_MORE_WORK = false;
+const SHOW_HOME_SEE_MORE_WORK = true;
 
 function splitTitleLetters(text) {
   return Array.from(text).map((char, index) => ({

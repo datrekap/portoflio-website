@@ -13,6 +13,8 @@ const loaders = {
   "/parkwise": () => import("../pages/ParkwiseCaseStudy/ParkwiseCaseStudy"),
   "/trojanstep": () =>
     import("../pages/TrojanStepCaseStudy/TrojanStepCaseStudy"),
+  "/soundclouds": () =>
+    import("../pages/SoundCloudsCaseStudy/SoundCloudsCaseStudy"),
 };
 
 const started = new Map();

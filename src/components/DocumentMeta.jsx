@@ -55,6 +55,11 @@ const PAGE_META = {
     description:
       "Case study: gamifying dance to lower anxiety around body expression and movement.",
   },
+  "/soundclouds": {
+    title: "SoundClouds | Daksh Kapoor",
+    description:
+      "Case study: an ambient AI installation where people move giant inflatables to shape shared light and sound.",
+  },
 };
 
 function setMeta(attr, key, value) {
