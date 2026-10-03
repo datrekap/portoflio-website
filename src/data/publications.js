@@ -42,7 +42,7 @@ export const publicationSections = [
           { name: "Jisu Kim" },
           { name: "Brian Magerko" },
         ],
-        venue: "NeurIPS 2026",
+        venue: "NeurIPS 2025",
         url: "https://openreview.net/forum?id=rOk1B3TYbj",
       },
     ],

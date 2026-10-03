@@ -128,7 +128,9 @@
   position: relative;
   overflow: visible;
   pointer-events: auto;
-  transition: --nav-pill-weight 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    --nav-pill-weight 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.25s ease;
 }
 
 .pill:not(.pill-active) {
@@ -139,8 +141,10 @@
   display: none !important;
 }
 
-.pill.pill-active {
+.pill.pill-active,
+.pill.pill-active .pill-label {
   --nav-pill-weight: 500;
+  color: #ff5500;
 }
 
 .pill .label-stack {
@@ -226,6 +230,11 @@
 
   .pill-list.desktop-only .pill .pill-label {
     color: #0f0f0f;
+  }
+
+  .pill-list.desktop-only .pill.pill-active,
+  .pill-list.desktop-only .pill.pill-active .pill-label {
+    color: #ff5500;
   }
 }
 
@@ -444,12 +453,16 @@ body.mobile-menu-open {
   letter-spacing: 0.08em;
   border: 0;
   border-radius: 0;
-  transition: font-weight 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    font-weight 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.25s ease;
   text-align: center;
   width: 100%;
 }
 
-.mobile-menu-popover .mobile-menu-link.mobile-menu-link-active {
+.mobile-menu-popover .mobile-menu-link.mobile-menu-link-active,
+.mobile-menu-popover .mobile-menu-link.mobile-menu-link-active:active {
+  color: #ff5500;
   font-weight: 500;
   text-decoration: underline;
   text-underline-offset: 0.32em;
@@ -510,7 +523,9 @@ body.mobile-menu-open {
     color: #f3f3f3;
   }
 
-  .mobile-menu-popover .mobile-menu-link.mobile-menu-link-active {
+  .mobile-menu-popover .mobile-menu-link.mobile-menu-link-active,
+  .mobile-menu-popover .mobile-menu-link.mobile-menu-link-active:active {
+    color: #ff5500;
     font-weight: 500;
     text-decoration: underline;
     text-underline-offset: 0.32em;

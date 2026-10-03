@@ -1,8 +1,8 @@
 .about-page {
   --about-ink: #333333;
   --about-accent: #ff5500;
-  --about-title-size: clamp(1.5rem, 4.2vw, 3rem);
-  --about-body-size: clamp(1rem, 1.4vw, 1.25rem);
+  --about-title-size: clamp(2rem, 2.4vw, 2.25rem);
+  --about-body-size: 1rem;
   --about-section-gap: clamp(4.5rem, 8vw, 7.5rem);
   --about-line-ease: cubic-bezier(0.4, 0, 0.2, 1);
   min-height: 100vh;
@@ -10,6 +10,12 @@
   background: #ffffff;
   color: var(--about-ink);
   overflow-x: hidden;
+}
+
+@media (min-width: 1024px) {
+  .about-page {
+    --about-body-size: 1.0625rem;
+  }
 }
 
 .about-narrow,
@@ -38,9 +44,9 @@
 
 .about-section-title {
   margin: 0 0 clamp(2.5rem, 5vw, 5.25rem);
-  font-family: var(--font-display);
+  font-family: var(--font-text);
   font-size: var(--about-title-size);
-  font-weight: 400;
+  font-weight: 650;
   line-height: 1.15;
   letter-spacing: -0.02em;
   color: var(--about-ink);
@@ -81,10 +87,10 @@
 
 .about-hero-title {
   margin: 0 0 clamp(1.35rem, 2.6vw, 2.15rem);
-  font-family: var(--font-display);
+  font-family: var(--font-text);
   font-size: clamp(2.15rem, 4.6vw, 3.75rem);
-  font-weight: 400;
-  line-height: 0.95;
+  font-weight: 650;
+  line-height: 1.1;
   letter-spacing: -0.03em;
   color: var(--about-ink);
   text-align: center;
@@ -99,7 +105,7 @@
   /* Match enjoying-the-little-things body copy */
   font-size: var(--about-body-size);
   font-weight: 400;
-  line-height: 1.45;
+  line-height: 1.5;
   color: var(--about-ink);
   text-align: justify;
   text-justify: inter-word;
@@ -361,9 +367,9 @@
 
 .about-intro-title {
   margin: 0 0 clamp(1.5rem, 3vw, 2.5rem);
-  font-family: var(--font-display);
+  font-family: var(--font-text);
   font-size: var(--about-title-size);
-  font-weight: 400;
+  font-weight: 650;
   line-height: 1.15;
   letter-spacing: -0.02em;
   color: var(--about-ink);
@@ -670,7 +676,7 @@
   margin: 0;
   font-size: var(--about-body-size);
   font-weight: 400;
-  line-height: 1.45;
+  line-height: 1.5;
   color: var(--about-ink);
   text-align: justify;
   text-justify: inter-word;
@@ -742,7 +748,7 @@
 .about-quote-cite {
   font-size: var(--about-body-size);
   font-weight: 400;
-  line-height: 1.45;
+  line-height: 1.5;
   color: #666666;
   font-style: normal;
 }
@@ -961,9 +967,9 @@
 .about-thanks {
   margin: var(--about-section-gap) 0;
   padding: 0 var(--page-gutter-x);
-  font-family: var(--font-display);
+  font-family: var(--font-text);
   font-size: var(--about-title-size);
-  font-weight: 400;
+  font-weight: 650;
   line-height: 1.15;
   letter-spacing: -0.02em;
   color: var(--about-ink);

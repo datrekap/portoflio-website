@@ -36,14 +36,6 @@ const HOME_SELECTED_WORK = workProjects.slice(0, 4);
 /* Flip to true to restore the home “SEE MORE WORK” link to /work. */
 const SHOW_HOME_SEE_MORE_WORK = true;
 
-function splitTitleLetters(text) {
-  return Array.from(text).map((char, index) => ({
-    char,
-    index,
-    isSpace: char === " ",
-  }));
-}
-
 function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
@@ -201,7 +193,7 @@ const Home = () => {
     if (!landing || !overlay || !titleEl || !bioEl) return undefined;
 
     const titleLetters = titleEl.querySelectorAll(".home-hero-letter");
-    const bioLines = bioEl.querySelectorAll(".home-bio-line-inner");
+    const bioLines = landing.querySelectorAll(".home-bio-line-inner");
     if (!titleLetters.length || !bioLines.length) return undefined;
 
     const reduced = prefersReducedMotion();
@@ -437,24 +429,6 @@ const Home = () => {
         <div className="home-landing-content page-content-shell">
           <div className="home-landing-grid">
             <div className="home-landing-inner">
-              <h1
-                ref={heroTitleRef}
-                className={`home-hero home-hero--letters home-hero--trial-${LETTER_TRIAL}`}
-                aria-label={HOME_TITLE}
-              >
-                <span className="home-hero-line" aria-hidden="true">
-                  <span className="home-hero-line-inner">
-                    {splitTitleLetters(HOME_TITLE).map(({ char, index, isSpace }) => (
-                      <span
-                        key={`${char}-${index}`}
-                        className={`home-hero-letter${isSpace ? " is-space" : ""}`}
-                      >
-                        {isSpace ? "\u00a0" : char}
-                      </span>
-                    ))}
-                  </span>
-                </span>
-              </h1>
               <p ref={bioRef} className={`home-bio${bioReady ? " is-intro-done" : ""}`}>
                 <span className="home-bio-line">
                   <span className="home-bio-line-inner">
@@ -465,11 +439,7 @@ const Home = () => {
                     >
                       Design Engineer
                     </button>{" "}
-                    <span className="home-bio-ampersand">&amp;</span>
-                  </span>
-                </span>
-                <span className="home-bio-line">
-                  <span className="home-bio-line-inner">
+                    <span className="home-bio-ampersand">&amp;</span>{" "}
                     <button
                       type="button"
                       className="home-bio-hotspot"
@@ -477,6 +447,37 @@ const Home = () => {
                     >
                       Researcher
                     </button>
+                  </span>
+                </span>
+              </p>
+              <h1
+                ref={heroTitleRef}
+                className={`home-hero home-hero--letters home-hero--trial-${LETTER_TRIAL}`}
+                aria-label={HOME_TITLE}
+              >
+                <span className="home-hero-line" aria-hidden="true">
+                  <span className="home-hero-line-inner">
+                    {HOME_TITLE.split(" ").map((word, wordIndex) => (
+                      <span className="home-hero-word" key={word}>
+                        {Array.from(word).map((char, index) => (
+                          <span
+                            key={`${wordIndex}-${char}-${index}`}
+                            className="home-hero-letter"
+                          >
+                            {char}
+                          </span>
+                        ))}
+                      </span>
+                    ))}
+                  </span>
+                </span>
+              </h1>
+              <p className="home-role-line">
+                <span className="home-bio-line">
+                  <span className="home-bio-line-inner">
+                    Building and Researching{" "}
+                    <span className="home-role-accent">apps, games, and installations</span>{" "}
+                    that change how people feel towards technology.
                   </span>
                 </span>
               </p>

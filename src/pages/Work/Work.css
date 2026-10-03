@@ -7,11 +7,11 @@
 
 .work-page-title {
   margin: 0 0 1.25rem;
-  font-family: var(--font-display);
+  font-family: var(--font-text);
   font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 400;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  font-weight: 650;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
   color: #333;
   text-align: left;
 }
@@ -24,10 +24,10 @@
 .work-page-subtitle {
   max-width: 48.9375rem;
   margin: 0 0 clamp(2rem, 4vw, 3.5rem);
-  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-size: clamp(1rem, 1.25vw, 1.125rem);
   font-weight: 400;
-  line-height: 1.45;
-  color: rgba(51, 51, 51, 0.5);
+  line-height: 1.5;
+  color: #333;
   text-align: left;
 }
 

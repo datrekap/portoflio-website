@@ -212,17 +212,18 @@
 .work-project-card__role {
   margin: 0;
   flex-shrink: 0;
-  font-size: 0.75rem;
-  font-weight: 400;
-  line-height: 1.2;
-  letter-spacing: 0.02em;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: 0;
   color: #333;
   text-align: right;
 }
 
 .work-project-card__summary {
   margin: 0;
-  font-size: 0.75rem;
+  max-width: 65ch;
+  font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
   color: #333;
@@ -242,10 +243,6 @@
 
   .work-project-card__role {
     text-align: left;
-  }
-
-  .work-project-card__summary {
-    display: none;
   }
 
   .work-project-card__video {

@@ -62,16 +62,17 @@
 
 .cs-hero-title {
   margin: 0;
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 7vw, 4.375rem);
-  font-weight: 400;
-  line-height: 1;
+  font-family: var(--font-text);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 650;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
   color: #333;
 }
 
 .cs-hero-subtitle {
   margin: 0.5rem 0 0;
-  font-size: clamp(1.25rem, 2.4vw, 1.875rem);
+  font-size: clamp(1.375rem, 1.6vw, 1.5rem);
   font-weight: 300;
   line-height: 1.2;
   color: #333;
@@ -110,9 +111,8 @@
 
 .cs-intro-copy {
   margin: 0;
-  max-width: 40rem;
   font-size: var(--case-study-body-size);
-  font-weight: 300;
+  font-weight: 400;
   line-height: var(--case-study-body-line-height);
   color: #333;
 }
@@ -139,7 +139,7 @@
 
 .cs-heading-display {
   margin: 0 0 1.5rem;
-  font-size: clamp(1.5rem, 3vw, 1.875rem);
+  font-size: clamp(1.375rem, 1.7vw, 1.5rem);
   font-weight: 700;
   line-height: 1.2;
   text-transform: uppercase;
@@ -149,7 +149,7 @@
 .cs-body {
   margin: 0;
   font-size: var(--case-study-body-size);
-  font-weight: 300;
+  font-weight: 400;
   line-height: var(--case-study-body-line-height);
   color: #333;
 }

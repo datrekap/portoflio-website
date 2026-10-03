@@ -172,7 +172,7 @@ export const SC_PUBLICATIONS = [
     title:
       "Sound Clouds: Exploring ambient intelligence in public spaces to elicit deep human experience of awe, wonder, and beauty",
     authorsBefore: "Chengzhi Zhang, Dashiel Carrera, ",
-    authorsAfter: ", Jasmine Kaur, Jisu Kim, Brian Magerko. NeurIPS 2026",
+    authorsAfter: ", Jasmine Kaur, Jisu Kim, Brian Magerko. NeurIPS 2025",
     url: "https://openreview.net/forum?id=rOk1B3TYbj",
   },
 ];

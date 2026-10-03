@@ -146,9 +146,8 @@ export default function PropertyworksCaseStudy() {
               <Appear asChild>
                 <div className="cs-intro-row">
                   <p className="cs-intro-copy">
-                    Redefining the user experience of a lease management SaaS
-                    platform by introducing a universal flagging system and
-                    reducing onboarding friction.
+                  Improving the lease-management experience through 
+                  a universal flagging system and a lower-friction onboarding flow.
                   </p>
                   <CaseStudyButton onClick={handleViewSolution}>
                     View Solution

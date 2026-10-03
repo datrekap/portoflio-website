@@ -33,8 +33,8 @@
     --font-text: "Montserrat", ui-sans-serif, system-ui, sans-serif;
     --font-display: "Major Mono Display", ui-monospace, monospace;
     --case-study-body-size: 1rem;
-    --case-study-body-line-height: 1.6;
-    --case-study-body-weight: 300;
+    --case-study-body-line-height: 1.5;
+    --case-study-body-weight: 400;
     --case-study-label-size: 0.7rem;
     --case-study-label-weight: 400;
     --case-study-label-tracking: 0.05em;
@@ -68,14 +68,13 @@
 
   @media (min-width: 768px) {
     :root {
-      --case-study-body-size: 1.125rem;
       --case-study-label-size: 0.875rem;
     }
   }
 
   @media (min-width: 1024px) {
     :root {
-      --case-study-body-size: 1.25rem;
+      --case-study-body-size: 1.0625rem;
     }
   }
 

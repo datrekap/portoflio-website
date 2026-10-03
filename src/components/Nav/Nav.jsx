@@ -70,7 +70,16 @@ const Nav = () => {
     if (item.label === "about") {
       return path === "/about" || path === ABOUT_CREATIVE_PATH;
     }
-    if (item.label === "work") return path === "/work";
+    if (item.label === "work") {
+      return (
+        path === "/work" ||
+        path === "/public-future-arts-lab" ||
+        path === "/sitehub-2" ||
+        path === "/parkwise" ||
+        path === "/trojanstep" ||
+        path === "/soundclouds"
+      );
+    }
     if (item.label === "play") return path === "/play";
     return false;
   };
