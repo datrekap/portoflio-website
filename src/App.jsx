@@ -1,5 +1,5 @@
 import React, { lazy, Suspense, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { ReactLenis, useLenis } from "@studio-freight/react-lenis";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Analytics } from "@vercel/analytics/react";
@@ -14,6 +14,7 @@ import Home from "./pages/Home/Home";
 import Work from "./pages/Work/Work";
 import Play from "./pages/Play/Play";
 import About from "./pages/About/About";
+import Motion, { MOTION_PATH } from "./pages/Motion/Motion";
 import NotFound from "./pages/NotFound/NotFound";
 import { caseStudyLoader } from "./routes/caseStudyRoutes";
 import "./App.css";
@@ -89,7 +90,8 @@ function App() {
             <Route path="/work" element={<Work />} />
             <Route path="/play" element={<Play />} />
             <Route path="/about" element={<About />} />
-            <Route path="/about/creative" element={<About />} />
+            <Route path="/about/creative" element={<Navigate to={MOTION_PATH} replace />} />
+            <Route path={MOTION_PATH} element={<Motion />} />
             <Route
               path="/public-future-arts-lab"
               element={

@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useLayoutEffect } from "react";
+import { Link } from "react-router-dom";
 import { useLenis } from "@studio-freight/react-lenis";
 import { gsap } from "gsap";
 import WorkProjectGrid from "../../components/Work/WorkProjectGrid";
 import PageShell from "../../components/PageShell/PageShell";
 import { revealNav } from "../../constants/navTiming";
+import { MOTION_PATH } from "../../data/motionWork";
 import "./Work.css";
 
 const Work = () => {
@@ -176,6 +178,18 @@ const Work = () => {
               and make everyday interactions more enjoyable.
             </p>
             <WorkProjectGrid containerRef={workGridContainerRef} />
+            <div className="work-page__video-cta">
+              <Link to={MOTION_PATH} className="work-see-video-work">
+                <span>SEE VIDEO WORK</span>
+                <img
+                  src="/work/icons/arrow.svg"
+                  alt=""
+                  className="work-see-video-work-arrow"
+                  width={34}
+                  height={8}
+                />
+              </Link>
+            </div>
           </div>
         </section>
     </PageShell>

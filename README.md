@@ -17,6 +17,7 @@ Built with React and Vite. Deployed on Vercel.
 | `/parkwise` | ParkWise case study |
 | `/trojanstep` | TrojanStep case study |
 | `/soundclouds` | SoundClouds case study |
+| `/motion` | Video, motion graphics, and cinematography |
 
 ## Stack
 

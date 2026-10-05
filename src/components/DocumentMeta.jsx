@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { MOTION_PATH } from "../data/motionWork";
 
 const DEFAULT_TITLE = "Daksh Kapoor | Designer Engineer & Researcher";
 const DEFAULT_DESCRIPTION =
@@ -34,6 +35,11 @@ const PAGE_META = {
     title: "Creative work | Daksh Kapoor",
     description:
       "Video, motion graphics, and cinematography by Daksh Kapoor from before product design.",
+  },
+  [MOTION_PATH]: {
+    title: "Motion | Daksh Kapoor",
+    description:
+      "Selected video, motion graphics, and visual storytelling by Daksh Kapoor.",
   },
   "/public-future-arts-lab": {
     title: "FultonBrighterFutures | Daksh Kapoor",

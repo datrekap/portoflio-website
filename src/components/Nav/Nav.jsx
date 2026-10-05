@@ -14,6 +14,7 @@ import {
   isGoogleCreativePath,
 } from "../../constants/homeRoutes";
 import { ABOUT_CREATIVE_PATH } from "../../data/aboutCreativeWork";
+import { MOTION_PATH } from "../../data/motionWork";
 import "./Nav.css";
 import DarkDKLogo from "../../assets/img/DarkDKLogo.png";
 import LightDKLogo from "../../assets/img/LightDKLogo.png";
@@ -77,7 +78,8 @@ const Nav = () => {
         path === "/sitehub-2" ||
         path === "/parkwise" ||
         path === "/trojanstep" ||
-        path === "/soundclouds"
+        path === "/soundclouds" ||
+        path === MOTION_PATH
       );
     }
     if (item.label === "play") return path === "/play";

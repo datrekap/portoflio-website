@@ -1,18 +1,16 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import Appear from "../../components/Appear/Appear";
 import PageShell from "../../components/PageShell/PageShell";
 import AboutHeroWindows from "./AboutHeroWindows";
 import AboutQuote from "./AboutQuote";
-import AboutCreativeOverlay from "./AboutCreativeOverlay";
 import useInfiniteDragLoop from "../../hooks/useInfiniteDragLoop";
+import { MOTION_PATH } from "../../data/motionWork";
 import {
   ABOUT_EXPERIENCE,
   ABOUT_HOVER_ART,
   ABOUT_PHOTO_COLUMNS,
   ABOUT_STRIP_DRIFT,
 } from "../../data/aboutContent";
-import { ABOUT_CREATIVE_PATH } from "../../data/aboutCreativeWork";
 import "./About.css";
 
 function calloutPhaseClass(phase) {
@@ -129,27 +127,11 @@ function AboutPhotoStrip() {
 }
 
 const About = () => {
-  const { pathname } = useLocation();
-  const navigate = useNavigate();
   const [littleThingsCallout, setLittleThingsCallout] = useState(null);
+  const [creativeCallout, setCreativeCallout] = useState(null);
   const heroCopyRef = useRef(null);
-  const creativeTriggerRef = useRef(null);
-  const creativeOpen = pathname === ABOUT_CREATIVE_PATH;
-
-  const openCreativeOverlay = () => {
-    if (pathname === ABOUT_CREATIVE_PATH) return;
-    navigate(ABOUT_CREATIVE_PATH, { replace: true });
-  };
-
-  const closeCreativeOverlay = () => {
-    navigate("/about", { replace: true });
-    window.requestAnimationFrame(() => {
-      creativeTriggerRef.current?.focus();
-    });
-  };
 
   return (
-    <>
     <PageShell className="about-page">
       <section className="about-hero" aria-label="Introduction">
         <div className="about-wide about-hero-layout">
@@ -168,16 +150,31 @@ const About = () => {
                 My creative path began as an undergraduate exploring animation,
                 video, and digital arts, which laid the foundation for my career
                 as a{" "}
-                <button
-                  ref={creativeTriggerRef}
-                  type="button"
-                  className="about-bio-hotspot"
-                  aria-haspopup="dialog"
-                  aria-expanded={creativeOpen}
-                  onClick={openCreativeOverlay}
+                <a
+                  href={MOTION_PATH}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`about-bio-hotspot about-hover-phrase${calloutPhaseClass(creativeCallout)}`}
+                  onMouseEnter={() => setCreativeCallout("in")}
+                  onMouseLeave={() =>
+                    setCreativeCallout((current) =>
+                      current === "in" ? "out" : current,
+                    )
+                  }
+                  onFocus={() => setCreativeCallout("in")}
+                  onBlur={() =>
+                    setCreativeCallout((current) =>
+                      current === "in" ? "out" : current,
+                    )
+                  }
                 >
                   creative specialist
-                </button>
+                  <img
+                    className="about-hover-phrase__art"
+                    src="/work/hover-effect-work.svg"
+                    alt=""
+                  />
+                </a>
                 . Along the way, I became fascinated not
                 only by how people connect with my work, but also by{" "}
                 <strong>how they interact</strong> with it.
@@ -291,10 +288,6 @@ const About = () => {
         THANKS FOR VISITING!
       </Appear>
     </PageShell>
-      {creativeOpen ? (
-        <AboutCreativeOverlay onClose={closeCreativeOverlay} />
-      ) : null}
-    </>
   );
 };
 
