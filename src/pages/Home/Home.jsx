@@ -236,6 +236,8 @@ const Home = () => {
       gsap.set(bioLines, { y: 0 });
       if (floor) gsap.set(floor, { opacity: 1, y: 0 });
       if (figure) gsap.set(figure, { opacity: 1, y: 0 });
+      const credit = landing.querySelector(".home-motion-credit");
+      if (credit) gsap.set(credit, { opacity: 0.58, y: 0 });
       finish();
     };
 
@@ -244,6 +246,7 @@ const Home = () => {
       const horizontal = overlay.querySelectorAll(".home-grid-line--h");
       const floor = landing.querySelector(".home-hero-floor");
       const figure = landing.querySelector(".home-hero-walker-slot");
+      const credit = landing.querySelector(".home-motion-credit");
 
       if (!vertical.length || !horizontal.length) {
         attempts += 1;
@@ -293,6 +296,7 @@ const Home = () => {
       gsap.set(bioLines, { y: "100%" });
       if (floor) gsap.set(floor, { opacity: 0, y: 64 });
       if (figure) gsap.set(figure, { opacity: 0, y: 44 });
+      if (credit) gsap.set(credit, { opacity: 0, y: 18 });
 
       tl = gsap.timeline({ onComplete: finish });
 
@@ -400,6 +404,13 @@ const Home = () => {
           "settle+=0.08",
         );
       }
+      if (credit) {
+        tl.to(
+          credit,
+          { opacity: 0.58, y: 0, duration: 1, ease: ENTER_EASE },
+          "settle+=0.18",
+        );
+      }
     };
 
     frame = requestAnimationFrame(run);
@@ -484,6 +495,10 @@ const Home = () => {
             </div>
           </div>
         </div>
+        <p className="home-motion-credit">
+          Built on a background in video, motion graphics, and visual
+          storytelling.
+        </p>
       </section>
 
       <section

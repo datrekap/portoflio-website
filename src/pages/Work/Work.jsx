@@ -13,6 +13,7 @@ const Work = () => {
   const titleRef = useRef(null);
   const titleWrapperRef = useRef(null);
   const subtitleRef = useRef(null);
+  const introCtaRef = useRef(null);
   const pillsContainerRef = useRef(null);
   const timelineRef = useRef(null);
   const workGridContainerRef = useRef(null);
@@ -29,6 +30,13 @@ const Work = () => {
       gsap.set(subtitleRef.current, {
         opacity: 0,
         y: 24,
+      });
+    }
+
+    if (introCtaRef.current) {
+      gsap.set(introCtaRef.current, {
+        opacity: 0,
+        y: 16,
       });
     }
 
@@ -77,6 +85,18 @@ const Work = () => {
               duration: 1,
             },
             "-=1.1",
+          );
+        }
+
+        if (introCtaRef.current) {
+          timelineRef.current.to(
+            introCtaRef.current,
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.9,
+            },
+            "-=0.85",
           );
         }
 
@@ -165,20 +185,20 @@ const Work = () => {
       className="work-page min-h-screen relative"
       style={{ backgroundColor: "#f3f3f3" }}
     >
-        <section className="work-page__hero">
-          <div className="page-content-shell">
-            <h1 ref={titleRef} className="work-page-title">
-              <span ref={titleWrapperRef} className="work-page-title-wrapper">
-                EXPERIENCES BUILT
-              </span>
-            </h1>
+      <section className="work-page__hero">
+        <div className="page-content-shell">
+          <h1 ref={titleRef} className="work-page-title">
+            <span ref={titleWrapperRef} className="work-page-title-wrapper">
+              EXPERIENCES BUILT
+            </span>
+          </h1>
+          <div className="work-page__intro-row">
             <p ref={subtitleRef} className="work-page-subtitle">
-              I strive to solve meaningful problems through products and 
-              experiences that invite participation, spark curiosity, 
-              and make everyday interactions more enjoyable.
+              I strive to solve meaningful problems through products and
+              experiences that invite participation, spark curiosity, and make
+              everyday interactions more enjoyable.
             </p>
-            <WorkProjectGrid containerRef={workGridContainerRef} />
-            <div className="work-page__video-cta">
+            <div ref={introCtaRef} className="work-page__intro-cta">
               <Link to={MOTION_PATH} className="work-see-video-work">
                 <span>SEE VIDEO WORK</span>
                 <img
@@ -191,7 +211,9 @@ const Work = () => {
               </Link>
             </div>
           </div>
-        </section>
+          <WorkProjectGrid containerRef={workGridContainerRef} />
+        </div>
+      </section>
     </PageShell>
   );
 };

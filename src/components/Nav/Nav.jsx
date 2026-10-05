@@ -36,14 +36,11 @@ const Nav = () => {
   const menuOpenRef = useRef(false);
   const menuClosingRef = useRef(false);
 
-  const RESUME_URL =
-    "https://drive.google.com/file/d/1dxbGxh4xrmuKMV1uSPrl-MKsIY3JT1mn/view?usp=drive_link";
-
   const navItems = [
-    { label: "work", href: "/work", isLink: true },
+    { label: "product", href: "/work", isLink: true },
+    { label: "video", href: MOTION_PATH, isLink: true },
     { label: "play", href: "/play", isLink: true },
     { label: "about", href: "/about", isLink: true },
-    { label: "resume", href: RESUME_URL, isLink: false },
   ];
 
   const mobileNavItems = [
@@ -71,17 +68,17 @@ const Nav = () => {
     if (item.label === "about") {
       return path === "/about" || path === ABOUT_CREATIVE_PATH;
     }
-    if (item.label === "work") {
+    if (item.label === "product") {
       return (
         path === "/work" ||
         path === "/public-future-arts-lab" ||
         path === "/sitehub-2" ||
         path === "/parkwise" ||
         path === "/trojanstep" ||
-        path === "/soundclouds" ||
-        path === MOTION_PATH
+        path === "/soundclouds"
       );
     }
+    if (item.label === "video") return path === MOTION_PATH;
     if (item.label === "play") return path === "/play";
     return false;
   };
@@ -100,7 +97,10 @@ const Nav = () => {
 
     const path = location.pathname;
     const runsIntroTimeline =
-      isHomePath(path) || path === "/work" || path === "/play";
+      isHomePath(path) ||
+      path === "/work" ||
+      path === "/play" ||
+      path === MOTION_PATH;
 
     let tween = null;
     let revealed = false;
@@ -217,11 +217,6 @@ const Nav = () => {
     gsap.set(hamburger, { opacity: 0, scale: 0.8, display: "flex" });
     hamburger.style.pointerEvents = "none";
   }, [isMobileMenuOpen, location.pathname, lenis, windowWidth]);
-
-  const handleResumeClick = (e) => {
-    e.preventDefault();
-    window.open(RESUME_URL, "_blank", "noopener,noreferrer");
-  };
 
   useEffect(() => {
     return () => {
@@ -347,22 +342,6 @@ const Nav = () => {
       </>
     );
 
-    if (item.label === "resume") {
-      return (
-        <li key={`item-${i}`}>
-          <a
-            href={RESUME_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            {...pillProps}
-            onClick={handleResumeClick}
-          >
-            {pillInner}
-          </a>
-        </li>
-      );
-    }
-
     if (!item.isLink) {
       return (
         <li key={`item-${i}`}>
@@ -449,25 +428,6 @@ const Nav = () => {
                   >
                     <img src={LightDKLogo} alt="DK logo" className="logo-image" />
                   </Link>
-                </li>
-              );
-            }
-
-            if (item.label === "resume") {
-              return (
-                <li key={`mobile-item-${i}`}>
-                  <a
-                    href={RESUME_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mobile-menu-link"
-                    onClick={(e) => {
-                      handleResumeClick(e);
-                      closeMobileMenu();
-                    }}
-                  >
-                    {item.label}
-                  </a>
                 </li>
               );
             }

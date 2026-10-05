@@ -221,7 +221,7 @@
   display: block;
 }
 
-/* Desktop: all links (work, play, about, resume) are flat text, no pill background */
+/* Desktop: all links (product, video, play, about) are flat text, no pill background */
 @media (min-width: 769px) {
   .pill-list.desktop-only .pill {
     background: transparent;

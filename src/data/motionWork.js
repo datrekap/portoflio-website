@@ -2,7 +2,8 @@ export const MOTION_PATH = "/motion";
 
 export const MOTION_INTRO = {
   title: "Video, motion, and visual storytelling",
-  body: "I shoot, edit, and design videos so a message is easy to follow. The following is a showcase of field cinematography with motion graphics, finished in Premiere Pro, Davinci Resolve, and After Effects.",
+  titleLines: ["Video, motion,", "and visual storytelling"],
+  body: "I shape footage and motion graphics into stories with clarity, rhythm, and purpose. The following is a showcase of field cinematography with motion graphics, finished in Premiere Pro, Davinci Resolve, and After Effects.",
 };
 
 /**

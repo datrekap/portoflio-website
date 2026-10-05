@@ -24,6 +24,11 @@ export const FOOTER_SOCIAL_LINKS = [
     href: "https://orcid.org/0009-0002-8036-4906",
     external: true,
   },
+  {
+    label: "Resume",
+    href: "https://drive.google.com/file/d/1dxbGxh4xrmuKMV1uSPrl-MKsIY3JT1mn/view?usp=drive_link",
+    external: true,
+  },
 ];
 
 /** Routes the "ANOTHER ONE!" button may send visitors to (picks one at random). */
