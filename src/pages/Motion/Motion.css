@@ -189,10 +189,12 @@
 }
 
 .motion-overlay__shell {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: "prev dialog next";
   align-items: center;
   justify-content: center;
-  gap: clamp(0.5rem, 1.8vw, 1.35rem);
+  column-gap: clamp(0.5rem, 1.8vw, 1.35rem);
   width: min(100%, calc(66rem + 7.5rem));
   max-height: 100%;
   min-height: 0;
@@ -217,6 +219,14 @@
     background 0.2s ease,
     border-color 0.2s ease,
     transform 0.2s ease;
+}
+
+.motion-overlay__nav--prev {
+  grid-area: prev;
+}
+
+.motion-overlay__nav--next {
+  grid-area: next;
 }
 
 .motion-overlay__nav img {
@@ -249,13 +259,13 @@
 }
 
 .motion-overlay__dialog {
-  flex: 1 1 auto;
+  grid-area: dialog;
   min-width: 0;
   position: relative;
   display: flex;
   flex-direction: column;
   width: min(66rem, 100%);
-  height: calc(100dvh - (2 * var(--motion-overlay-inset)));
+  height: auto;
   max-height: calc(100dvh - (2 * var(--motion-overlay-inset)));
   overflow: hidden;
   background: #f3f3f3;
@@ -308,12 +318,11 @@
 }
 
 .motion-overlay__body {
-  display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr);
-  align-content: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
   gap: 0.75rem;
   box-sizing: border-box;
-  flex: 1;
   width: 100%;
   min-height: 0;
   padding: clamp(1.5rem, 3vw, 2.25rem) clamp(1.5rem, 5.5vw, 3.5rem);
@@ -375,19 +384,19 @@
 
 .motion-overlay__frame {
   position: relative;
-  justify-self: stretch;
-  align-self: center;
   width: 100%;
   max-width: 100%;
-  max-height: 100%;
   aspect-ratio: 16 / 9;
   height: auto;
   margin: 0;
+  overflow: hidden;
   background: #1a1a1a;
 }
 
 .motion-overlay__frame video,
 .motion-overlay__frame iframe {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
@@ -395,25 +404,118 @@
   background: #1a1a1a;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 767px) {
+  .motion-overlay {
+    --motion-overlay-inset: 0.55rem;
+    align-items: center;
+    padding-inline: 0.4rem;
+  }
+
   .motion-overlay__shell {
-    gap: 0.35rem;
+    grid-template-columns: 2.15rem minmax(0, 1fr) 2.15rem;
+    grid-template-areas: "prev dialog next";
+    column-gap: 0.3rem;
+    row-gap: 0;
     width: 100%;
+    max-height: 100%;
+    align-items: center;
+  }
+
+  .motion-overlay__dialog {
+    justify-self: stretch;
+    width: 100%;
+    height: fit-content;
+    max-height: none;
+    overflow: hidden;
+  }
+
+  .motion-overlay__body {
+    gap: 0.35rem;
+    padding: 0.7rem 0.7rem 0.7rem;
+    padding-right: 2.15rem;
+  }
+
+  .motion-overlay__title {
+    font-size: 0.98rem;
+    line-height: 1.2;
+    padding-right: 0.1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .motion-overlay__meta {
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .motion-overlay__role {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 0.72rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .motion-overlay__meta .motion-overlay__kind {
+    margin-left: 0;
+    flex: 0 0 auto;
+  }
+
+  .motion-overlay__kind {
+    font-size: 0.56rem;
+    padding: 0.16rem 0.35rem;
+  }
+
+  .motion-overlay__frame {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    flex: none;
   }
 
   .motion-overlay__nav {
     width: 2.15rem;
     height: 2.15rem;
+    align-self: center;
   }
 
   .motion-overlay__nav img {
-    width: 1.1rem;
+    width: 1.05rem;
   }
 }
 
-@media (min-width: 769px) {
-  .motion-hero {
-    padding-top: clamp(7rem, 12vh, 9rem);
+@media (max-width: 480px) {
+  .motion-overlay__close {
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  .motion-overlay__close-bar {
+    top: 0.35rem;
+    right: 0.35rem;
+  }
+}
+
+@media (min-width: 768px) and (min-height: 720px) {
+  .motion-overlay__dialog {
+    height: calc(100dvh - (2 * var(--motion-overlay-inset)));
+    max-height: calc(100dvh - (2 * var(--motion-overlay-inset)));
+  }
+
+  .motion-overlay__body {
+    flex: 1;
+    min-height: 0;
+    justify-content: center;
+  }
+
+  .motion-overlay__frame {
+    max-height: min(
+      100%,
+      calc(100dvh - (2 * var(--motion-overlay-inset)) - 9rem)
+    );
   }
 }
 
@@ -421,6 +523,12 @@
   .motion-gallery {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: clamp(1.5rem, 2.5vw, 2.75rem);
+  }
+}
+
+@media (min-width: 769px) {
+  .motion-hero {
+    padding-top: clamp(7rem, 12vh, 9rem);
   }
 }
 
