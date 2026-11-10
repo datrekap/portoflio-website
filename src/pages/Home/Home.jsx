@@ -32,7 +32,15 @@ const TEXT_EASE = "power3.out";
 const LETTER_TRIAL = "elastic-pop"; // elastic-pop | masked-rise | center-wave
 const LETTER_EASE = "back.out(2.6)";
 const HOME_TITLE = "DAKSH KAPOOR";
-const HOME_SELECTED_WORK = workProjects.slice(0, 4);
+const HOME_SELECTED_WORK_IDS = [
+  "soundclouds",
+  "trojanstep",
+  "public-future-arts-lab",
+  "sitehub-2",
+];
+const HOME_SELECTED_WORK = HOME_SELECTED_WORK_IDS.map((id) =>
+  workProjects.find((project) => project.id === id)
+).filter(Boolean);
 /* Flip to true to restore the home “SEE MORE WORK” link to /work. */
 const SHOW_HOME_SEE_MORE_WORK = true;
 
